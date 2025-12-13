@@ -1,0 +1,73 @@
+// Connexion à la base de données
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Générateur de client pour le code JS
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Table des Utilisateurs
+model User {
+  id           Int      @id @default(autoincrement())
+  pseudo       String   @unique
+  passwordHash String
+  role         String   @default("membre") // "admin" ou "membre"
+  firstLogin   Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  
+  // Relation : Un user a plusieurs Dinozs
+  dinozs       Dinoz[]
+}
+
+// Table des Dinozs
+model Dinoz {
+  id        Int     @id @default(autoincrement())
+  name      String
+  race      String
+  imageUrl  String?
+  level     Int     @default(1)
+  
+  // Stats (Feu, Bois, etc.)
+  statFire  Int     @default(0)
+  statWood  Int     @default(0)
+  statWater Int     @default(0)
+  statBolt  Int     @default(0)
+  statAir   Int     @default(0)
+
+  // Relation avec le User (Propriétaire)
+  userId    Int
+  user      User    @relation(fields: [userId], references: [id])
+
+  // Relation avec les compétences
+  skills    DinozSkill[]
+}
+
+// Table de Référence des Compétences (L'arbre complet du jeu)
+model RefSkill {
+  id            Int     @id @default(autoincrement())
+  name          String
+  element       String  // "Feu", "Eau"...
+  parentSkillId Int?    // Pour savoir qui débloque quoi
+  
+  // Auto-relation pour l'arbre (Parent/Enfant)
+  parent        RefSkill?  @relation("SkillTree", fields: [parentSkillId], references: [id])
+  children      RefSkill[] @relation("SkillTree")
+
+  // Lien vers les dinozs qui l'ont
+  dinozs        DinozSkill[]
+}
+
+// Table de liaison (Qui a appris quoi)
+model DinozSkill {
+  id         Int      @id @default(autoincrement())
+  status     String   // "appris" ou "prévu"
+  
+  dinozId    Int
+  dinoz      Dinoz    @relation(fields: [dinozId], references: [id])
+  
+  skillId    Int
+  skill      RefSkill @relation(fields: [skillId], references: [id])
+}
