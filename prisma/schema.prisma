@@ -14,7 +14,7 @@ model User {
   id           Int      @id @default(autoincrement())
   pseudo       String   @unique
   passwordHash String
-  role         String   @default("membre") // "admin" ou "membre"
+  role         String   @default("MEMBRE") // "LEADER", "CHEF-ADJOINT" ou "MEMBRE"
   firstLogin   Boolean  @default(true)
   createdAt    DateTime @default(now())
   
