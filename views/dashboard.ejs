@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guerriers du Givre - Tableau de Bord</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body { color: red; text-align: center; }
+        .dashboard-container { margin-top: 100px; }
+        .btn-logout { 
+            background: #c0392b; color: white; padding: 10px 20px; 
+            text-decoration: none; border-radius: 5px; font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <h1>Bienvenue, <%= pseudo %> ! ❄️</h1>
+        
+        <p>Tu es maintenant connecté au QG des Guerriers du Givre.</p>
+        <br><br>
+        
+        <a href="/logout" class="btn-logout">Se déconnecter</a>
+    </div>
+
+</body>
+</html>

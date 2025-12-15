@@ -1,0 +1,118 @@
+/* 1. Configuration globale */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* L'image de fond de la caverne */
+    background: url('../img/bg-cave.jpg') no-repeat center center fixed; 
+    background-size: cover;
+    color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 2. L'En-tête (Bannière) 
+#main-header {
+    width: 100%;
+    height: 200px; 
+    background: url('../img/header-banner.jpg') no-repeat center top;
+    background-size: contain; 
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.5); 
+    background-color: #0b1e3b; 
+}*/
+
+/* 3. Le Conteneur du Login (Centrage) */
+#login-container {
+    flex: 1; /* Prend toute la place restante */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centre verticalement */
+}
+
+/* 4. La Boîte de Login (L'effet GLACE 🧊) */
+#login-box {
+    background: rgba(12, 36, 61, 0.6); /* Bleu très foncé semi-transparent */
+    backdrop-filter: blur(8px); /* Le flou derrière la glace ! */
+    padding: 40px;
+    border-radius: 15px;
+    border: 2px solid rgba(137, 207, 240, 0.5); /* Bordure bleu glacier */
+    box-shadow: 0 0 20px rgba(137, 207, 240, 0.3), inset 0 0 20px rgba(0,0,0,0.5);
+    width: 350px;
+    text-align: center;
+    color: #e0f7fa; /* Texte blanc bleuté */
+}
+
+#login-box h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #00d2ff; /* Effet néon sur le titre */
+    font-family: serif; /* Une police un peu plus 'RPG' */
+    margin-top: 0;
+}
+
+/* 5. Les Champs du formulaire */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    text-align: left;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: #81d4fa;
+}
+
+input {
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #4fc3f7;
+    background: rgba(0, 0, 0, 0.3); /* Fond sombre transparent */
+    color: white;
+    font-size: 1em;
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #00e5ff;
+    box-shadow: 0 0 10px #00e5ff; /* Lueur quand on clique dedans */
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* 6. Le Bouton de connexion */
+button {
+    margin-top: 10px;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(180deg, #29b6f6, #0277bd); /* Dégradé bleu */
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    text-shadow: 1px 1px 2px black;
+    box-shadow: 0 4px 0 #01579b; /* Effet 3D du bouton */
+    transition: 0.1s;
+}
+
+button:active {
+    transform: translateY(4px); /* Le bouton s'enfonce quand on clique */
+    box-shadow: none;
+}
+
+button:hover {
+    filter: brightness(1.2);
+}
+
+.small-link a {
+    color: #81d4fa;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+.small-link a:hover {
+    text-decoration: underline;
+    color: white;
+}
