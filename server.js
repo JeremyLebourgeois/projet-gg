@@ -89,16 +89,29 @@ app.post('/login', async (req, res) => {
 
 
 // Route : Tableau de Bord
-app.get('/dashboard', async(req, res) => {
-    // 1. Contrôle d'accès : Doit être connecté pour voir cette page
-    if (!req.session.userId) {
-        return res.redirect('/login'); 
-    }
-    
-    // 2. Affichage : On utilise les données de session (pseudo) pour personnaliser la page
-    res.render('dashboard', { pseudo: req.session.pseudo });
-});
+app.get('/dashboard', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/login');
 
+    // On récupère toutes les infos de l'utilisateur (date de création, role...)
+    const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
+
+    if (user && user.firstLogin) {
+        return res.redirect('/change-password');
+    }
+
+    // Calcul du nombre de jours depuis l'inscription
+    const now = new Date();
+    const created = new Date(user.createdAt);
+    const diffTime = Math.abs(now - created);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+
+    // On envoie tout à la vue
+    res.render('dashboard', { 
+        pseudo: user.pseudo,
+        role: user.role, // ex: "membre" ou "admin"
+        daysMember: diffDays // ex: 12
+    });
+});
 
 // Route : Déconnexion
 app.get('/logout', (req, res) => {
