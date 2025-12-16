@@ -7,20 +7,10 @@ body {
     background: url('../img/bg-cave.jpg') no-repeat center center fixed; 
     background-size: cover;
     color: white;
-    height: 100vh;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
-
-/* 2. L'En-tête (Bannière) 
-#main-header {
-    width: 100%;
-    height: 200px; 
-    background: url('../img/header-banner.jpg') no-repeat center top;
-    background-size: contain; 
-    box-shadow: 0px 5px 20px rgba(0,0,0,0.5); 
-    background-color: #0b1e3b; 
-}*/
 
 /* 3. Le Conteneur du Login (Centrage) */
 #login-container {
@@ -146,14 +136,16 @@ button:hover {
     transform: scale(1.05);
 }
 
+
 /* 1. Header avec fondu sur les côtés */
 .hub-header {
     width: 100%;
-    height: 250px;
+    /* TAILLE VALIDÉE */
+    height: 130px; 
     position: relative;
     border-bottom: 2px solid #4fc3f7;
-    background-color: rgba(0, 0, 0, 0.3); /* Légère teinte sombre derrière */
-    overflow: hidden; /* Important pour contenir l'image */
+    background-color: rgba(0, 0, 0, 0.3);
+    overflow: hidden;
 }
 
 /* Pseudo-élément pour l'image de bannière avec masque */
@@ -162,16 +154,16 @@ button:hover {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     
-    /* L'image est centrée et garde son ratio (pas déformée) */
     background: url('../img/header-banner.jpg') no-repeat center center;
-    background-size: contain; 
+    background-size: contain; /* Ou 'contain' selon ce qui rend le mieux à 130px */
     
-    /* LE FONDU : Masque alpha qui rend transparent les bords gauche et droit */
+    /* LE FONDU (Masque) - Toujours actif pour fondre les bords */
     -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
     mask-image: linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%);
-
+    
     z-index: 0;
 }
+
 
 /* Contenu par-dessus l'image */
 .header-content {
@@ -285,3 +277,274 @@ button:hover {
     transform: none;
     border-color: rgba(137, 207, 240, 0.3);
 }
+
+
+/* --- PAGE MES DINOZS --- */
+/* Menu de Navigation (Icônes en haut à droite) */
+.nav-menu {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.nav-btn {
+    background: rgba(12, 36, 61, 0.6);
+    color: #4fc3f7;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid #4fc3f7;
+    font-size: 1.2em;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.nav-btn:hover {
+    background: #4fc3f7;
+    color: #000;
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px rgba(79, 195, 247, 0.6);
+}
+
+.nav-btn.disabled {
+    filter: grayscale(1);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Conteneur principal */
+.dino-container {
+    padding: 20px 40px;
+    max-width: 1400px; /* Large pour faire tenir 7 colonnes */
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Barre d'outils (Search, Filter, New) */
+.toolbar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    border-radius: 10px;
+    align-items: center;
+    border: 1px solid rgba(79, 195, 247, 0.2);
+}
+
+.search-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #4fc3f7;
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: white;
+    font-family: inherit;
+    width: 250px;
+}
+
+.btn-tool {
+    background: linear-gradient(180deg, #0d47a1, #002171);
+    color: white;
+    border: 1px solid #4fc3f7;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn-tool:hover {
+    background: linear-gradient(180deg, #1565c0, #0d47a1);
+    box-shadow: 0 0 10px rgba(79, 195, 247, 0.3);
+}
+
+.btn-new {
+    background: linear-gradient(180deg, #00695c, #004d40); /* Vert pour "Nouveau" */
+    border-color: #4db6ac;
+}
+.btn-new:hover {
+    background: linear-gradient(180deg, #00897b, #00695c);
+}
+
+.spacer {
+    flex: 1; /* Pousse les éléments suivants à droite */
+}
+
+/* LA GRILLE 7 COLONNES */
+.dino-grid {
+    display: grid;
+    /* LE COEUR DU DESIGN : 7 colonnes égales */
+    grid-template-columns: repeat(7, 1fr); 
+    gap: 15px;
+}
+
+/* Carte Dinoz */
+.dino-card {
+    background: rgba(206, 219, 244, 0.9); /* Fond Beige style "Carte" (selon ton template) */
+    /* SI tu préfères le bleu givre, remplace par : background: rgba(12, 36, 61, 0.6); */
+    
+    border-radius: 8px;
+    padding: 5px;
+    text-align: center;
+    transition: transform 0.2s;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    border: 2px solid #d7ccc8;
+}
+
+.dino-card:hover {
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+.card-img-container {
+    width: 100%;
+    aspect-ratio: 1/1; /* Carré */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.dino-card img {
+    max-width: 90%;
+    max-height: 90%;
+    filter: drop-shadow(0 4px 2px rgba(0,0,0,0.4));
+}
+
+.card-info h3 {
+    margin: 2px 0;
+    color: #3e2723; /* Texte sombre sur fond beige */
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.card-info p {
+    margin: 0;
+    color: #5d4037;
+    font-size: 0.75em;
+}
+
+/* Responsive : Si l'écran est trop petit, on passe à moins de colonnes */
+@media (max-width: 1200px) {
+    .dino-grid { grid-template-columns: repeat(5, 1fr); }
+}
+@media (max-width: 900px) {
+    .dino-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Utilitaire pour cacher/montrer les grilles */
+.hidden {
+    display: none !important;
+}
+
+/* Style spécifique pour les cartes de sélection de race */
+.race-card {
+    /* On reprend le style de dino-card via le JS, mais on peut ajouter ceci */
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.race-card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #4fc3f7; /* Lueur bleue au survol */
+    border-color: #4fc3f7;
+}
+
+/* --- MODALE --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Fond sombre derrière */
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-box {
+    background: rgba(12, 36, 61, 0.9);
+    border: 2px solid #4fc3f7;
+    padding: 30px;
+    border-radius: 15px;
+    width: 400px;
+    box-shadow: 0 0 25px rgba(79, 195, 247, 0.5);
+    color: white;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal-box h2 {
+    text-align: center;
+    margin-top: 0;
+    color: #4fc3f7;
+    text-shadow: 0 0 10px #00e5ff;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #b3e5fc;
+}
+
+.form-group input[type="text"],
+.form-group input[type="url"],
+.form-group select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #4fc3f7;
+    background: rgba(0, 0, 0, 0.4);
+    color: white;
+    font-size: 1em;
+}
+
+.radio-group {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9em;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.btn-cancel {
+    background: transparent;
+    border: 1px solid #ef5350;
+    color: #ef5350;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn-cancel:hover { background: rgba(239, 83, 80, 0.1); }
+
+.btn-submit {
+    background: linear-gradient(180deg, #00c853, #00600f); /* Vert validation */
+    border: none;
+    color: white;
+    padding: 8px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 200, 83, 0.4);
+}
+.btn-submit:hover { filter: brightness(1.2); }

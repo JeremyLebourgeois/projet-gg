@@ -168,3 +168,63 @@ app.post('/change-password', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Serveur lancé sur http://localhost:${PORT}`);
 });
+
+// --- Route: Mes Dinozs ---
+app.get('/dinozs', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/login');
+
+    // 1. Infos Utilisateur (Header)
+    const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
+    
+    // Calcul ancienneté
+    const now = new Date();
+    const created = new Date(user.createdAt);
+    const diffDays = Math.ceil(Math.abs(now - created) / (1000 * 60 * 60 * 24));
+
+    // 2. Récupérer la liste des Dinozs de l'utilisateur
+    const dinozs = await prisma.dinoz.findMany({
+        where: { userId: user.id },
+        orderBy: { level: 'desc' } // Triés par niveau (plus haut en premier)
+    });
+
+    res.render('my-dinozs', { 
+        pseudo: user.pseudo, 
+        role: user.role, 
+        daysMember: diffDays,
+        dinozs: dinozs 
+    });
+});
+
+// --- Route: Créer un nouveau Dinoz ---
+app.post('/dinozs/create', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/login');
+
+    const { name, race, imageUrl, skinType } = req.body;
+
+    // Logique de l'image :
+    // Si l'utilisateur a coché "Skin de Glace" (skinType === 'default'), on met null dans la DB.
+    // (Car ton code EJS gère déjà : si null -> affiche l'image /img/race.png)
+    // Sinon, on prend l'URL fournie.
+    let finalImage = null;
+    if (skinType !== 'default' && imageUrl && imageUrl.trim() !== "") {
+        finalImage = imageUrl;
+    }
+
+    try {
+        await prisma.dinoz.create({
+            data: {
+                name: name,
+                race: race,
+                level: 1, // On commence niveau 1
+                imageUrl: finalImage,
+                userId: req.session.userId,
+                // Initialiser les stats ici selon la race
+               
+            }
+        });
+        res.redirect('/dinozs'); // On recharge la page pour voir le nouveau bébé
+    } catch (error) {
+        console.error("Erreur création dinoz:", error);
+        res.redirect('/dinozs'); // En cas d'erreur on redirige quand même pour l'instant
+    }
+});
