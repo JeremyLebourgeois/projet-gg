@@ -22,6 +22,7 @@ model User {
   dinozs       Dinoz[]
 }
 
+
 // Table des Dinozs
 model Dinoz {
   id        Int     @id @default(autoincrement())
@@ -29,45 +30,49 @@ model Dinoz {
   race      String
   imageUrl  String?
   level     Int     @default(1)
+  notes     String?
   
-  // Stats (Feu, Bois, etc.)
+  // Stats
   statFire  Int     @default(0)
   statWood  Int     @default(0)
   statWater Int     @default(0)
   statBolt  Int     @default(0)
   statAir   Int     @default(0)
+// Stats Générales
+  statLife       Int @default(100)
+  statSpeed      Int @default(10)
+  statInitiative Int @default(0)
+  statCounter    Int @default(0)
+  statDodge      Int @default(0)
+  statArmor      Int @default(0)
 
-  // Relation avec le User (Propriétaire)
+  // Propriétaire
   userId    Int
   user      User    @relation(fields: [userId], references: [id])
+  
+  // 1. Compétences Apprises
+  learnedSkills   RefSkill[] @relation("LearnedSkills")
+  // 2. Compétences Débloquées (Disponibles)
+  unlockedSkills  RefSkill[] @relation("UnlockedSkills")
 
-  // Relation avec les compétences
-  skills    DinozSkill[]
+  // Historique des ups (JSON)
+  ups       Json? 
 }
 
-// Table de Référence des Compétences (L'arbre complet du jeu)
+// Table de Référence des Compétences (L'arbre)
 model RefSkill {
-  id            Int     @id @default(autoincrement())
-  name          String
-  element       String  // "Feu", "Eau"...
-  parentSkillId Int?    // Pour savoir qui débloque quoi
-  
-  // Auto-relation pour l'arbre (Parent/Enfant)
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  type        String? // "A", "E", "P", "C", "S"
+  element     String? // "Feu", "Bois"...
+  description String?
+
+  // Relations inverses vers les Dinozs
+  dinozsLearned   Dinoz[] @relation("LearnedSkills")
+  dinozsUnlocked  Dinoz[] @relation("UnlockedSkills")
+
+  // --- RELATION PARENT/ENFANT (Arbre de compétences) ---
+  parentSkillId Int?
   parent        RefSkill?  @relation("SkillTree", fields: [parentSkillId], references: [id])
   children      RefSkill[] @relation("SkillTree")
-
-  // Lien vers les dinozs qui l'ont
-  dinozs        DinozSkill[]
-}
-
-// Table de liaison (Qui a appris quoi)
-model DinozSkill {
-  id         Int      @id @default(autoincrement())
-  status     String   // "appris" ou "prévu"
-  
-  dinozId    Int
-  dinoz      Dinoz    @relation(fields: [dinozId], references: [id])
-  
-  skillId    Int
-  skill      RefSkill @relation(fields: [skillId], references: [id])
 }

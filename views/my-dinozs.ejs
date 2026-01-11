@@ -44,7 +44,7 @@
 
         <div class="dino-grid" id="user-dino-grid">
             <% dinozs.forEach(dino => { %>
-                <div class="dino-card">
+                <a href="/dinoz/<%= dino.id %>" class="dino-card" style="text-decoration: none; color: inherit; display: block;">
                     <div class="card-img-container">
                         <img src="<%= dino.imageUrl ? dino.imageUrl : '/img/' + dino.race.toLowerCase() + '.png' %>" alt="<%= dino.race %>">
                     </div>
@@ -52,7 +52,7 @@
                         <h3><%= dino.name %></h3>
                         <p><%= dino.race %> Niv.<%= dino.level %></p>
                     </div>
-                </div>
+                </a>
             <% }) %>
 
             <% if (dinozs.length === 0) { %>
@@ -256,7 +256,7 @@
             }
 
             searchInput.addEventListener('input', filterSearch);
-            
+
             // --- 5. GESTION DE LA MODALE ---
             const modal = document.getElementById('new-dino-modal');
             const btnNew = document.querySelector('.btn-new');
@@ -291,10 +291,8 @@
                     urlInput.value = ''; // On vide si on cache
                 }
             };
+
         });
     </script>
-</body>
-</html>
-
 </body>
 </html>

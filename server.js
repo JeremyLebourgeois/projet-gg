@@ -228,3 +228,75 @@ app.post('/dinozs/create', async (req, res) => {
         res.redirect('/dinozs'); // En cas d'erreur on redirige quand même pour l'instant
     }
 });
+
+// --- Route : Page de Détails du Dinoz ---
+app.get('/dinoz/:id', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/login');
+    const dinozId = parseInt(req.params.id);
+
+    try {
+        const dino = await prisma.dinoz.findUnique({
+            where: { id: dinozId },
+            include: {
+                learnedSkills: true, // Important pour vérifier PDC
+                unlockedSkills: true
+            }
+        });
+
+        if (!dino || dino.userId !== req.session.userId) {
+            return res.redirect('/dinozs');
+        }
+
+        const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
+
+        // Calcul de l'ancienneté
+        const now = new Date();
+        const diffTime = Math.abs(now - user.createdAt);
+        const daysMember = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        // --- VERIFICATION PLAN DE CARRIÈRE ---
+        // On regarde si dans la liste des compétences apprises, l'une s'appelle "Plan de Carrière"
+        const hasPDC = dino.learnedSkills.some(skill => skill.name === "Plan de Carrière");
+
+        res.render('dinoz-details', { 
+            dino: dino, 
+            user: user, // Utile si ta vue utilise 'user' directement
+            pseudo: user.pseudo,
+            role: user.role,
+            daysMember: daysMember,
+            hasPDC: hasPDC // <--- On envoie l'info à la page (true ou false)
+        });
+
+    } catch (error) {
+        console.error("Erreur page dinoz :", error);
+        res.redirect('/dinozs');
+    }
+});
+// --- Route : Supprimer un Dinoz ---
+app.post('/dinozs/delete', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/login');
+
+    const { dinozId } = req.body;
+
+    try {
+        // 1. On vérifie que le Dinoz appartient bien au joueur connecté (Sécurité !)
+        const dino = await prisma.dinoz.findUnique({
+            where: { id: parseInt(dinozId) }
+        });
+
+        if (dino && dino.userId === req.session.userId) {
+            // 2. Suppression
+            await prisma.dinoz.delete({
+                where: { id: parseInt(dinozId) }
+            });
+            console.log(`Dinoz ${dinozId} supprimé.`);
+        }
+        
+        // 3. Retour à la liste
+        res.redirect('/dinozs');
+
+    } catch (error) {
+        console.error("Erreur suppression :", error);
+        res.redirect('/dinozs');
+    }
+});

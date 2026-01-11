@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title><%= dino.name %> - Détails</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dino-details-body">
+
+    <header class="hub-header">
+        <div class="header-overlay">
+            <div class="header-content">
+                <div class="user-info">
+                    <h1><%= pseudo %></h1>
+                    <p class="status"><strong><%= role %></strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
+                </div>
+
+                <div class="nav-menu">
+                    <a href="/dashboard" class="nav-btn" title="Accueil"><i class="fas fa-home"></i></a>
+                    <a href="/clan" class="nav-btn" title="Mon Clan"><i class="fas fa-chess-rook"></i></a>
+                    <a href="/plans" class="nav-btn" title="Plans"><i class="fas fa-scroll"></i></a>
+                    <a href="#" class="nav-btn disabled" title="Travaux"><i class="fas fa-hammer"></i></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        
+        <div class="col-left">
+            <div class="identity-card">
+                <div class="dino-visual">
+                    <img src="<%= dino.imageUrl ? dino.imageUrl : '/img/races/' + dino.race.toLowerCase() + '.png' %>" alt="<%= dino.name %>">
+                </div>
+                <div class="dino-header-info">
+                    <h2><%= dino.name %></h2>
+                    <p><%= dino.race %> Niveau <%= dino.level %></p>
+                </div>
+            </div>
+
+            <div class="stats-panel">
+                <div class="stats-header">- Stats -</div>
+                <div class="stats-content">
+                    
+                    <div class="stats-elements-row">
+                        <div class="element-box">
+                            <img src="/img/elements/fire.webp" class="element-img" alt="Feu">
+                            <span class="element-val"><%= dino.statFire %></span>
+                        </div>
+                        <div class="element-box">
+                            <img src="/img/elements/wood.webp" class="element-img" alt="Bois">
+                            <span class="element-val"><%= dino.statWood %></span>
+                        </div>
+                        <div class="element-box">
+                            <img src="/img/elements/water.webp" class="element-img" alt="Eau">
+                            <span class="element-val"><%= dino.statWater %></span>
+                        </div>
+                        <div class="element-box">
+                            <img src="/img/elements/lightning.webp" class="element-img" alt="Foudre">
+                            <span class="element-val"><%= dino.statBolt %></span>
+                        </div>
+                        <div class="element-box">
+                            <img src="/img/elements/air.webp" class="element-img" alt="Air">
+                            <span class="element-val"><%= dino.statAir %></span>
+                        </div>
+                    </div>
+
+                    <hr style="border-color: rgba(255,255,255,0.3);">
+                    
+                    <div class="stats-general-grid">
+                        <div class="stat-line"><i class="fas fa-heart"></i> <%= dino.statLife %> PV</div>
+                        <div class="stat-line"><i class="fas fa-hourglass-start"></i> <%= dino.statInitiative %> Init.</div>
+                        <div class="stat-line"><i class="fas fa-shield-alt"></i> <%= dino.statArmor %>% Armure</div> 
+                        <div class="stat-line"><i class="fas fa-running"></i> <%= dino.statSpeed %> Vit.</div>
+                        <div class="stat-line"><i class="fas fa-hand-fist"></i> <%= dino.statCounter %>% Contre</div> 
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="bottom-actions">
+                <i class="fas fa-heart action-icon like"></i>
+                <button class="icon-btn delete-btn"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        </div>
+
+        <div class="col-center">
+            <div class="mode-buttons">
+                <button class="btn-ice">Modifier</button>
+                <button class="btn-ice">Simulation</button>
+            </div>
+
+            <div class="table-scroll" id="level-table-container">
+                <table class="level-grid-table" id="progression-table">
+                    <thead>
+                        <tr>
+                            <th class="col-level">NIV</th>
+                            <th class="col-choice-header">CHOIX 1</th>
+                            <th class="col-choice-header col-choice-2 hidden">CHOIX 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i = 1; i < 80; i++) { %>
+                            <tr data-row-index="<%= i %>">
+                                <td class="col-level"><%= i + 1 %></td>
+                                
+                                <td class="cell-choice col-1" onclick="toggleMenu(this)">
+                                    <div class="cell-content">
+                                        <span class="placeholder">-</span>
+                                    </div>
+                                    <div class="cell-menu">
+                                        <img src="/img/elements/fire.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'fire')" title="Feu">
+                                        <img src="/img/elements/wood.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'wood')" title="Bois">
+                                        <img src="/img/elements/water.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'water')" title="Eau">
+                                        <img src="/img/elements/lightning.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'lightning')" title="Foudre">
+                                        <img src="/img/elements/air.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'air')" title="Air">
+                                        
+                                        <div class="menu-sep"></div>
+                                        
+                                        <div class="menu-icon text-badge bg-up" onclick="event.stopPropagation(); selectElement(this, 'up')" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;height:22px;">???</div>
+                                        <div class="menu-icon text-badge bg-pdc btn-pdc-item" onclick="event.stopPropagation(); selectElement(this, 'pdc')" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;height:22px;">PDC</div>
+                                    </div>
+                                </td>
+
+                                <td class="cell-choice col-2 hidden" onclick="toggleMenu(this)">
+                                    <div class="cell-content">
+                                        <span class="placeholder">-</span>
+                                    </div>
+                                    <div class="cell-menu">
+                                        <img src="/img/elements/fire.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'fire')" title="Feu">
+                                        <img src="/img/elements/wood.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'wood')" title="Bois">
+                                        <img src="/img/elements/water.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'water')" title="Eau">
+                                        <img src="/img/elements/lightning.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'lightning')" title="Foudre">
+                                        <img src="/img/elements/air.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'air')" title="Air">
+                                        
+                                        <div class="menu-sep"></div>
+                                        
+                                        <div class="menu-icon text-badge bg-up" onclick="event.stopPropagation(); selectElement(this, 'up')" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;height:22px;">???</div>
+                                        <div class="menu-icon text-badge bg-pdc btn-pdc-item" onclick="event.stopPropagation(); selectElement(this, 'pdc')" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;height:22px;">PDC</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+
+            <button class="btn-ice reincarnate-btn">Réincarner</button>
+        </div>
+
+        <div class="col-right">
+            <button class="btn-ice plans-header-btn">MES PLANS</button>
+            
+            <div class="plans-list">
+                <div class="plan-row">
+                    <div class="plan-icon fire"><img src="/img/elements/fire.webp" alt="Feu"></div>
+                    <div class="plan-bar"></div>
+                </div>
+                <div class="plan-row">
+                    <div class="plan-icon wood"><img src="/img/elements/wood.webp" alt="Bois"></div>
+                    <div class="plan-bar"></div>
+                </div>
+                <div class="plan-row">
+                    <div class="plan-icon water"><img src="/img/elements/water.webp" alt="Eau"></div>
+                    <div class="plan-bar"></div>
+                </div>
+                <div class="plan-row">
+                    <div class="plan-icon bolt"><img src="/img/elements/lightning.webp" alt="Foudre"></div>
+                    <div class="plan-bar"></div>
+                </div>
+                <div class="plan-row">
+                    <div class="plan-icon air"><img src="/img/elements/air.webp" alt="Air"></div>
+                    <div class="plan-bar"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <div id="delete-modal" class="modal-overlay hidden">
+        <div class="modal-box" style="border: 3px solid #C0392B;"> <h2 style="color: #C0392B;">Adieu Compagnon ?</h2>
+            <p>Es-tu sûr de vouloir te séparer de <strong><%= dino.name %></strong> ?</p>
+            <p style="font-size: 0.9rem; color: #666;">Cette action est irréversible. Il retournera au néant glacé.</p>
+            
+            <form action="/dinozs/delete" method="POST" style="margin-top: 20px;">
+                <input type="hidden" name="dinozId" value="<%= dino.id %>">
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" id="cancel-delete">Annuler</button>
+                    <button type="submit" class="btn-submit" style="background: #C0392B;">Confirmer la suppression</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        updateTableState(); 
+    });
+
+    // 1. GESTION DU CLIC SUR UNE CASE (OUVRIR/FERMER MENU)
+    window.toggleMenu = function(cell) {
+        // Si la case est verrouillée, on ne fait rien
+        if (cell.classList.contains('cell-locked')) return;
+
+        // On ferme TOUS les autres menus d'abord
+        const allMenus = document.querySelectorAll('.cell-menu');
+        const currentMenu = cell.querySelector('.cell-menu');
+        
+        // Est-ce que ce menu était déjà ouvert ?
+        const wasOpen = currentMenu.classList.contains('visible');
+
+        // On ferme tout
+        allMenus.forEach(m => m.classList.remove('visible'));
+
+        // Si ce n'était pas ouvert, on l'ouvre
+        if (!wasOpen) {
+            currentMenu.classList.add('visible');
+        }
+    };
+
+    // Fermer les menus si on clique ailleurs dans la page
+    document.addEventListener('click', function(event) {
+        // Si le clic n'est PAS dans une cellule de choix
+        if (!event.target.closest('.cell-choice')) {
+            document.querySelectorAll('.cell-menu').forEach(m => m.classList.remove('visible'));
+        }
+    });
+
+
+    // 2. SÉLECTIONNER UN ÉLÉMENT
+    window.selectElement = function(el, type) {
+        const cell = el.closest('.cell-choice');
+        const contentDiv = cell.querySelector('.cell-content');
+        
+        // Nettoyage visuel
+        cell.className = cell.className.replace(/bg-\w+/g, "").trim(); 
+        
+        // Stockage
+        cell.dataset.value = type;
+
+        // Mise à jour visuelle
+        if (type === 'pdc') {
+            cell.classList.add('bg-pdc');
+            contentDiv.innerHTML = `<span class="text-badge">PDC</span>`;
+        } else if (type === 'up') {
+            cell.classList.add('bg-up');
+            contentDiv.innerHTML = `<span class="text-badge">???</span>`;
+        } else {
+            cell.classList.add('bg-' + type);
+            contentDiv.innerHTML = `<img src="/img/elements/${type}.webp" style="width:24px;">`;
+        }
+
+        // On ferme le menu après choix
+        cell.querySelector('.cell-menu').classList.remove('visible');
+
+        // On lance le calcul
+        updateTableState();
+    };
+
+    // 3. LOGIQUE SÉQUENTIELLE + PDC (Inchangée mais essentielle)
+    function updateTableState() {
+        const rows = document.querySelectorAll('#progression-table tbody tr');
+        let currentDinoLevel = 1; 
+        let isRowUnlocked = true; 
+        
+        let pdcRowIndex = -1; 
+        
+        rows.forEach((row, index) => {
+            const val1 = row.querySelector('.col-1').dataset.value;
+            const val2 = row.querySelector('.col-2').dataset.value;
+            
+            if (pdcRowIndex === -1 && (val1 === 'pdc' || val2 === 'pdc')) {
+                pdcRowIndex = index;
+            }
+        });
+
+        rows.forEach((row, index) => {
+            const cell1 = row.querySelector('.col-1');
+            const cell2 = row.querySelector('.col-2');
+            const th2 = document.querySelector('.col-choice-2'); 
+
+            const isCol2Active = (pdcRowIndex !== -1 && index > pdcRowIndex);
+
+            if (isCol2Active) {
+                cell2.classList.remove('hidden');
+                th2.classList.remove('hidden'); 
+            } else {
+                cell2.classList.add('hidden');
+                if (pdcRowIndex === -1) th2.classList.add('hidden');
+                
+                // Si on recache, on vide la valeur (sauf si c'est vide)
+                if(cell2.dataset.value) {
+                    cell2.dataset.value = ""; 
+                    cell2.className = "cell-choice col-2 hidden"; 
+                    cell2.querySelector('.cell-content').innerHTML = '<span class="placeholder">-</span>';
+                }
+            }
+            
+            if (isRowUnlocked) {
+                unlockCell(cell1);
+                if (isCol2Active) unlockCell(cell2);
+            } else {
+                lockCell(cell1);
+                lockCell(cell2);
+            }
+
+            const val1 = cell1.dataset.value;
+            const val2 = cell2.dataset.value;
+            let rowComplete = false;
+
+            if (isCol2Active) {
+                if (val1 && val2) rowComplete = true;
+            } else {
+                if (val1) rowComplete = true;
+            }
+
+            if (rowComplete) {
+                currentDinoLevel++;
+                isRowUnlocked = true;
+            } else {
+                isRowUnlocked = false; 
+            }
+
+            const pdcBtns = row.querySelectorAll('.btn-pdc-item');
+            pdcBtns.forEach(btn => {
+                const parentVal = btn.closest('.cell-choice').dataset.value;
+                if (pdcRowIndex === -1 || parentVal === 'pdc') {
+                    btn.style.display = 'flex'; 
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+        });
+
+        const levelText = document.querySelector('.dino-header-info p');
+        if(levelText) {
+            const raceName = levelText.innerText.split(' Niveau')[0];
+            levelText.innerText = `${raceName} Niveau ${currentDinoLevel}`;
+        }
+    }
+
+    function lockCell(cell) { cell.classList.add('cell-locked'); }
+    function unlockCell(cell) { cell.classList.remove('cell-locked'); }
+
+        // Utilitaires
+        function lockCell(cell) {
+            cell.classList.add('cell-locked');
+            cell.title = "Terminez le niveau précédent d'abord";
+        }
+        function unlockCell(cell) {
+            cell.classList.remove('cell-locked');
+            cell.title = "Cliquez pour choisir";
+        }
+        function resetCellClasses(cell) {
+            // Enlève bg-fire, bg-wood, etc.
+            cell.classList.remove('bg-fire', 'bg-wood', 'bg-water', 'bg-lightning', 'bg-air', 'bg-up', 'bg-pdc');
+        }
+
+        // Fermer le popup si on clique ailleurs
+        document.addEventListener('click', (e) => {
+            const selector = document.getElementById('element-selector-popup');
+            if (!selector.classList.contains('hidden') && 
+                !e.target.closest('.cell-choice') && 
+                !e.target.closest('.element-selector')) {
+                selector.classList.add('hidden');
+            }
+        });
+    
+        // Script pour gérer l'ouverture/fermeture de la pop-up
+        const deleteBtn = document.querySelector('.delete-btn'); // Le bouton poubelle
+        const deleteModal = document.getElementById('delete-modal');
+        const cancelDelete = document.getElementById('cancel-delete');
+
+        // Attention : Vérifie que ton bouton poubelle a bien la classe 'delete-btn'
+        if(deleteBtn) {
+            deleteBtn.addEventListener('click', () => {
+                deleteModal.classList.remove('hidden');
+            });
+        }
+
+        if(cancelDelete) {
+            cancelDelete.addEventListener('click', () => {
+                deleteModal.classList.add('hidden');
+            });
+        }
+        
+        // Fermer en cliquant à côté
+        deleteModal.addEventListener('click', (e) => {
+            if (e.target === deleteModal) deleteModal.classList.add('hidden');
+        });
+    </script>
+</body>
+</html>

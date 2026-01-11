@@ -548,3 +548,420 @@ button:hover {
     box-shadow: 0 0 10px rgba(0, 200, 83, 0.4);
 }
 .btn-submit:hover { filter: brightness(1.2); }
+
+/* --- PAGE DÉTAIL DINOZ --- */
+
+/* --- LAYOUT GLOBAL --- */
+.dashboard-grid {
+    display: flex;
+    justify-content: flex-start; /* C'est ça qui aligne à gauche ! */
+    gap: 60px; /* Ton écart de 60px */
+    padding: 20px;
+    
+    /* POSITIONNEMENT GAUCHE */
+    margin-top: 40px;
+    margin-left: 50px; /* Marge fixe à gauche */
+    margin-right: 0;   /* On empêche le centrage à droite */
+    
+    max-width: none;
+    width: auto;
+}
+
+
+/* --- STATS GÉNÉRALES EN 2 COLONNES (Points 2 & 3) --- */
+.stats-general-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 colonnes de taille égale */
+    gap: 10px 5px; /* Ecart vertical 10px, horizontal 5px */
+    text-align: left; /* Alignement du texte */
+    margin-top: 10px;
+}
+/* On ajuste un peu les lignes pour qu'elles rentrent bien */
+.stats-general-grid .stat-line {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espace entre icône et chiffre */
+}
+
+/* --- BOUTON MES PLANS (Point 1) --- */
+/* On s'assure que le bouton prend toute la largeur */
+.plans-header-btn {
+    width: 100%;
+    margin-bottom: 20px;
+    /* Le reste est géré par la classe .btn-ice dans le HTML */
+}
+
+/* --- COLONNE GAUCHE --- */
+.col-left { 
+    width: 300px; /* CORRECTION 2 : On élargit un peu (était 260px) pour éviter que l'image déborde */
+    flex-shrink: 0; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    /* On enlève le gap ici pour gérer l'espacement manuellement avec margin-bottom */
+    gap: 0; 
+}
+
+.identity-card {
+    background: #FADCB6;
+    width: 100%;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    
+    /* CORRECTION 3 : Espace forcé sous la carte (donc sous l'image) avant les stats */
+    margin-bottom: 30px; 
+}
+.dino-visual img { 
+    /* CORRECTION 2 (Sécurité) : L'image ne doit jamais dépasser son conteneur */
+    max-width: 100%; 
+    width: 140px; /* Taille idéale */
+    height: auto; 
+    display: block; 
+    margin: 0 auto; 
+}
+.dino-header-info h2 { margin: 10px 0 5px; color: #444; font-size: 1.4rem; }
+.dino-header-info p { margin: 0; color: #D35400; font-weight: bold; }
+
+/* Le reste ne change pas, mais je te le remets pour être sûr de l'enchaînement */
+.stats-panel {
+    background: #5F8693;
+    width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    color: white;
+    min-height: 200px;
+    /* Pas de changement ici */
+}
+.stats-header {
+    background: #7F9EA9;
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+.stats-content { padding: 15px; }
+
+/* NOUVEAU : Alignement des 5 éléments */
+.stats-elements-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2); /* Fond sombre léger */
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+.element-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+.element-img {
+    width: 30px; 
+    height: 30px;
+    filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));
+}
+.element-val { font-weight: bold; font-size: 1rem; }
+
+.stat-line { margin-bottom: 5px; font-size: 0.95rem; }
+
+/* --- ALIGNEMENT BOUTONS BAS (Cœur / Poubelle) --- */
+.bottom-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Vital pour l'alignement vertical */
+    gap: 30px; 
+    width: 100%;
+    margin-top: 20px;
+    height: 50px; /* On force une hauteur pour stabiliser l'alignement */
+}
+
+/* Le Cœur */
+.action-icon.like {
+    color: #C0392B;
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Aide au centrage */
+    align-items: center;
+}
+.action-icon.like:hover { transform: scale(1.1); }
+
+/* La Poubelle */
+.delete-btn {
+    background: #007bff; /* Bleu */
+    border: none;
+    border-radius: 5px;
+    width: 45px;
+    height: 45px;
+    display: flex;       
+    align-items: center; /* Centre l'icône dans le carré */
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin: 0;
+    padding: 0; /* Important pour éviter les décalages */
+}
+
+.delete-btn i {
+    color: white;
+    font-size: 1.2rem;
+    line-height: 1; /* Empêche l'icône de pousser le bouton */
+}
+
+.delete-btn:hover { background: #0056b3; }
+
+/* --- COLONNE CENTRE --- */
+.col-center { 
+    width: 450px; /* Un peu plus large pour le tableau */
+    flex-shrink: 0;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+}
+
+.mode-buttons { display: flex; gap: 20px; margin-bottom: 20px; }
+
+
+.btn-ice {
+    /* On reprend le dégradé bleu foncé du bouton Réincarner */
+    background: linear-gradient(180deg, #29b6f6, #0277bd);
+    
+    /* On garde la forme arrondie et la bordure blanche du style glace */
+    border: 2px solid rgba(255, 255, 255, 0.4); 
+    border-radius: 15px;
+    
+    color: white;
+    padding: 8px 25px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    text-transform: uppercase;
+    text-align: center;
+    
+    /* Effet 3D et Ombre texte comme sur le bouton Réincarner */
+    box-shadow: 0 4px 0 #01579b, 0 5px 10px rgba(0,0,0,0.3);
+    text-shadow: 1px 1px 2px black;
+    
+    transition: all 0.2s;
+}
+
+.btn-ice:hover {
+    background: linear-gradient(180deg, #81d4fa, #039be5); /* Plus clair au survol */
+    transform: translateY(-2px); /* Petit saut vers le haut */
+    box-shadow: 0 6px 0 #01579b, 0 0 15px rgba(0, 229, 255, 0.6); /* Lueur */
+}
+
+/* TABLEAU STYLE GLACE */
+.table-scroll {
+    height: 500px;
+    overflow-y: auto;
+    width: 100%;
+    /* Transparence et bordures bleutées */
+    border: 2px solid #a8d4e6;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.85); 
+    box-shadow: inset 0 0 20px rgba(168, 212, 230, 0.5);
+}
+.level-grid-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+.level-grid-table th {
+    background: #5F8693;
+    color: white;
+    border-bottom: 2px solid #fff;
+    padding: 10px;
+    font-size: 0.8rem;
+    position: sticky; top: 0;
+    z-index: 10;
+}
+.level-grid-table td {
+    border-bottom: 1px solid #d1e9f3; /* Ligne bleu très clair */
+    height: 20px;
+    padding: 8px;
+    font-size: 0.8rem;
+    color: #333;
+}
+/* Une ligne sur deux légèrement bleutée */
+.level-grid-table tr:nth-child(even) {
+    background-color: rgba(227, 242, 253, 0.5);
+}
+
+/* --- TABLEAU DE NIVEAUX & INTERACTION --- */
+
+.col-level {
+    width: 30px;
+    font-weight: bold;
+    color: #555;
+    background-color: #f4f4f4;
+}
+
+/* NOUVEAU : On réduit la largeur des colonnes Choix */
+.col-choice-header, .cell-choice {
+    width: 230px; /* Largeur fixe ajustée (réduite) */
+    max-width: 230px;
+}
+
+/* La cellule de choix */
+.cell-choice {
+    cursor: pointer;
+    font-weight: bold;
+    position: relative; 
+    height: 40px; 
+    padding: 0;
+}
+
+.cell-choice:hover {
+    background-color: rgba(0,0,0,0.05); /* Juste un petit effet visuel case */
+}
+
+.cell-locked {
+    background-color: #e0e0e0 !important;
+    cursor: not-allowed;
+    color: #999;
+    pointer-events: none; 
+}
+
+/* Le contenu sélectionné */
+.cell-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+/* --- LE MENU COMPACT --- */
+.cell-menu {
+    display: none; 
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    background: white;
+    border: 2px solid #5F8693;
+    border-radius: 20px; /* Plus petit arrondi */
+    padding: 3px 6px;    /* Marges internes réduites */
+    gap: 3px;            /* Espace entre les icônes réduit */
+    z-index: 100;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    white-space: nowrap; 
+}
+
+/* Animation d'apparition (inchangée) */
+.cell-menu.visible {
+    display: flex;
+    align-items: center;
+    animation: popIn 0.2s ease-out;
+}
+
+/* Icônes plus petites */
+.menu-icon {
+    width: 22px;  /* Réduit de 28px à 22px */
+    height: 22px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    border-radius: 50%;
+    border: 1px solid transparent;
+}
+.menu-icon:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    background: #eee;
+}
+
+.menu-sep {
+    width: 1px;
+    height: 16px; /* Réduit */
+    background: #ccc;
+    margin: 0 3px; /* Marges réduites */
+}
+
+/* Badges textes plus petits */
+.text-badge {
+    font-weight: 800;
+    font-size: 0.65rem; /* Texte plus petit */
+    padding: 1px 4px;   /* Badge plus serré */
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    line-height: 1;     /* Important pour le centrage vertical */
+}
+
+/* --- STYLES DES VALEURS --- */
+.bg-fire { background-color: #ffcccc; color: #c0392b; }
+.bg-wood { background-color: #d5f5e3; color: #27ae60; }
+.bg-water { background-color: #d6eaf8; color: #2980b9; }
+.bg-lightning { background-color: #fcf3cf; color: #d4ac0d; }
+.bg-air { background-color: #ebf5fb; color: #5d6d7e; }
+
+/* MODIFICATION : PDC reprend les couleurs de LIGHTNING (Foudre) */
+.bg-pdc { 
+    background-color: #fcf3cf; /* Fond jaune pâle */
+    color: #d4ac0d;            /* Texte doré */
+    border: 2px solid #f1c40f; /* Bordure jaune vif */
+}
+
+.bg-up { 
+    background-color: #eceff1; 
+    color: #546e7a; 
+    border: 1px dashed #b0bec5;
+}
+
+.text-badge {
+    font-weight: 800;
+    font-size: 0.9rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+}
+
+.hidden { display: none !important; }
+
+.reincarnate-btn {
+    /* Hérite du style .btn-ice maintenant via le HTML, 
+       mais on garde la marge ici */
+    margin-top: 15px;
+    width: 100%;
+}
+
+/* --- COLONNE DROITE --- */
+.col-right { 
+    flex-grow: 1; /* Prend tout l'espace restant */
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+}
+
+/* --- BOUTON MES PLANS --- */
+.plans-header-btn {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.plans-list { width: 100%; display: flex; flex-direction: column; gap: 15px; }
+.plan-row { display: flex; align-items: center; gap: 10px; }
+.plan-icon {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid white;
+    background: #ddd;
+    flex-shrink: 0;
+}
+.plan-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+.plan-bar {
+    flex-grow: 1;
+    height: 35px;
+    background: #5F8693;
+    border-radius: 20px;
+    opacity: 0.8;
+}
