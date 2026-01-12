@@ -30,8 +30,12 @@
         
         <div class="col-left">
             <div class="identity-card">
-                <div class="dino-visual">
-                    <img src="<%= dino.imageUrl ? dino.imageUrl : '/img/races/' + dino.race.toLowerCase() + '.png' %>" alt="<%= dino.name %>">
+                <div class="dino-avatar">
+                <% if (dino.imageUrl) { %>
+                    <img src="<%= dino.imageUrl %>" alt="<%= dino.name %>" class="dino-img">
+                <% } else { %>
+                    <img src="/img/<%= dino.race.toLowerCase() %>.png" alt="<%= dino.race %>" class="dino-img">
+                <% } %>
                 </div>
                 <div class="dino-header-info">
                     <h2><%= dino.name %></h2>
@@ -39,9 +43,13 @@
                 </div>
             </div>
 
+            
             <div class="stats-panel">
-                <div class="stats-header">- Stats -</div>
-                <div class="stats-content">
+                <div class="stats-header" onclick="toggleStats()">
+                     Statistiques <i class="fas fa-chevron-down" id="stats-icon" style="font-size: 0.8em; margin-left: 5px;"></i> 
+                </div>
+                
+                <div class="stats-content hidden" id="dino-stats-content">
                     
                     <div class="stats-elements-row">
                         <div class="element-box">
@@ -86,10 +94,12 @@
         </div>
 
         <div class="col-center">
-            <div class="mode-buttons">
-                <button class="btn-ice">Modifier</button>
-                <button class="btn-ice">Simulation</button>
-            </div>
+            <% if (dino.isReincarnate === 0) { %>
+                <div class="mode-buttons">
+                    <button class="btn-ice" id="btn-open-reincarnate">Réincarner</button>
+                    <button class="btn-ice">Simulation</button>
+                </div>
+            <% } %>
 
             <div class="table-scroll" id="level-table-container">
                 <table class="level-grid-table" id="progression-table">
@@ -145,12 +155,10 @@
                     </tbody>
                 </table>
             </div>
-
-            <button class="btn-ice reincarnate-btn">Réincarner</button>
         </div>
 
         <div class="col-right">
-            <button class="btn-ice plans-header-btn">MES PLANS</button>
+            <button class="btn-ice">MES PLANS</button>
             
             <div class="plans-list">
                 <div class="plan-row">
@@ -192,53 +200,82 @@
         </div>
     </div>
 
+    <div id="reincarnate-modal" class="modal hidden">
+        <div class="modal-content ice-theme">
+            <h2>Réincarnation</h2>
+            <p>Le Dinoz va retomber <strong>Niveau 1</strong> et perdre sa progression de grille.</p>
+            <p>En échange, répartissez <strong>5 points</strong> de bonus élémentaire :</p>
+
+            <div class="points-distributor">
+                <div class="points-remaining">Points restants : <span id="points-left">5</span></div>
+
+                <% const elements = ['fire', 'wood', 'water', 'lightning', 'air']; %>
+                <% const labels = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air']; %>
+                
+                <% elements.forEach((elem, index) => { %>
+                    <div class="distrib-row" data-element="<%= elem %>">
+                        <img src="/img/elements/<%= elem %>.webp" class="mini-icon">
+                        <span class="elem-name"><%= labels[index] %></span>
+                        
+                        <div class="counter-box">
+                            <button class="btn-mini" onclick="updatePoints('<%= elem %>', -1)">-</button>
+                            <span class="count-val" id="count-<%= elem %>">0</span>
+                            <button class="btn-mini" onclick="updatePoints('<%= elem %>', 1)">+</button>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" id="cancel-reincarnate">Annuler</button>
+                <button class="btn-confirm" id="confirm-reincarnate" disabled>Valider la Réincarnation</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+    // --- ETAT GLOBAL ---
+    let currentSelection = { row: null, col: null, cell: null };
+    let hasPDC = false;
+    
     document.addEventListener('DOMContentLoaded', () => {
+        // --- CHARGEMENT : On injecte les données de 'ups' ici ---
+        // Le <%- %> permet d'écrire le JSON brut directement dans le code JS
+        const savedData = <%- dino.ups ? JSON.stringify(dino.ups) : '{}' %>;
+        
+        // 1. On restaure la grille visuellement
+        restoreGrid(savedData);
+        
+        // 2. On lance le calcul du niveau et des verrous
         updateTableState(); 
     });
 
-    // 1. GESTION DU CLIC SUR UNE CASE (OUVRIR/FERMER MENU)
-    window.toggleMenu = function(cell) {
-        // Si la case est verrouillée, on ne fait rien
-        if (cell.classList.contains('cell-locked')) return;
+    // --- FONCTION RESTAURATION ---
+    function restoreGrid(data) {
+        // On parcourt chaque ligne sauvegardée
+        for (const [rowIndex, cols] of Object.entries(data)) {
+            // On cherche la ligne HTML correspondante (Attention aux index qui commencent à 1)
+            const row = document.querySelector(`tr[data-row-index="${rowIndex}"]`);
+            if (!row) continue;
 
-        // On ferme TOUS les autres menus d'abord
-        const allMenus = document.querySelectorAll('.cell-menu');
-        const currentMenu = cell.querySelector('.cell-menu');
-        
-        // Est-ce que ce menu était déjà ouvert ?
-        const wasOpen = currentMenu.classList.contains('visible');
-
-        // On ferme tout
-        allMenus.forEach(m => m.classList.remove('visible'));
-
-        // Si ce n'était pas ouvert, on l'ouvre
-        if (!wasOpen) {
-            currentMenu.classList.add('visible');
+            // On applique visuellement les choix
+            if (cols.col1) applyVisuals(row.querySelector('.col-1'), cols.col1);
+            if (cols.col2) applyVisuals(row.querySelector('.col-2'), cols.col2);
         }
-    };
+    }
 
-    // Fermer les menus si on clique ailleurs dans la page
-    document.addEventListener('click', function(event) {
-        // Si le clic n'est PAS dans une cellule de choix
-        if (!event.target.closest('.cell-choice')) {
-            document.querySelectorAll('.cell-menu').forEach(m => m.classList.remove('visible'));
-        }
-    });
-
-
-    // 2. SÉLECTIONNER UN ÉLÉMENT
-    window.selectElement = function(el, type) {
-        const cell = el.closest('.cell-choice');
+    // Petit utilitaire pour éviter de répéter le code visuel
+    function applyVisuals(cell, type) {
+        if (!cell || !type) return;
         const contentDiv = cell.querySelector('.cell-content');
         
-        // Nettoyage visuel
+        // On stocke la valeur
+        cell.dataset.value = type;
+        
+        // Nettoyage classes
         cell.className = cell.className.replace(/bg-\w+/g, "").trim(); 
         
-        // Stockage
-        cell.dataset.value = type;
-
-        // Mise à jour visuelle
+        // Application Style + Contenu
         if (type === 'pdc') {
             cell.classList.add('bg-pdc');
             contentDiv.innerHTML = `<span class="text-badge">PDC</span>`;
@@ -249,31 +286,81 @@
             cell.classList.add('bg-' + type);
             contentDiv.innerHTML = `<img src="/img/elements/${type}.webp" style="width:24px;">`;
         }
+    }
 
-        // On ferme le menu après choix
-        cell.querySelector('.cell-menu').classList.remove('visible');
+    // --- GESTION DU MENU (CLIC) ---
+    window.toggleMenu = function(cell) {
+        if (cell.classList.contains('cell-locked')) return;
 
-        // On lance le calcul
-        updateTableState();
+        const allMenus = document.querySelectorAll('.cell-menu');
+        const currentMenu = cell.querySelector('.cell-menu');
+        const wasOpen = currentMenu.classList.contains('visible');
+
+        allMenus.forEach(m => m.classList.remove('visible'));
+
+        if (!wasOpen) currentMenu.classList.add('visible');
     };
 
-    // 3. LOGIQUE SÉQUENTIELLE + PDC (Inchangée mais essentielle)
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.cell-choice')) {
+            document.querySelectorAll('.cell-menu').forEach(m => m.classList.remove('visible'));
+        }
+    });
+
+    // --- SÉLECTIONNER UN ÉLÉMENT + SAUVEGARDE ---
+    window.selectElement = function(el, type) {
+        const cell = el.closest('.cell-choice');
+        const row = cell.closest('tr');
+        
+        // Indices pour la sauvegarde
+        const rowIndex = row.dataset.rowIndex;
+        const colIndex = cell.classList.contains('col-1') ? 1 : 2;
+
+        // 1. Application Visuelle
+        applyVisuals(cell, type);
+
+        // 2. Fermer le menu
+        cell.querySelector('.cell-menu').classList.remove('visible');
+
+        // 3. Recalculer la logique (PDC, niveaux...)
+        updateTableState();
+
+        // 4. SAUVEGARDE SILENCIEUSE VERS LE SERVEUR
+        saveGridData(rowIndex, colIndex, type);
+    };
+
+    async function saveGridData(rowIndex, colIndex, value) {
+        try {
+            // On récupère l'ID du dino via EJS
+            const dinoId = "<%= dino.id %>"; 
+            
+            await fetch('/dinoz/update-grid', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ dinoId, rowIndex, colIndex, value })
+            });
+        } catch (err) {
+            console.error("Erreur sauvegarde", err);
+        }
+    }
+
+    // --- LOGIQUE SÉQUENTIELLE + PDC (INCHANGÉE) ---
     function updateTableState() {
         const rows = document.querySelectorAll('#progression-table tbody tr');
         let currentDinoLevel = 1; 
         let isRowUnlocked = true; 
-        
         let pdcRowIndex = -1; 
         
+        // Recherche de PDC
         rows.forEach((row, index) => {
             const val1 = row.querySelector('.col-1').dataset.value;
             const val2 = row.querySelector('.col-2').dataset.value;
-            
             if (pdcRowIndex === -1 && (val1 === 'pdc' || val2 === 'pdc')) {
                 pdcRowIndex = index;
             }
         });
 
+        // Application des états
         rows.forEach((row, index) => {
             const cell1 = row.querySelector('.col-1');
             const cell2 = row.querySelector('.col-2');
@@ -287,13 +374,8 @@
             } else {
                 cell2.classList.add('hidden');
                 if (pdcRowIndex === -1) th2.classList.add('hidden');
-                
-                // Si on recache, on vide la valeur (sauf si c'est vide)
-                if(cell2.dataset.value) {
-                    cell2.dataset.value = ""; 
-                    cell2.className = "cell-choice col-2 hidden"; 
-                    cell2.querySelector('.cell-content').innerHTML = '<span class="placeholder">-</span>';
-                }
+                // Si masqué, on ne vide PAS les données ici pour éviter de perdre la save serveur en cas de bug d'affichage
+                // On cache juste visuellement
             }
             
             if (isRowUnlocked) {
@@ -321,6 +403,7 @@
                 isRowUnlocked = false; 
             }
 
+            // Gestion boutons PDC
             const pdcBtns = row.querySelectorAll('.btn-pdc-item');
             pdcBtns.forEach(btn => {
                 const parentVal = btn.closest('.cell-choice').dataset.value;
@@ -342,52 +425,110 @@
     function lockCell(cell) { cell.classList.add('cell-locked'); }
     function unlockCell(cell) { cell.classList.remove('cell-locked'); }
 
-        // Utilitaires
-        function lockCell(cell) {
-            cell.classList.add('cell-locked');
-            cell.title = "Terminez le niveau précédent d'abord";
-        }
-        function unlockCell(cell) {
-            cell.classList.remove('cell-locked');
-            cell.title = "Cliquez pour choisir";
-        }
-        function resetCellClasses(cell) {
-            // Enlève bg-fire, bg-wood, etc.
-            cell.classList.remove('bg-fire', 'bg-wood', 'bg-water', 'bg-lightning', 'bg-air', 'bg-up', 'bg-pdc');
-        }
+    // (Code suppression inchangé)
+    const deleteBtn = document.querySelector('.delete-btn');
+    const deleteModal = document.getElementById('delete-modal');
+    if(deleteBtn) deleteBtn.addEventListener('click', () => deleteModal.classList.remove('hidden'));
+    const cancelBtn = document.getElementById('cancel-delete');
+    if(cancelBtn) cancelBtn.addEventListener('click', () => deleteModal.classList.add('hidden'));
 
-        // Fermer le popup si on clique ailleurs
-        document.addEventListener('click', (e) => {
-            const selector = document.getElementById('element-selector-popup');
-            if (!selector.classList.contains('hidden') && 
-                !e.target.closest('.cell-choice') && 
-                !e.target.closest('.element-selector')) {
-                selector.classList.add('hidden');
-            }
-        });
-    
-        // Script pour gérer l'ouverture/fermeture de la pop-up
-        const deleteBtn = document.querySelector('.delete-btn'); // Le bouton poubelle
-        const deleteModal = document.getElementById('delete-modal');
-        const cancelDelete = document.getElementById('cancel-delete');
-
-        // Attention : Vérifie que ton bouton poubelle a bien la classe 'delete-btn'
-        if(deleteBtn) {
-            deleteBtn.addEventListener('click', () => {
-                deleteModal.classList.remove('hidden');
-            });
-        }
-
-        if(cancelDelete) {
-            cancelDelete.addEventListener('click', () => {
-                deleteModal.classList.add('hidden');
-            });
-        }
+    // --- GESTION DU PANNEAU STATS ---
+    window.toggleStats = function() {
+        const content = document.getElementById('dino-stats-content');
+        const icon = document.getElementById('stats-icon');
         
-        // Fermer en cliquant à côté
-        deleteModal.addEventListener('click', (e) => {
-            if (e.target === deleteModal) deleteModal.classList.add('hidden');
+        // On bascule la classe 'hidden'
+        const isHidden = content.classList.toggle('hidden');
+        
+        // Petit bonus visuel : on change l'icône (Flèche bas / Flèche haut)
+        if (isHidden) {
+            icon.className = 'fas fa-chevron-down';
+        } else {
+            icon.className = 'fas fa-chevron-up';
+        }
+    };
+
+    // --- LOGIQUE RÉINCARNATION ---
+    let bonusStats = { fire: 0, wood: 0, water: 0, lightning: 0, air: 0 };
+    let pointsLeft = 5;
+
+    // 1. Ouvrir / Fermer la modale
+    const btnReincar = document.getElementById('btn-open-reincarnate');
+    const modalReincar = document.getElementById('reincarnate-modal');
+    const btnCancelReincar = document.getElementById('cancel-reincarnate');
+
+    if (btnReincar) {
+        btnReincar.addEventListener('click', () => {
+            modalReincar.classList.remove('hidden');
+            resetDistributor(); // Remise à zéro quand on ouvre
         });
-    </script>
+    }
+    
+    if (btnCancelReincar) {
+        btnCancelReincar.addEventListener('click', () => modalReincar.classList.add('hidden'));
+    }
+
+    // 2. Gestion des Compteurs (+/-)
+    window.updatePoints = function(element, change) {
+        // Si on veut ajouter mais qu'on n'a plus de points -> Stop
+        if (change === 1 && pointsLeft <= 0) return;
+        // Si on veut retirer mais qu'on est déjà à 0 -> Stop
+        if (change === -1 && bonusStats[element] <= 0) return;
+
+        // Mise à jour des valeurs
+        bonusStats[element] += change;
+        pointsLeft -= change;
+
+        // Mise à jour de l'affichage HTML
+        document.getElementById(`count-${element}`).innerText = bonusStats[element];
+        document.getElementById('points-left').innerText = pointsLeft;
+
+        // Gestion du bouton Valider (Actif seulement si 0 points restants)
+        const btnConfirm = document.getElementById('confirm-reincarnate');
+        if (pointsLeft === 0) {
+            btnConfirm.disabled = false;
+            btnConfirm.style.opacity = "1";
+        } else {
+            btnConfirm.disabled = true;
+            btnConfirm.style.opacity = "0.5";
+        }
+    };
+
+    function resetDistributor() {
+        bonusStats = { fire: 0, wood: 0, water: 0, lightning: 0, air: 0 };
+        pointsLeft = 5;
+        // Reset visuel
+        ['fire', 'wood', 'water', 'lightning', 'air'].forEach(el => {
+            document.getElementById(`count-${el}`).innerText = "0";
+        });
+        document.getElementById('points-left').innerText = "5";
+        document.getElementById('confirm-reincarnate').disabled = true;
+    }
+
+    // 3. Validation finale (Envoi au serveur)
+    document.getElementById('confirm-reincarnate').addEventListener('click', async () => {
+        try {
+            const dinoId = "<%= dino.id %>";
+            
+            const response = await fetch('/dinoz/reincarnate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    dinoId: dinoId,
+                    bonuses: bonusStats
+                })
+            });
+
+            if (response.ok) {
+                window.location.reload(); // On recharge pour voir le résultat
+            } else {
+                alert("Erreur lors de la réincarnation !");
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
+</script>
 </body>
 </html>

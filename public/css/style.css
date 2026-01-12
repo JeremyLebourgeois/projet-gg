@@ -469,6 +469,50 @@ button:hover {
     align-items: center;
 }
 
+/* --- LE FOND DE LA MODALE (Pour centrer la boîte) --- */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Fond sombre */
+    z-index: 2000; /* Très haut pour passer au-dessus de tout */
+    
+    /* LA MAGIE DU CENTRAGE : */
+    display: flex;
+    justify-content: center; /* Centre Horizontalement */
+    align-items: center;     /* Centre Verticalement */
+    
+    /* Si tu veux une petite animation d'apparition */
+    backdrop-filter: blur(5px);
+}
+.btn-mini {
+    background: #5F8693;
+    border: none;
+    color: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem; /* Ajuste la taille du symbole */
+    
+    /* CENTRAGE DU SYMBOLE À L'INTÉRIEUR */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;        /* Retire le "gras" inutile autour du texte */
+    line-height: 0;    /* Retire la hauteur de ligne qui décale le texte */
+    margin-top: -2px;  /* (Optionnel) Petite correction optique si besoin */
+}
+/* Pour les boutons qui sont dans le pop up de la reinca*/
+.btn-mini:hover {
+    background: #89cff0;
+    color: black;
+    transform: scale(1.1); /* Petit effet de zoom sympa */
+}
+
 .modal-box {
     background: rgba(12, 36, 61, 0.9);
     border: 2px solid #4fc3f7;
@@ -614,34 +658,84 @@ button:hover {
     /* CORRECTION 3 : Espace forcé sous la carte (donc sous l'image) avant les stats */
     margin-bottom: 30px; 
 }
-.dino-visual img { 
-    /* CORRECTION 2 (Sécurité) : L'image ne doit jamais dépasser son conteneur */
-    max-width: 100%; 
-    width: 140px; /* Taille idéale */
-    height: auto; 
-    display: block; 
-    margin: 0 auto; 
+/* --- AVATAR DINOZ (Page Détails) --- */
+
+.dino-avatar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.2); /* Fond sombre discret derrière l'image */
+    border-radius: 15px;
+    padding: 10px;
+    box-sizing: border-box; /* Important pour que le padding ne casse pas la largeur */
 }
+
+.dino-img {
+    max-width: 100%; /* L'image ne dépassera jamais la largeur de la colonne */
+    height: auto;    /* La hauteur s'adapte pour ne pas déformer l'image */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Ombre portée */
+    border: 2px solid rgba(137, 207, 240, 0.3); /* Bordure bleu glacier subtile */
+    
+    /* Optionnel : Si tu veux limiter la hauteur max aussi */
+    max-height: 400px; 
+    object-fit: contain;
+}
+
 .dino-header-info h2 { margin: 10px 0 5px; color: #444; font-size: 1.4rem; }
 .dino-header-info p { margin: 0; color: #D35400; font-weight: bold; }
 
-/* Le reste ne change pas, mais je te le remets pour être sûr de l'enchaînement */
+/* --- STATS PANEL (Adapté) --- */
 .stats-panel {
     background: #5F8693;
     width: 100%;
     border-radius: 15px;
     overflow: hidden;
     color: white;
-    min-height: 200px;
-    /* Pas de changement ici */
+    /* On enlève min-height pour que ça puisse se replier totalement */
+    /* min-height: 200px;  <-- Supprimé */ 
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
+
+/* Le titre devient un bouton cliquable */
 .stats-header {
-    background: #7F9EA9;
-    padding: 8px;
+    background: rgba(12, 36, 61, 0.6); /* Fond sombre bleuté de base */
+    padding: 10px;
     text-align: center;
     font-weight: bold;
+    cursor: pointer;          /* Curseur main */
+    user-select: none;        /* Empêche la sélection de texte */
+    transition: all 0.3s;     /* Animation douce */
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    letter-spacing: 2px;
 }
-.stats-content { padding: 15px; }
+
+/* Effet au survol (L'effet "Glace") */
+.stats-header:hover {
+    background: rgba(137, 207, 240, 0.4); /* Bleu glacier lumineux */
+    color: #fff;
+    text-shadow: 0 0 5px rgba(255,255,255,0.8);
+}
+
+/* Le contenu qui sera caché */
+.stats-content {
+    padding: 15px;
+    /* Transition fluide pour l'apparition (optionnel, sinon le display:none suffit) */
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Classe utilitaire (si tu ne l'as pas déjà tout en bas du fichier) */
+.hidden {
+    display: none !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 /* NOUVEAU : Alignement des 5 éléments */
 .stats-elements-row {
@@ -727,6 +821,65 @@ button:hover {
 
 .mode-buttons { display: flex; gap: 20px; margin-bottom: 20px; }
 
+/* --- MODALE RÉINCARNATION --- */
+.ice-theme {
+    background: rgba(12, 36, 61, 0.9);
+    border: 2px solid #89cff0;
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(137, 207, 240, 0.4);
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.points-remaining {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #f1c40f; /* Jaune doré pour attirer l'oeil */
+    margin-bottom: 15px;
+}
+
+.distrib-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 8px;
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+
+.mini-icon { width: 24px; height: 24px; margin-right: 10px; }
+.elem-name { flex-grow: 1; text-align: left; font-weight: bold; }
+
+.counter-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.count-val { font-weight: bold; width: 20px; text-align: center; }
+
+.btn-mini {
+    background: #5F8693;
+    border: none;
+    color: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-mini:hover { background: #89cff0; color: black; }
+
+/* Bouton valider désactivé */
+.btn-confirm:disabled {
+    background: #555;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
 
 .btn-ice {
     /* On reprend le dégradé bleu foncé du bouton Réincarner */
@@ -896,17 +1049,17 @@ button:hover {
 }
 
 /* --- STYLES DES VALEURS --- */
-.bg-fire { background-color: #ffcccc; color: #c0392b; }
-.bg-wood { background-color: #d5f5e3; color: #27ae60; }
-.bg-water { background-color: #d6eaf8; color: #2980b9; }
-.bg-lightning { background-color: #fcf3cf; color: #d4ac0d; }
-.bg-air { background-color: #ebf5fb; color: #5d6d7e; }
+.bg-fire { background-color: #c0392b; color: #c0392b; }
+.bg-wood { background-color: #27ae60; color: #27ae60; }
+.bg-water { background-color: #2980b9; color: #2980b9; }
+.bg-lightning { background-color: #d4ac0d; color: #d4ac0d; }
+.bg-air { background-color: #5d6d7e; color: #5d6d7e; }
 
 /* MODIFICATION : PDC reprend les couleurs de LIGHTNING (Foudre) */
 .bg-pdc { 
-    background-color: #fcf3cf; /* Fond jaune pâle */
-    color: #d4ac0d;            /* Texte doré */
-    border: 2px solid #f1c40f; /* Bordure jaune vif */
+    background-color: #d4ac0d; /* Fond jaune pâle */
+    color: black;            /* Texte doré */
+    /*border: 2px solid #f1c40f;  Bordure jaune vif */
 }
 
 .bg-up { 
@@ -925,13 +1078,6 @@ button:hover {
 
 .hidden { display: none !important; }
 
-.reincarnate-btn {
-    /* Hérite du style .btn-ice maintenant via le HTML, 
-       mais on garde la marge ici */
-    margin-top: 15px;
-    width: 100%;
-}
-
 /* --- COLONNE DROITE --- */
 .col-right { 
     flex-grow: 1; /* Prend tout l'espace restant */
@@ -940,13 +1086,7 @@ button:hover {
     align-items: center; 
 }
 
-/* --- BOUTON MES PLANS --- */
-.plans-header-btn {
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.plans-list { width: 100%; display: flex; flex-direction: column; gap: 15px; }
+.plans-list { width: 100%; display: flex; margin-top: 20px ; flex-direction: column; gap: 20px; }
 .plan-row { display: flex; align-items: center; gap: 10px; }
 .plan-icon {
     width: 50px; height: 50px;

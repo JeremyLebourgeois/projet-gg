@@ -293,6 +293,14 @@
             };
 
         });
+
+        window.addEventListener('pageshow', function(event) {
+            // Si la page est chargée depuis le cache (bouton précédent)
+            // OU si le navigateur garde la page en mémoire
+            if (event.persisted || performance.getEntriesByType("navigation")[0].type === 'back_forward') {
+                window.location.reload();
+            }
+        });
     </script>
 </body>
 </html>

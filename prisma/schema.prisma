@@ -57,14 +57,22 @@ model Dinoz {
 
   // Historique des ups (JSON)
   ups       Json? 
+
+  // Dinoz Récincarné ? -- 1 pour oui -- 0 pour non
+  isReincarnate   Int @default(0)
 }
 
 // Table de Référence des Compétences (L'arbre)
 model RefSkill {
   id          Int     @id @default(autoincrement())
   name        String  @unique
+  
+  // infos générales
   type        String? // "A", "E", "P", "C", "S"
   element     String? // "Feu", "Bois"...
+  energy      Int?    @default(0)
+  probability Int?    @default(0)
+  priority    Int?    @default(0)
   description String?
 
   // Relations inverses vers les Dinozs

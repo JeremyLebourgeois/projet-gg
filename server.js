@@ -4,8 +4,11 @@ const { PrismaClient } = require('@prisma/client');
 const session = require('express-session'); 
 const bcrypt = require('bcrypt');
 
+
 // 2. On configure le serveur
 const app = express();
+app.use(express.json()); // Indispensable pour lire les fetch() en JSON
+app.use(express.urlencoded({ extended: true })); // Indispensable pour lire les formulaires classiques
 const prisma = new PrismaClient();
 const PORT = 3000;
 
@@ -298,5 +301,138 @@ app.post('/dinozs/delete', async (req, res) => {
     } catch (error) {
         console.error("Erreur suppression :", error);
         res.redirect('/dinozs');
+    }
+});
+
+// --- API : Sauvegarder un choix de niveau (Grille + Calcul Niveau) ---
+app.post('/dinoz/update-grid', async (req, res) => {
+    if (!req.session.userId) return res.status(401).json({ error: "Non connecté" });
+
+    const { dinoId, rowIndex, colIndex, value } = req.body;
+
+    try {
+        // 1. Récupérer le dinoz
+        const dino = await prisma.dinoz.findUnique({
+            where: { id: parseInt(dinoId) }
+        });
+
+        if (!dino || dino.userId !== req.session.userId) {
+            return res.status(403).json({ error: "Interdit" });
+        }
+
+        // 2. Mise à jour de l'objet JSON (Grille)
+        let gridData = dino.ups || {}; 
+
+        if (!gridData[rowIndex]) {
+            gridData[rowIndex] = {}; 
+        }
+        
+        if (value === "") {
+            delete gridData[rowIndex][`col${colIndex}`];
+            // Si la ligne est vide, on pourrait nettoyer l'objet ligne, mais ce n'est pas critique
+        } else {
+            gridData[rowIndex][`col${colIndex}`] = value;
+        }
+
+        // --- 3. NOUVEAU : CALCUL DU NIVEAU CÔTÉ SERVEUR ---
+        let newLevel = 1; // Niveau de base
+        let pdcRowIndex = -1;
+
+        // A. On cherche où est "PDC" dans les données
+        for (const [rIdx, cols] of Object.entries(gridData)) {
+            if (cols.col1 === 'pdc' || cols.col2 === 'pdc') {
+                const idx = parseInt(rIdx);
+                // On garde l'index le plus petit (le premier PDC trouvé)
+                if (pdcRowIndex === -1 || idx < pdcRowIndex) {
+                    pdcRowIndex = idx;
+                }
+            }
+        }
+
+        // B. On compte les niveaux séquentiellement (comme sur le frontend)
+        // On boucle de la ligne 1 jusqu'à 80 (ou plus si nécessaire)
+        for (let i = 1; i < 80; i++) {
+            const rowKey = i.toString(); // Les clés JSON sont des strings "1", "2"...
+            const rowData = gridData[rowKey];
+
+            // Si la ligne n'existe pas encore dans les données, on arrête le comptage
+            if (!rowData) break;
+
+            const val1 = rowData.col1;
+            const val2 = rowData.col2;
+
+            // Règle PDC : Si on est APRÈS la ligne où PDC a été pris, il faut les 2 colonnes
+            const needCol2 = (pdcRowIndex !== -1 && i > pdcRowIndex);
+            
+            let isRowComplete = false;
+
+            if (needCol2) {
+                // Avec PDC actif : il faut col1 ET col2
+                if (val1 && val2) isRowComplete = true;
+            } else {
+                // Sans PDC (ou avant PDC) : il suffit de col1
+                if (val1) isRowComplete = true;
+            }
+
+            if (isRowComplete) {
+                newLevel++;
+            } else {
+                // Si une ligne n'est pas finie, on arrête de compter (le niveau est bloqué ici)
+                break;
+            }
+        }
+
+        // 4. Sauvegarde complète (Grille + Niveau)
+        await prisma.dinoz.update({
+            where: { id: parseInt(dinoId) },
+            data: { 
+                ups: gridData,
+                level: newLevel // <--- C'est ça qui mettra à jour l'affichage partout !
+            }
+        });
+
+        res.json({ success: true, level: newLevel });
+
+    } catch (error) {
+        console.error("Erreur save grid:", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+// --- API : RÉINCARNATION ---
+app.post('/dinoz/reincarnate', async (req, res) => {
+    if (!req.session.userId) return res.status(401).json({ error: "Non connecté" });
+
+    const { dinoId, bonuses } = req.body;
+
+    try {
+        // 1. Vérifions que le dino appartient bien au joueur
+        const dino = await prisma.dinoz.findUnique({ where: { id: parseInt(dinoId) } });
+        if (!dino || dino.userId !== req.session.userId) {
+            return res.status(403).json({ error: "Interdit" });
+        }
+
+        // 2. Mise à jour massive
+        await prisma.dinoz.update({
+            where: { id: parseInt(dinoId) },
+            data: {
+                level: 1,              // Retour niveau 1
+                isReincarnate: 1,      // Marqué comme réincarné
+                ups: {},               // ON VIDE LA GRILLE (Important !)
+                
+                // On AJOUTE les bonus aux stats existantes
+                statFire: { increment: bonuses.fire },
+                statWood: { increment: bonuses.wood },
+                statWater: { increment: bonuses.water },
+                statBolt: { increment: bonuses.lightning }, // Attention: 'statBolt' dans ta DB, 'lightning' dans le JS
+                statAir: { increment: bonuses.air }
+            }
+        });
+
+        res.json({ success: true });
+
+    } catch (error) {
+        console.error("Erreur réincarnation:", error);
+        res.status(500).json({ error: "Erreur serveur" });
     }
 });

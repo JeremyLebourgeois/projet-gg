@@ -1,0 +1,3799 @@
+[
+  {
+    "id": 11101,
+    "name": "GriffesEnflammees",
+    "type": "P",
+    "element": "Feu",
+    "parents": [],
+    "description": "Augmente la puissance de tous les **assauts** de Feu de 7",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11102,
+    "name": "Colere",
+    "type": "E",
+    "element": "Feu",
+    "parents": [],
+    "description": "Augmente la puissance du prochain assaut de 25%",
+    "probability": 20,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 11103,
+    "name": "Force",
+    "type": "P",
+    "element": "Feu",
+    "parents": [],
+    "description": "Augmente la puissance de tous les **assauts** de 1",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11104,
+    "name": "Brasero",
+    "type": "E",
+    "element": "Feu",
+    "parents": [],
+    "description": "Attaque tous les ennemis avec un pouvoir Feu de 3",
+    "probability": 25,
+    "priority": 1,
+    "energy": 30
+  },
+  {
+    "id": 11201,
+    "name": "SouffleArdent",
+    "type": "A",
+    "element": "Feu",
+    "parents": [
+      11101
+    ],
+    "description": "Attaque tous les ennemis avec un pouvoir de Feu 5",
+    "probability": 10,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 11202,
+    "name": "Charge",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11103
+    ],
+    "description": "Augmente la puissance du premier assaut de 5",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11203,
+    "name": "SangChaud",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11102
+    ],
+    "description": "Augmente l'initiative de 4",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11204,
+    "name": "Furie",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11102
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de 3 et diminue toutes les **défenses** de 2",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11205,
+    "name": "ChasseurDeGoupignon",
+    "type": "C",
+    "element": "Feu",
+    "parents": [
+      11101
+    ],
+    "description": "Permet au Dinoz de chasser des petits animaux dans certains lieux",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11206,
+    "name": "ArtsMartiaux",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11103
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de 2",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11207,
+    "name": "Detonation",
+    "type": "E",
+    "element": "Feu",
+    "parents": [
+      11104
+    ],
+    "description": "Le Dinoz perd 5 PV et gagne 15 d'initiative",
+    "probability": 10,
+    "priority": 1,
+    "energy": 60
+  },
+  {
+    "id": 11208,
+    "name": "PropulsionDivine",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11103
+    ],
+    "description": "Augmente la vitesse des attaques Feu de 30%. Réduit l'élément Feu de 2.",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11301,
+    "name": "Vigilance",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11206
+    ],
+    "description": "Augmente la défense Feu de 5",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11302,
+    "name": "CoeurArdent",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11203
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de Feu de 12 et augmente le maximum de points de vie de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11303,
+    "name": "CouleeDeLave",
+    "type": "A",
+    "element": "Feu",
+    "parents": [
+      11205
+    ],
+    "description": "Attaque un ennemi avec un pouvoir de Feu 12",
+    "probability": 5,
+    "priority": 8,
+    "energy": 25
+  },
+  {
+    "id": 11304,
+    "name": "Sieste",
+    "type": "A",
+    "element": "Feu",
+    "parents": [
+      11203
+    ],
+    "description": "Le Dinoz regagne jusqu'à 20 points de vie et s'endort",
+    "probability": 5,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 11305,
+    "name": "Kamikaze",
+    "type": "A",
+    "element": "Feu",
+    "parents": [
+      11202
+    ],
+    "description": "Attaque un ennemi avec un pouvoir de Feu 15 puis le Dinoz perd la moitié de sa vie",
+    "probability": 5,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 11306,
+    "name": "ChasseurDeGeant",
+    "type": "C",
+    "element": "Feu",
+    "parents": [
+      11205
+    ],
+    "description": "Permet au Dinoz de chasser des animaux moyens dans certains lieux",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11307,
+    "name": "BouleDeFeu",
+    "type": "A",
+    "element": "Feu",
+    "parents": [
+      11201
+    ],
+    "description": "Attaque un ennemi avec un pouvoir de Feu 7",
+    "probability": 15,
+    "priority": 2,
+    "energy": 20
+  },
+  {
+    "id": 11308,
+    "name": "Waikikido",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11206
+    ],
+    "description": "Augmente les chances de contre-attaque de 10% et le maximum de points de vie de 20. Diminue l'initiative du Dinoz de 5",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11309,
+    "name": "AuraIncandescente",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11204
+    ],
+    "description": "Augmente l'élément Feu de 2",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11310,
+    "name": "Vengeance",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11204
+    ],
+    "description": "Augmente les chances de contre-attaque de 5%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11311,
+    "name": "Combustion",
+    "type": "E",
+    "element": "Feu",
+    "parents": [
+      11201
+    ],
+    "description": "Tous les ennemis perdent des points de vie égaux à leur élément Bois (soumis équilibrage)",
+    "probability": 10,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 11312,
+    "name": "PaumeChalumeau",
+    "type": "A",
+    "element": "Feu",
+    "parents": [
+      11206
+    ],
+    "description": "Attaque un ennemi avec un pouvoir de Feu 10 puis diminue l'initiative du Dinoz de 15",
+    "probability": 15,
+    "priority": 2,
+    "energy": 20
+  },
+  {
+    "id": 11313,
+    "name": "CoeurDuPhenix",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11207
+    ],
+    "description": "Augmente le nombre de PV récupérés lors du repos de 15%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 75
+  },
+  {
+    "id": 11314,
+    "name": "Bouddha",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      41201,
+      11206,
+      51309,
+      61121
+    ],
+    "description": "Renforce la défense dans chaque élément de 10 points pour toute l'équipe",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 11315,
+    "name": "GriffesInfernales",
+    "type": "S",
+    "element": "Feu",
+    "parents": [
+      11208
+    ],
+    "description": "Enflamme l'adversaire et lui inflige des dégâts de Feu à chaque tour, basés sur la valeur de son élément Feu",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11401,
+    "name": "ChasseurDeDragon",
+    "type": "C",
+    "element": "Feu",
+    "parents": [
+      11306
+    ],
+    "description": "Permet au Dinoz de chasser des animaux très rares et dangereux dans certains lieux",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11402,
+    "name": "Belier",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11305
+    ],
+    "description": "Augmente la puissance du premier assaut de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11403,
+    "name": "Torche",
+    "type": "S",
+    "element": "Feu",
+    "parents": [
+      11311
+    ],
+    "description": "Le Dinoz s'enflamme et perd 1 PV par tour. Les ennemis attaquant le Dinoz en mêlée subissent des dégâts relatifs à l'élément Feu du Dinoz enflammé soumis à équilibrage.",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11404,
+    "name": "SelfControl",
+    "type": "S",
+    "element": "Feu",
+    "parents": [
+      11304
+    ],
+    "description": "Immunise le Dinoz contre tous les effets négatifs et diminue son initiative de 3",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11405,
+    "name": "Sprint",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      11305,
+      41303,
+      61119
+    ],
+    "description": "Augmente l'initiative de 6",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11406,
+    "name": "Vendetta",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      11310,
+      51306,
+      61119
+    ],
+    "description": "Augmente les chances de contre-attaque de 20%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11407,
+    "name": "Meteores",
+    "type": "A",
+    "element": "Feu",
+    "parents": [
+      11309
+    ],
+    "description": "Attaque tous les ennemis avec un pouvoir de Feu 10",
+    "probability": 7,
+    "priority": 4,
+    "energy": 35
+  },
+  {
+    "id": 11408,
+    "name": "ChefDeGuerre",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      11301
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de tous les Dinoz du Groupe de 2",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11409,
+    "name": "ArmureDeBasalte",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      11308,
+      21303,
+      61119
+    ],
+    "description": "Augmente l'armure de 15%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11410,
+    "name": "MaitreElementaire",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      11311,
+      31301,
+      61119
+    ],
+    "description": "Augmente les éléments Eau et Feu de 2",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 11411,
+    "name": "Salamandre",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      31305,
+      11312,
+      61121
+    ],
+    "description": "Attaque un ennemi avec une invocation de Feu 30",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 11412,
+    "name": "Vulcain",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      11303,
+      41310,
+      61121
+    ],
+    "description": "Attaque tous les ennemis avec une invocation de Feu 20",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 11413,
+    "name": "ArmureDIfrit",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      11307,
+      21311,
+      61121
+    ],
+    "description": "Augmente la défense des alliés contre le Feu de 20",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 11501,
+    "name": "Brave",
+    "type": "S",
+    "element": "Feu",
+    "parents": [
+      11404
+    ],
+    "description": "Le Dinoz ne pourra plus faire partie d'un Groupe. Augmente l'élément Feu de 6, le maximum de vie de 50 et la vitesse de 15%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 12101,
+    "name": "ProteinesDinozienne",
+    "type": "P",
+    "element": "Feu",
+    "parents": [],
+    "description": "Augmente l'endurance du Dinoz de 30%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 12201,
+    "name": "Extenuation",
+    "type": "A",
+    "element": "Feu",
+    "parents": [
+      12101
+    ],
+    "description": "Diminue de 25% la capacité de récupération d'un adversaire",
+    "probability": 15,
+    "priority": 4,
+    "energy": 20
+  },
+  {
+    "id": 12202,
+    "name": "Rouge",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      12101
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de 20 lorsque le Dinoz se trouve au Grand-tout-chaud",
+    "probability": 10,
+    "priority": 7,
+    "energy": 0
+  },
+  {
+    "id": 12301,
+    "name": "CarapaceDeMagma",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      12201
+    ],
+    "description": "Augmente le maximum de points de vie de 30 et la puissance des **assauts** Feu de 5",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 12302,
+    "name": "CriDeGuerre",
+    "type": "A",
+    "element": "Feu",
+    "parents": [
+      12202
+    ],
+    "description": "Le Dinoz lancera sa compétence A la plus puissante au prochain tour",
+    "probability": 10,
+    "priority": 7,
+    "energy": 25
+  },
+  {
+    "id": 12401,
+    "name": "FievreBrulante",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      12301
+    ],
+    "description": "Augmente les chances de multi-coups de 30%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 12402,
+    "name": "BenedictionDArtemis",
+    "type": "S",
+    "element": "Feu",
+    "parents": [
+      12301
+    ],
+    "description": "Permet de chasser dans une case supplémentaire",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 12403,
+    "name": "Joker",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      12302
+    ],
+    "description": "Augmente ou diminue (50/50) la vitesse du Dinoz de 25% au début d'un combat",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 12404,
+    "name": "ArmureDeFeu",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      12302
+    ],
+    "description": "Augmente la défense contre le Bois de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 12501,
+    "name": "PaysDeCendre",
+    "type": "E",
+    "element": "Feu",
+    "parents": [
+      12401
+    ],
+    "description": "Les Dinoz (alliés et ennemis) avec un élément Feu inférieur à 10 ne pourront plus utiliser de compétences A et E durant les 3 prochains tours du lanceur",
+    "probability": 20,
+    "priority": 3,
+    "energy": 35
+  },
+  {
+    "id": 12502,
+    "name": "ReceptacleRocheux",
+    "type": "A",
+    "element": "Feu",
+    "parents": [
+      12402
+    ],
+    "description": "Annule les compétences sphériques A et E de type Bois sur un Dinoz",
+    "probability": 15,
+    "priority": 7,
+    "energy": 35
+  },
+  {
+    "id": 12503,
+    "name": "PlumesDePhoenix",
+    "type": "E",
+    "element": "Feu",
+    "parents": [
+      12402
+    ],
+    "description": "Le Dinoz est ramené une fois à la vie avec 12 PV et gagne +10 en vitesse et en initiative, mais ne peut plus se régénérer",
+    "probability": 0,
+    "priority": 0,
+    "energy": 20
+  },
+  {
+    "id": 12504,
+    "name": "AcclamationFraternelle",
+    "type": "A",
+    "element": "Feu",
+    "parents": [
+      12402
+    ],
+    "description": "Augmente la récupération d'énergie de tous les Dinoz de 30%",
+    "probability": 15,
+    "priority": 6,
+    "energy": 20
+  },
+  {
+    "id": 12505,
+    "name": "PoingDeFeu",
+    "type": "P",
+    "element": "Feu",
+    "parents": [
+      12404
+    ],
+    "description": "Augmente de 20 la puissance des **assauts** Feu",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21101,
+    "name": "Carapace",
+    "type": "P",
+    "element": "Bois",
+    "parents": [],
+    "description": "Augmente l'armure de 5%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21102,
+    "name": "Sauvagerie",
+    "type": "P",
+    "element": "Bois",
+    "parents": [],
+    "description": "Augmente la puissance des **assauts** de Bois de 5",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21103,
+    "name": "Endurance",
+    "type": "P",
+    "element": "Bois",
+    "parents": [],
+    "description": "Augmente la défense Bois de 2",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21104,
+    "name": "LanceurDeGland",
+    "type": "A",
+    "element": "Bois",
+    "parents": [],
+    "description": "Lance un gland sur un ennemi avec un pouvoir Bois de 5",
+    "probability": 15,
+    "priority": 3,
+    "energy": 25
+  },
+  {
+    "id": 21201,
+    "name": "Vignes",
+    "type": "E",
+    "element": "Bois",
+    "parents": [
+      21101
+    ],
+    "description": "Diminue l'initiative d'un ennemi au sol de 15",
+    "probability": 20,
+    "priority": 2,
+    "energy": 20
+  },
+  {
+    "id": 21202,
+    "name": "RenfortsKorgon",
+    "type": "E",
+    "element": "Bois",
+    "parents": [
+      21102
+    ],
+    "description": "Appelle un korgon pour aider à combattre",
+    "probability": 15,
+    "priority": 3,
+    "energy": 30
+  },
+  {
+    "id": 21203,
+    "name": "Sympathique",
+    "type": "S",
+    "element": "Bois",
+    "parents": [
+      21101
+    ],
+    "description": "Le Dinoz peut être suivi par un Dinoz supplémentaire",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21204,
+    "name": "Tenacite",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      21102
+    ],
+    "description": "Augmente le minimum de dégâts de 1",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21205,
+    "name": "Fouille",
+    "type": "C",
+    "element": "Bois",
+    "parents": [
+      21103
+    ],
+    "description": "Permet au Dinoz de trouver des artefacts dans certains lieux",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21206,
+    "name": "Croissance",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      21103
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de 1 et augmente le maximum de points de vie de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21207,
+    "name": "Gratteur",
+    "type": "C",
+    "element": "Bois",
+    "parents": [
+      21104
+    ],
+    "description": "Permet au Dinoz de chercher une case supplémentaire",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21301,
+    "name": "EtatPrimal",
+    "type": "E",
+    "element": "Bois",
+    "parents": [
+      21201
+    ],
+    "description": "Annule tous les statuts positifs des ennemis et tous les statuts négatifs des alliés",
+    "probability": 10,
+    "priority": 3,
+    "energy": 20
+  },
+  {
+    "id": 21302,
+    "name": "Detective",
+    "type": "C",
+    "element": "Bois",
+    "parents": [
+      21205
+    ],
+    "description": "Permet au Dinoz de chercher des artefacts rares à certains endroits",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21303,
+    "name": "Cocon",
+    "type": "S",
+    "element": "Bois",
+    "parents": [
+      21206
+    ],
+    "description": "Augmente de 2 les PV récupérés par heure lors du repos",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21304,
+    "name": "InstinctSauvage",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      21202
+    ],
+    "description": "Augmente de 2 l'élément Bois",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21305,
+    "name": "LargeMachoire",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      21206
+    ],
+    "description": "Augmente la puissance des **assauts** de Bois de 15",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21306,
+    "name": "Acrobate",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      21202
+    ],
+    "description": "Augmente la vitesse du Dinoz de 15%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21307,
+    "name": "PrintempsPrecoce",
+    "type": "E",
+    "element": "Bois",
+    "parents": [
+      21201
+    ],
+    "description": "Tous les autres combattants alliés regagnent jusqu'à autant de points de vie que l'élément Bois du Dinoz",
+    "probability": 10,
+    "priority": 2,
+    "energy": 20
+  },
+  {
+    "id": 21308,
+    "name": "Charisme",
+    "type": "S",
+    "element": "Bois",
+    "parents": [
+      21204
+    ],
+    "description": "Le Dinoz peut être suivi par un Dinoz supplémentaire",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21309,
+    "name": "ResistanceALaMagie",
+    "type": "E",
+    "element": "Bois",
+    "parents": [
+      21204
+    ],
+    "description": "Annule tous les effets négatifs de ce Dinoz",
+    "probability": 50,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 21310,
+    "name": "Planificateur",
+    "type": "C",
+    "element": "Bois",
+    "parents": [
+      21203
+    ],
+    "description": "Permet au Dinoz de chercher une case supplémentaire",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21311,
+    "name": "HeritageFaroe",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      21203
+    ],
+    "description": "Augmente la puissance des **assauts** Bois de 12 et l'armure de 10%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21312,
+    "name": "ExpertEnFouille",
+    "type": "C",
+    "element": "Bois",
+    "parents": [
+      21205
+    ],
+    "description": "Permet au Dinoz de chercher une case de plus lors d'une action de fouille",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21313,
+    "name": "GrosseBeigne",
+    "type": "E",
+    "element": "Bois",
+    "parents": [
+      21207
+    ],
+    "description": "Double la puissance du prochain assaut",
+    "probability": 10,
+    "priority": 4,
+    "energy": 45
+  },
+  {
+    "id": 21401,
+    "name": "EspritGorilloz",
+    "type": "E",
+    "element": "Bois",
+    "parents": [
+      21311
+    ],
+    "description": "Appelle un esprit Gorilloz pour aider à combattre",
+    "probability": 20,
+    "priority": 4,
+    "energy": 40
+  },
+  {
+    "id": 21402,
+    "name": "Leader",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      21308
+    ],
+    "description": "Augmente le nombre maximum de Dinoz actifs de 3 (non cumulable)",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21403,
+    "name": "Ingenieur",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      21304
+    ],
+    "description": "Tous les Dinoz débloquent un emplacement d'équipement supplémentaire (non cumulable)",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21404,
+    "name": "Geant",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      21303
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de 5, augmente le maximum de points de vie de 30 et diminue la vitesse de 20%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21405,
+    "name": "GardeForestier",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      21307
+    ],
+    "description": "Augmente de 3 la défense Bois de tous les Dinoz du groupe",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21406,
+    "name": "Archeologue",
+    "type": "C",
+    "element": "Bois",
+    "parents": [
+      21302
+    ],
+    "description": "Permet au Dinoz de trouver des artefacts rares ou exceptionnels à certains endroits",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21407,
+    "name": "BenedictionDesFees",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      11302,
+      21301,
+      61121
+    ],
+    "description": "Ajoute 10 points d'initiative à tous les Dinoz de l'équipe",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 21408,
+    "name": "Choc",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      21301,
+      41306,
+      61119
+    ],
+    "description": "Ajoute la valeur de l'élément Bois sur les **assauts** Foudre, et vice-versa",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 21409,
+    "name": "LoupGarou",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      21304,
+      51311,
+      61121
+    ],
+    "description": "Attaque tous les ennemis avec une invocation de Bois 30",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 21501,
+    "name": "Colosse",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      21404
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de 15, augmente le maximum de points de vie de 30 et diminue la vitesse de 20%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 22101,
+    "name": "OxygenationMusculaire",
+    "type": "P",
+    "element": "Bois",
+    "parents": [],
+    "description": "Augmente l'endurance du Dinoz de 20%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 22102,
+    "name": "Vert",
+    "type": "P",
+    "element": "Bois",
+    "parents": [],
+    "description": "Augmente la puissance de tous les **assauts** de 20 quand le Dinoz se trouve dans la Forêt de Grumhel",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 22201,
+    "name": "SourceDeVie",
+    "type": "S",
+    "element": "Bois",
+    "parents": [
+      22101
+    ],
+    "description": "Si un assaut touche le Dinoz, il peut absorber jusqu'à 5% de la vie de son adversaire",
+    "probability": 0,
+    "priority": 0,
+    "energy": 20
+  },
+  {
+    "id": 22202,
+    "name": "VideEnergetique",
+    "type": "S",
+    "element": "Bois",
+    "parents": [
+      22101
+    ],
+    "description": "Diminue de 15% la capacité de récupération d’un adversaire lors d'un assaut",
+    "probability": 0,
+    "priority": 0,
+    "energy": 20
+  },
+  {
+    "id": 22203,
+    "name": "BouclierDinoz",
+    "type": "E",
+    "element": "Bois",
+    "parents": [
+      22102
+    ],
+    "description": "Protège le Dinoz avec le moins de PV en prenant les dégâts à sa place pendant la durée du combat",
+    "probability": 10,
+    "priority": 9,
+    "energy": 20
+  },
+  {
+    "id": 22204,
+    "name": "AcideLactique",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      22102
+    ],
+    "description": "Diminue l'endurance du Dinoz de 15%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 22301,
+    "name": "LancerDeRoche",
+    "type": "A",
+    "element": "Bois",
+    "parents": [
+      22201
+    ],
+    "description": "Propulse un rocher sur l'ennemi avec un pouvoir Bois de 10",
+    "probability": 10,
+    "priority": 7,
+    "energy": 35
+  },
+  {
+    "id": 22302,
+    "name": "Courbatures",
+    "type": "E",
+    "element": "Bois",
+    "parents": [
+      22202
+    ],
+    "description": "Diminue l'énergie maximale d'un adversaire de 30%",
+    "probability": 10,
+    "priority": 5,
+    "energy": 20
+  },
+  {
+    "id": 22303,
+    "name": "ForceControl",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      22203
+    ],
+    "description": "Le Dinoz inflige au minimum 10 points de dégâts lors d'un assaut",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 22304,
+    "name": "PeauDeFer",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      22204
+    ],
+    "description": "Augmente les PV max de 50",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 22401,
+    "name": "Champollion",
+    "type": "S",
+    "element": "Bois",
+    "parents": [
+      22301
+    ],
+    "description": "Permet au Dinoz de chercher une fois de plus lors d'une action de fouille",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 22402,
+    "name": "CourantDeVie",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      22302
+    ],
+    "description": "Augmente les **défenses** Eau de 20 et les **assauts** Bois de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 22403,
+    "name": "Berserk",
+    "type": "E",
+    "element": "Bois",
+    "parents": [
+      22303
+    ],
+    "description": "Double la puissance des **assauts**, mais empêche l'utilisation des compétences A et E pendant toute la durée du combat",
+    "probability": 10,
+    "priority": 8,
+    "energy": 20
+  },
+  {
+    "id": 22404,
+    "name": "RiviereDeVie",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      22304
+    ],
+    "description": "Augmente l'initiative du Dinoz de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 22501,
+    "name": "MurDeBoue",
+    "type": "A",
+    "element": "Bois",
+    "parents": [
+      22401
+    ],
+    "description": "Absorbe jusqu'à 30 points de dégâts avant de disparaître. Est vulnérable à Rayon Kaar-Sher.",
+    "probability": 5,
+    "priority": 8,
+    "energy": 45
+  },
+  {
+    "id": 22503,
+    "name": "Sharignan",
+    "type": "E",
+    "element": "Bois",
+    "parents": [
+      22402
+    ],
+    "description": "Copie une compétence utilisée par l'adversaire et la conserve pendant toute la durée du combat",
+    "probability": 0,
+    "priority": 0,
+    "energy": 45
+  },
+  {
+    "id": 22504,
+    "name": "Amazonie",
+    "type": "A",
+    "element": "Bois",
+    "parents": [
+      22403
+    ],
+    "description": "Tous les Dinoz (alliés et ennemis) avec un élément Bois inférieur à 10 ne pourront plus utiliser de compétences A et E pendant les 3 prochains tours du lanceur à moins qu'ils ne subissent plus de 10 points de dégâts",
+    "probability": 20,
+    "priority": 3,
+    "energy": 40
+  },
+  {
+    "id": 22505,
+    "name": "ReceptacleAqueux",
+    "type": "A",
+    "element": "Bois",
+    "parents": [
+      22404
+    ],
+    "description": "Annule les compétences sphériques A de type Eau",
+    "probability": 15,
+    "priority": 7,
+    "energy": 50
+  },
+  {
+    "id": 31101,
+    "name": "CanonAEau",
+    "type": "A",
+    "element": "Eau",
+    "parents": [],
+    "description": "Attaque un ennemi avec un pouvoir Eau de 6",
+    "probability": 25,
+    "priority": 1,
+    "energy": 5
+  },
+  {
+    "id": 31102,
+    "name": "Perception",
+    "type": "P",
+    "element": "Eau",
+    "parents": [],
+    "description": "Augmente la puissance de tous les **assauts** Eau de 4, et permet au Dinoz d'annuler l'effet intangible à chaque assaut. Annule également l'effet des compétences coup sournois et coup fatal.",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31103,
+    "name": "Mutation",
+    "type": "P",
+    "element": "Eau",
+    "parents": [],
+    "description": "Augmente les PV max de 30",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31104,
+    "name": "Vitalite",
+    "type": "P",
+    "element": "Eau",
+    "parents": [],
+    "description": "Augmente les PV max de 10",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31201,
+    "name": "Gel",
+    "type": "A",
+    "element": "Eau",
+    "parents": [
+      31101
+    ],
+    "description": "Attaque un ennemi avec un pouvoir Eau de 5. L'ennemi est ensuite ralenti.",
+    "probability": 10,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 31202,
+    "name": "DoucheEcossaise",
+    "type": "E",
+    "element": "Eau",
+    "parents": [
+      31101
+    ],
+    "description": "Attaque tous les ennemis avec un pouvoir Eau de 2",
+    "probability": 40,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 31203,
+    "name": "CoupsSournois",
+    "type": "A",
+    "element": "Eau",
+    "parents": [
+      31102
+    ],
+    "description": "Attaque un ennemi. En cas de réussite l'ennemi perd la moitié de ses points de vie (soumis à équilibrage) s'il n'a pas la compétence perception. Note : ne fonctionne pas sur les boss.",
+    "probability": 7,
+    "priority": 3,
+    "energy": 20
+  },
+  {
+    "id": 31204,
+    "name": "ApprentiPecheur",
+    "type": "C",
+    "element": "Eau",
+    "parents": [
+      31102
+    ],
+    "description": "Permet au Dinoz de pêcher de petits poissons à certains endroits",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31205,
+    "name": "PocheVentrale",
+    "type": "S",
+    "element": "Eau",
+    "parents": [
+      31103
+    ],
+    "description": "Déverrouille un emplacement d'équipement supplémentaire",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31206,
+    "name": "KarateSousMarin",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      31103
+    ],
+    "description": "Augmente la puissance de tous les **assauts** et **pouvoirs** d'Eau de 10",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31207,
+    "name": "EcaillesLuminescentes",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      31103
+    ],
+    "description": "Augmente l'armure de 10%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31208,
+    "name": "MoignonsLiquides",
+    "type": "A",
+    "element": "Eau",
+    "parents": [
+      31104
+    ],
+    "description": "Diminue l'initiative d'un ennemi de 25",
+    "probability": 8,
+    "priority": 4,
+    "energy": 75
+  },
+  {
+    "id": 31301,
+    "name": "ZeroAbsolu",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      31201
+    ],
+    "description": "Augmente la défense contre le Feu de 25",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31302,
+    "name": "Petrification",
+    "type": "A",
+    "element": "Eau",
+    "parents": [
+      31201
+    ],
+    "description": "Pétrifie un ennemi pour une durée moyenne, il ne peut plus agir mais son armure augmente de 50%",
+    "probability": 10,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 31303,
+    "name": "Acupuncture",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      31202
+    ],
+    "description": "Régénère 1 PV par tour, les assaillants en mêlée prennent 1 point de dégât.",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31304,
+    "name": "Sapeur",
+    "type": "S",
+    "element": "Eau",
+    "parents": [
+      31202
+    ],
+    "description": "Augmente la probabilité d'utilisation des équipements de 50%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31305,
+    "name": "CoupFatal",
+    "type": "A",
+    "element": "Eau",
+    "parents": [
+      31203
+    ],
+    "description": "Attaque un ennemi. S'il est touché, il perd tous ses points de vie (soumis à équilibrage) s'il n'a pas la compétence perception. Note : ne fonctionne pas sur les boss.",
+    "probability": 2,
+    "priority": 4,
+    "energy": 20
+  },
+  {
+    "id": 31306,
+    "name": "EntrainementSousMarin",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      31203
+    ],
+    "description": "Augmente les PV max de 10",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31307,
+    "name": "PecheurConfirme",
+    "type": "C",
+    "element": "Eau",
+    "parents": [
+      31204
+    ],
+    "description": "Permet au Dinoz de pêcher de gros poissons à certains endroits",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31308,
+    "name": "Marecage",
+    "type": "E",
+    "element": "Eau",
+    "parents": [
+      31204
+    ],
+    "description": "Ralentit tous les ennemis de 50% pour une durée moyenne",
+    "probability": 15,
+    "priority": 6,
+    "energy": 20
+  },
+  {
+    "id": 31309,
+    "name": "Sumo",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      31205
+    ],
+    "description": "Augmente les PV max de 100",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31310,
+    "name": "SansPitie",
+    "type": "S",
+    "element": "Eau",
+    "parents": [
+      31205
+    ],
+    "description": "Les **assauts** ciblent l'ennemi avec le moins de PV",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31311,
+    "name": "CloneAqueux",
+    "type": "E",
+    "element": "Eau",
+    "parents": [
+      31206
+    ],
+    "description": "Crée une copie du lanceur avec 1 PV. La copie hérite seulement des statistiques de bases du lanceur (attaque, défense, esquive, multi-coups, contre).",
+    "probability": 15,
+    "priority": 8,
+    "energy": 35
+  },
+  {
+    "id": 31312,
+    "name": "GriffesEmpoisonnees",
+    "type": "S",
+    "element": "Eau",
+    "parents": [
+      31206
+    ],
+    "description": "Si un **assaut** d'Eau du Dinoz touche un ennemi, il est empoisonné pour une durée moyenne et le poison inflige 14 dégâts",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31313,
+    "name": "Deluge",
+    "type": "A",
+    "element": "Eau",
+    "parents": [
+      31208
+    ],
+    "description": "Attaque tous les ennemis avec un pouvoir Eau de 10, et diminue leur initiative de 8",
+    "probability": 5,
+    "priority": 5,
+    "energy": 75
+  },
+  {
+    "id": 31314,
+    "name": "PeauDeSerpent",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      31207
+    ],
+    "description": "Augmente les chances d'esquive de 10%. Réduit la vitesse des attaques Eau de 15%.",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31401,
+    "name": "RayonKaarSher",
+    "type": "A",
+    "element": "Eau",
+    "parents": [
+      31302
+    ],
+    "description": "Attaque tous les ennemis avec un pouvoir Eau de 7",
+    "probability": 20,
+    "priority": 1,
+    "energy": 40
+  },
+  {
+    "id": 31402,
+    "name": "Magasinier",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      31304
+    ],
+    "description": "Augmente la capacité maximale de l'inventaire du joueur de 50% (non cumulable)",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31403,
+    "name": "EntrainementSousMarinAvance",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      31306
+    ],
+    "description": "Augmente les PV max de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31404,
+    "name": "MaitrePecheur",
+    "type": "C",
+    "element": "Eau",
+    "parents": [
+      31307
+    ],
+    "description": "Permet au Dinoz de pêcher des poissons rares et exceptionnels à certains endroits",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31405,
+    "name": "Cuisinier",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      31309
+    ],
+    "description": "Augmente le gain de PV des objets de 10% pour tous les Dinoz (non cumulable)",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31406,
+    "name": "SangAcide",
+    "type": "S",
+    "element": "Eau",
+    "parents": [
+      31312
+    ],
+    "description": "Les ennemis attaquant le Dinoz en mêlée ont une chance de subir des dégâts relatifs à l'élément Eau du Dinoz (soumis à équilibrage)",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31407,
+    "name": "Bulle",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      31304,
+      51312,
+      61119
+    ],
+    "description": "Enveloppe le Dinoz dans une bulle réduisant les dégâts des sorts élémentaux de type autre que le Bois. L'efficacité est basée sur la proportion des éléments Eau et Air devant les autres éléments.",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31408,
+    "name": "Increvable",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      31311,
+      21309,
+      61119
+    ],
+    "description": "Augmente toutes les défenses de 2",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31409,
+    "name": "Ondine",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      11310,
+      31310,
+      61121
+    ],
+    "description": "Attaque un ennemi avec un pouvoir Eau de 30",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 31501,
+    "name": "MaitreNageur",
+    "type": "S",
+    "element": "Eau",
+    "parents": [
+      31403
+    ],
+    "description": "Augmente l'élément Eau de 5",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 31502,
+    "name": "Leviathan",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      31406,
+      51206,
+      61121
+    ],
+    "description": "Attaque tous les ennemis avec une invocation d'Eau 20",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 32101,
+    "name": "EauDivine",
+    "type": "S",
+    "element": "Eau",
+    "parents": [],
+    "description": "Double les PV récupérés lors du repos",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 32201,
+    "name": "RadiationsGamma",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      32101
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de 5, le maximum de points de vie 30, et diminue l'initiative de 10",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 32202,
+    "name": "Bleu",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      32101
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de 20 lorsque le Dinoz est aux Îles Atlantéinées",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 32301,
+    "name": "MueAcqueuse",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      32201
+    ],
+    "description": "Augmente la défense contre la Foudre de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 32302,
+    "name": "CarapaceBlindee",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      32201
+    ],
+    "description": "Augmente l'armure de 50%, réduit la vitesse de 20%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 32303,
+    "name": "DieteChromatique",
+    "type": "E",
+    "element": "Eau",
+    "parents": [
+      32202
+    ],
+    "description": "Inflige le statut mono-élément à un ennemi (verrouille son élément actuel)",
+    "probability": 15,
+    "priority": 8,
+    "energy": 45
+  },
+  {
+    "id": 32401,
+    "name": "EffluveAphrodisiaque",
+    "type": "S",
+    "element": "Eau",
+    "parents": [
+      32301
+    ],
+    "description": "Le Dinoz peut être suivi par un Dinoz supplémentaire",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 32402,
+    "name": "Nemo",
+    "type": "S",
+    "element": "Eau",
+    "parents": [
+      32301
+    ],
+    "description": "Le Dinoz peut pêcher dans une case supplémentaire",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 32403,
+    "name": "Cleptomane",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      32302
+    ],
+    "description": "Empêche un des Dinoz adverses d'utiliser des objets non magiques pendant le combat. Se lance au début du combat.",
+    "probability": 0,
+    "priority": 0,
+    "energy": 45
+  },
+  {
+    "id": 32404,
+    "name": "Abysse",
+    "type": "A",
+    "element": "Eau",
+    "parents": [
+      32303
+    ],
+    "description": "Tous les Dinoz (alliés et ennemis) avec un élément Eau inférieur à 10 verront la puissance de tous leurs **assauts** et attaques diminuée de 25% pour les 3 prochains tours du lanceur",
+    "probability": 20,
+    "priority": 3,
+    "energy": 35
+  },
+  {
+    "id": 32405,
+    "name": "BanniDesDieux",
+    "type": "E",
+    "element": "Eau",
+    "parents": [
+      32303
+    ],
+    "description": "Le Dinoz ciblé ne peut plus utiliser son invocation",
+    "probability": 10,
+    "priority": 8,
+    "energy": 20
+  },
+  {
+    "id": 32501,
+    "name": "TourbillonMagique",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      32401
+    ],
+    "description": "Augmente la puissance des **assauts** Eau de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 32502,
+    "name": "Hyperventilation",
+    "type": "A",
+    "element": "Eau",
+    "parents": [
+      32402
+    ],
+    "description": "Diminue l'endurance de tous les Dinoz ennemis de 20%",
+    "probability": 15,
+    "priority": 8,
+    "energy": 55
+  },
+  {
+    "id": 32503,
+    "name": "TherapieDeGroupe",
+    "type": "E",
+    "element": "Eau",
+    "parents": [
+      32403
+    ],
+    "description": "Récupère autant de PV que l'équipe adverse lorsqu'elle utilise une compétence de soin sur le Dinoz lanceur",
+    "probability": 0,
+    "priority": 0,
+    "energy": 55
+  },
+  {
+    "id": 32504,
+    "name": "ReceptacleTesla",
+    "type": "A",
+    "element": "Eau",
+    "parents": [
+      32404
+    ],
+    "description": "Annule les compétences sphériques A et E de type Foudre d'un Dinoz",
+    "probability": 15,
+    "priority": 7,
+    "energy": 45
+  },
+  {
+    "id": 32505,
+    "name": "VitaliteMarine",
+    "type": "P",
+    "element": "Eau",
+    "parents": [
+      32405
+    ],
+    "description": "Augmente les PV max de 80",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41101,
+    "name": "Intelligence",
+    "type": "S",
+    "element": "Foudre",
+    "parents": [],
+    "description": "Augmente l'XP gagnée de 5%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41102,
+    "name": "Focus",
+    "type": "E",
+    "element": "Foudre",
+    "parents": [],
+    "description": "Augmente la puissance du prochain assaut d'un bonus de Foudre 1",
+    "probability": 30,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 41103,
+    "name": "Celerite",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [],
+    "description": "Augmente la vitesse du Dinoz de 15%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41104,
+    "name": "Reflex",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [],
+    "description": "Augmente l'initiative de 5",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41201,
+    "name": "Concentration",
+    "type": "S",
+    "element": "Foudre",
+    "parents": [
+      41102
+    ],
+    "description": "Les **assauts** ciblent toujours le même ennemi",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41202,
+    "name": "AttaqueEclair",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      41103
+    ],
+    "description": "Augmente la vitesse des attaques Foudre de 40%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41203,
+    "name": "Paratonnerre",
+    "type": "C",
+    "element": "Foudre",
+    "parents": [
+      41101
+    ],
+    "description": "Permet au Dinoz d'absorber l'énergie de la Foudre à certains endroits",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41204,
+    "name": "CoupDouble",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      41103
+    ],
+    "description": "Augmente les chances de multi-coups de 20%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41205,
+    "name": "Regenerescence",
+    "type": "S",
+    "element": "Foudre",
+    "parents": [
+      41102
+    ],
+    "description": "Augmente de 2 les PV récupérés par heure lors du repos",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41206,
+    "name": "PremiersSoins",
+    "type": "S",
+    "element": "Foudre",
+    "parents": [
+      41101
+    ],
+    "description": "Permet au Dinoz de récupérer un point de vie à la fin du combat s'il a perdu de la vie",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41207,
+    "name": "EclairSinueux",
+    "type": "A",
+    "element": "Foudre",
+    "parents": [
+      41104
+    ],
+    "description": "Frappe 3 ennemis avec un pouvoir Foudre de 10",
+    "probability": 10,
+    "priority": 3,
+    "energy": 50
+  },
+  {
+    "id": 41301,
+    "name": "Foudre",
+    "type": "A",
+    "element": "Foudre",
+    "parents": [
+      41204
+    ],
+    "description": "Attaque un ennemi avec un pouvoir Foudre de 10",
+    "probability": 10,
+    "priority": 4,
+    "energy": 25
+  },
+  {
+    "id": 41302,
+    "name": "FissionElementaire",
+    "type": "C",
+    "element": "Foudre",
+    "parents": [
+      41203
+    ],
+    "description": "Permet au Dinoz d'absorber tous types d'énergie élémentaire à certains endroits",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41303,
+    "name": "VoieDeKaos",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      41201
+    ],
+    "description": "Augmente la puissance des **assauts** Feu et Foudre de 6",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41304,
+    "name": "PlanDeCarriere",
+    "type": "S",
+    "element": "Foudre",
+    "parents": [
+      41204
+    ],
+    "description": "Permet au Dinoz de retirer au sort l'élément à chaque changement de niveau. Limité à une fois par niveau.",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41305,
+    "name": "Adrenaline",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      41206
+    ],
+    "description": "Augmente la vitesse des attaques Foudre de 50%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41306,
+    "name": "VoieDeGaia",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      41201
+    ],
+    "description": "Augmente les défenses Bois et Foudre de 3",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41307,
+    "name": "Medecine",
+    "type": "S",
+    "element": "Foudre",
+    "parents": [
+      41206
+    ],
+    "description": "Permet de récupérer jusqu'à 3 PV à la fin d'un combat",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41308,
+    "name": "DanseFoudroyante",
+    "type": "A",
+    "element": "Foudre",
+    "parents": [
+      41204
+    ],
+    "description": "Attaque 5 fois avec un pouvoir Foudre de 3",
+    "probability": 10,
+    "priority": 3,
+    "energy": 35
+  },
+  {
+    "id": 41309,
+    "name": "Embuche",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      41202
+    ],
+    "description": "Augmente l'initiative de 7",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41310,
+    "name": "PureeSalvatrice",
+    "type": "E",
+    "element": "Foudre",
+    "parents": [
+      41205
+    ],
+    "description": "Annule tous les effets négatifs du groupe",
+    "probability": 15,
+    "priority": 3,
+    "energy": 45
+  },
+  {
+    "id": 41311,
+    "name": "AuraHermetique",
+    "type": "E",
+    "element": "Foudre",
+    "parents": [
+      41205
+    ],
+    "description": "Le Dinoz se donne le statut bouclier (augmente l'armure de 20%)",
+    "probability": 30,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 41312,
+    "name": "CrocsDiamant",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      41203
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de 2",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41313,
+    "name": "Survie",
+    "type": "S",
+    "element": "Foudre",
+    "parents": [
+      41207
+    ],
+    "description": "En cas de mort, le Dinoz est réanimé une fois avec 12 PV",
+    "probability": 0,
+    "priority": 0,
+    "energy": 65
+  },
+  {
+    "id": 41401,
+    "name": "AubeFeuillue",
+    "type": "A",
+    "element": "Foudre",
+    "parents": [
+      41306
+    ],
+    "description": "Régénère les PV de tous les Dinoz du groupe jusqu'à Foudre 2 + Bois 2",
+    "probability": 10,
+    "priority": 3,
+    "energy": 65
+  },
+  {
+    "id": 41402,
+    "name": "Brancardier",
+    "type": "S",
+    "element": "Foudre",
+    "parents": [
+      41307
+    ],
+    "description": "Permet à un autre Dinoz du groupe de récupérer jusqu'à 5 PV à la fin d'un combat",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41403,
+    "name": "Benediction",
+    "type": "E",
+    "element": "Foudre",
+    "parents": [],
+    "description": "Donne le statut béni à tous les Dinoz du groupe",
+    "probability": 25,
+    "priority": 3,
+    "energy": 20
+  },
+  {
+    "id": 41404,
+    "name": "CrepusculeFlambloyant",
+    "type": "A",
+    "element": "Foudre",
+    "parents": [
+      41303
+    ],
+    "description": "Attaque tous les ennemis avec un pouvoir Feu 6 + Foudre 6",
+    "probability": 5,
+    "priority": 3,
+    "energy": 40
+  },
+  {
+    "id": 41405,
+    "name": "Marchand",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      41302
+    ],
+    "description": "Diminue tous les prix de la boutique de Dinoland de 10% (non cumulable)",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41406,
+    "name": "Reincarnation",
+    "type": "S",
+    "element": "Foudre",
+    "parents": [
+      41304
+    ],
+    "description": "Permet au Dinoz de se réincarner une fois à partir du niveau 40 en mourant. Le Dinoz recommencera niveau 1, sans statut, compétence et missions mais recevra 5 points d'éléments supplémentaires répartis aléatoirement suivant ses affinités élémentaires.",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41408,
+    "name": "Surcharge",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      51302,
+      41305,
+      61119
+    ],
+    "description": "Augmente les chances de multi-coups de 15%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41409,
+    "name": "Electrolyse",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      41301,
+      31308,
+      61119
+    ],
+    "description": "Augmente la vitesse de tous les Dinoz du groupe de 5%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41410,
+    "name": "Golem",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      41302,
+      11309,
+      61121
+    ],
+    "description": "Augmente la défense des alliés contre la Foudre de 20",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 41411,
+    "name": "Raijin",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      41301,
+      51302,
+      61121
+    ],
+    "description": "Attaque tous les ennemis avec une invocation de Foudre 20",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 41412,
+    "name": "Quetzacoatl",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      41301
+    ],
+    "description": "Attaque tous les ennemis avec un pouvoir Foudre de 40",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 41413,
+    "name": "RoiDesSinges",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      21308,
+      41308,
+      61121
+    ],
+    "description": "Les alliés gagnent 20% de chance d'esquive",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 41501,
+    "name": "ArchangeCorrosif",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      41404
+    ],
+    "description": "Augmente l'élément Feu de 2 et l'élément Foudre de 1",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41502,
+    "name": "ArchangeGenesif",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      41401
+    ],
+    "description": "Augmente l'élément Bois de 2 et l'élément Foudre de 1",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41503,
+    "name": "Pretre",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      41403
+    ],
+    "description": "Augmente de 1 les PV récupérés par heure lors du repos pour tous les Dinoz (non cumulable)",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 42101,
+    "name": "SoutienMoral",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [],
+    "description": "Augmente l'endurance du Dinoz de 10%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 42201,
+    "name": "StimulationCardiaque",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      42101
+    ],
+    "description": "Augmente la capacité de récupération du Dinoz de 20%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 42202,
+    "name": "Jaune",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      42101
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de 20 quand le Dinoz est aux Steppes Magnétiques",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 42301,
+    "name": "MorsureDuSoleil",
+    "type": "E",
+    "element": "Foudre",
+    "parents": [
+      42201
+    ],
+    "description": "Éblouit le Dinoz adverse pour une durée moyenne. Ses **assauts** auront une chance sur 3 de toucher leur cible.",
+    "probability": 15,
+    "priority": 7,
+    "energy": 30
+  },
+  {
+    "id": 42302,
+    "name": "CrampeChronique",
+    "type": "E",
+    "element": "Foudre",
+    "parents": [
+      42202
+    ],
+    "description": "Le Dinoz perd 10 points d'énergie, et diminue de 15% la capacité de récupération du lanceur",
+    "probability": 10,
+    "priority": 7,
+    "energy": 20
+  },
+  {
+    "id": 42401,
+    "name": "BatterieSupplementaire",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      42301
+    ],
+    "description": "Augmente les PV max de 50 et réduit l'initiative de 15",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 42402,
+    "name": "Einstein",
+    "type": "S",
+    "element": "Foudre",
+    "parents": [
+      42301
+    ],
+    "description": "Permet au Dinoz d'énergétiser une case supplémentaire",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 42403,
+    "name": "BarriereElectrifiee",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      42302
+    ],
+    "description": "Augmente la défense contre l'Air de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 42404,
+    "name": "Oracle",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      42302
+    ],
+    "description": "Double le taux de lancement de l'invocation lors d'un combat",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 42501,
+    "name": "ReceptacleAerien",
+    "type": "A",
+    "element": "Foudre",
+    "parents": [
+      42401
+    ],
+    "description": "Annule les compétences sphériques A et E de type Air d'un Dinoz",
+    "probability": 15,
+    "priority": 7,
+    "energy": 20
+  },
+  {
+    "id": 42502,
+    "name": "FeuDeStElme",
+    "type": "A",
+    "element": "Foudre",
+    "parents": [
+      42402
+    ],
+    "description": "Les Dinoz (alliés et ennemis) avec un élément Foudre inférieur à 10 perdent 5% de leur vie à chaque tour pendant les 3 prochains tours du lanceur",
+    "probability": 20,
+    "priority": 3,
+    "energy": 40
+  },
+  {
+    "id": 42503,
+    "name": "ForceDeZeus",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      42403
+    ],
+    "description": "Augmente la puissance de tous les **assauts** Foudre de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 42504,
+    "name": "RemanenceHertzienne",
+    "type": "P",
+    "element": "Foudre",
+    "parents": [
+      42404
+    ],
+    "description": "Augmente les chances d'esquive de 20%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51101,
+    "name": "Agilite",
+    "type": "P",
+    "element": "Air",
+    "parents": [],
+    "description": "Augmente la puissance des **assauts** Air de 5",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51102,
+    "name": "Strategie",
+    "type": "S",
+    "element": "Air",
+    "parents": [],
+    "description": "Adopte la meilleure stratégie d'attaque en fonction des défenses ennemies",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51103,
+    "name": "Mistral",
+    "type": "A",
+    "element": "Air",
+    "parents": [],
+    "description": "Attaque tous les ennemis avec un pouvoir Air de 3",
+    "probability": 15,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 51104,
+    "name": "Aiguillon",
+    "type": "E",
+    "element": "Air",
+    "parents": [],
+    "description": "Attaque un ennemi avec un pouvoir Air de 3",
+    "probability": 15,
+    "priority": 1,
+    "energy": 35
+  },
+  {
+    "id": 51105,
+    "name": "Envol",
+    "type": "A",
+    "element": "Air",
+    "parents": [],
+    "description": "Le Dinoz effectue un assaut puis s'envole. Réservé aux dinozs volants.",
+    "probability": 30,
+    "priority": 1,
+    "energy": 20
+  },
+  {
+    "id": 51201,
+    "name": "Esquive",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      51101
+    ],
+    "description": "Augmente les chances d'esquive de 10%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51202,
+    "name": "Saut",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      51101
+    ],
+    "description": "Permet aux **assauts** de toucher les ennemis volants",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51203,
+    "name": "Analyse",
+    "type": "S",
+    "element": "Air",
+    "parents": [
+      51102
+    ],
+    "description": "Choisit la meilleure cible pour chaque attaque",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51204,
+    "name": "Cueillette",
+    "type": "C",
+    "element": "Air",
+    "parents": [
+      51102
+    ],
+    "description": "Permet au Dinoz de collecter des plantes à certains endroits",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51205,
+    "name": "TaiChi",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      51103
+    ],
+    "description": "Augmente la puissance des **assauts** Air de 15. Diminue la vitesse des attaques Air de 20%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51206,
+    "name": "Tornade",
+    "type": "A",
+    "element": "Air",
+    "parents": [
+      51103
+    ],
+    "description": "Attaque tous les ennemis avec un pouvoir Air de 10 et fait tomber les ennemis volants au sol",
+    "probability": 3,
+    "priority": 5,
+    "energy": 30
+  },
+  {
+    "id": 51207,
+    "name": "AuraPuante",
+    "type": "S",
+    "element": "Air",
+    "parents": [
+      51104
+    ],
+    "description": "Empoisonne les assaillants en mêlée pour une durée moyenne, le poison inflige 10 dégâts",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51301,
+    "name": "DisqueVacuum",
+    "type": "A",
+    "element": "Air",
+    "parents": [
+      51201
+    ],
+    "description": "Attaque un ennemi avec un pouvoir Air de 12",
+    "probability": 7,
+    "priority": 8,
+    "energy": 35
+  },
+  {
+    "id": 51302,
+    "name": "Elasticite",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      51201
+    ],
+    "description": "Augmente la puissance des **assauts** Air de 10 et augmente la défense Air de 3",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51303,
+    "name": "AttaquePlongeante",
+    "type": "A",
+    "element": "Air",
+    "parents": [
+      51202
+    ],
+    "description": "Attaque avec un assaut possédant un bonus Air de 2",
+    "probability": 20,
+    "priority": 5,
+    "energy": 20
+  },
+  {
+    "id": 51304,
+    "name": "Furtivite",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      51202
+    ],
+    "description": "Augmente de 2 les défenses Air, Eau et Foudre",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51305,
+    "name": "Specialiste",
+    "type": "S",
+    "element": "Air",
+    "parents": [
+      51203
+    ],
+    "description": "Retire l'élément le plus faible du cycle élémentaire des **assauts**",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51306,
+    "name": "TalonDAchille",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      51203
+    ],
+    "description": "Augmente la puissance de tous les **assauts** de 2",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51307,
+    "name": "NuageToxique",
+    "type": "A",
+    "element": "Air",
+    "parents": [
+      51204
+    ],
+    "description": "Empoisonne tous les ennemis pour une durée moyenne, les dégâts par tour sont strictement égaux à l'élément Air du lanceur",
+    "probability": 10,
+    "priority": 3,
+    "energy": 45
+  },
+  {
+    "id": 51308,
+    "name": "OeilDeLynx",
+    "type": "C",
+    "element": "Air",
+    "parents": [
+      51204
+    ],
+    "description": "Permet au Dinoz de trouver des plantes exotiques à certains endroits",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51309,
+    "name": "Eveil",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      51205
+    ],
+    "description": "Diminue la vitesse des attaques Air de 20%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51310,
+    "name": "PaumeEjectable",
+    "type": "A",
+    "element": "Air",
+    "parents": [
+      51205
+    ],
+    "description": "Attaque avec un assaut de puissance doublée, puis le Dinoz perd 15 en initiative",
+    "probability": 15,
+    "priority": 2,
+    "energy": 20
+  },
+  {
+    "id": 51311,
+    "name": "VentVif",
+    "type": "E",
+    "element": "Air",
+    "parents": [
+      51206
+    ],
+    "description": "Donne le statut accéléré (Augmente la vitesse de 50%)",
+    "probability": 15,
+    "priority": 2,
+    "energy": 25
+  },
+  {
+    "id": 51312,
+    "name": "FormeVaporeuse",
+    "type": "S",
+    "element": "Air",
+    "parents": [
+      51206
+    ],
+    "description": "Le Dinoz a 6% de chance de devenir intangible pour une durée courte juste avant de subir une attaque",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51313,
+    "name": "Hypnose",
+    "type": "A",
+    "element": "Air",
+    "parents": [
+      51207
+    ],
+    "description": "Un des ennemis est placé sous hypnose et vient se battre à vos côtés",
+    "probability": 5,
+    "priority": 7,
+    "energy": 50
+  },
+  {
+    "id": 51314,
+    "name": "Secousse",
+    "type": "A",
+    "element": "Double",
+    "parents": [
+      51310,
+      21304,
+      61119
+    ],
+    "description": "Frappe le sol avec un pouvoir Bois 4 + Air 4 sur tous les ennemis",
+    "probability": 20,
+    "priority": 2,
+    "energy": 20
+  },
+  {
+    "id": 51401,
+    "name": "TrouNoir",
+    "type": "A",
+    "element": "Air",
+    "parents": [
+      51301
+    ],
+    "description": "Envoie un ennemi dans une dimension parallèle. Note : n'affecte pas les boss et non utilisable dans certains combats compétitifs (Dojo).",
+    "probability": 3,
+    "priority": 10,
+    "energy": 60
+  },
+  {
+    "id": 51402,
+    "name": "MaitreLevitateur",
+    "type": "S",
+    "element": "Air",
+    "parents": [
+      51303
+    ],
+    "description": "Permet à tous les Dinoz du groupe d'attaquer les ennemis volants",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51403,
+    "name": "HaleineFetive",
+    "type": "S",
+    "element": "Air",
+    "parents": [
+      51307
+    ],
+    "description": "Empoisonne les ennemis touchés par un assaut pour une longue durée, les dégâts par tour sont strictement égaux à l'élément Air du lanceur",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51404,
+    "name": "MeditationSolitaire",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      51309
+    ],
+    "description": "Augmente la défense Air de 3, diminue la vitesse des attaques Air de 50%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51405,
+    "name": "Professeur",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      51309
+    ],
+    "description": "Augmente l'expérience gagnée par tous les Dinoz de 5% (non cumulable)",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51406,
+    "name": "SouffleDeVie",
+    "type": "S",
+    "element": "Air",
+    "parents": [
+      51311
+    ],
+    "description": "Le Dinoz est immunisé au poison et aux malédictions",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51407,
+    "name": "TotemAncestralAeroporte",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      11311,
+      51309,
+      61121
+    ],
+    "description": "Attaque un ennemi avec une invocation Air 30",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 51408,
+    "name": "Fujin",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      41308,
+      51301,
+      61121
+    ],
+    "description": "Double la vitesse des Dinoz de l'équipe",
+    "probability": 10,
+    "priority": 4,
+    "energy": 80
+  },
+  {
+    "id": 51501,
+    "name": "MeditationTranscendantale",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      51404
+    ],
+    "description": "Augmente la défense Air de 6, diminue la vitesse des attaques Air de 50%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 51502,
+    "name": "Djinn",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      11201,
+      51403,
+      61121
+    ],
+    "description": "Attaque tous les ennemis avec une invocation d'Air 20",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 51503,
+    "name": "Hades",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      51403,
+      21204,
+      31203,
+      61121
+    ],
+    "description": "Empoisonne et ralentit tous les adversaires",
+    "probability": 10,
+    "priority": 4,
+    "energy": 60
+  },
+  {
+    "id": 51601,
+    "name": "FormeEtherale",
+    "type": "S",
+    "element": "Air",
+    "parents": [
+      51501
+    ],
+    "description": "Le Dinoz apparaît avec le statut intangible pour une durée infinie",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 52101,
+    "name": "MaitriseCorporelle",
+    "type": "P",
+    "element": "Air",
+    "parents": [],
+    "description": "Augmente de 25% la vitesse de récupération du Dinoz",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 52201,
+    "name": "Blanc",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      52101
+    ],
+    "description": "Augmente les **assauts** de 20 du Dinoz s'il se trouve à Nimbao",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 52202,
+    "name": "Anaerobie",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      52101
+    ],
+    "description": "Réduit l’endurance du Dinoz de 25%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 52301,
+    "name": "DoubleFace",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      52201
+    ],
+    "description": "50% de chance d'augmenter ou réduire l'initiative du lanceur de 10 au début d'un combat",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 52302,
+    "name": "Flagellation",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      52201
+    ],
+    "description": "Réduit de 15% la vitesse de récupération",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 52303,
+    "name": "SouffleDange",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      52202
+    ],
+    "description": "Augmente la défense contre le Feu de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 52304,
+    "name": "Ouragan",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      52202
+    ],
+    "description": "Augmente la puissance des **assauts** Air de 20",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 52401,
+    "name": "Ouranos",
+    "type": "A",
+    "element": "Air",
+    "parents": [
+      52301
+    ],
+    "description": "Les Dinoz (alliés et ennemis) ayant un élément Air inférieur à 10 voient la vitesse de leurs **assauts** diminuée de 50% pour les 3 prochains tours du lanceur",
+    "probability": 20,
+    "priority": 3,
+    "energy": 45
+  },
+  {
+    "id": 52402,
+    "name": "Twinoid500mg",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      52302
+    ],
+    "description": "Augmente l'endurance du Dinoz de 50%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 52403,
+    "name": "LonDuhaut",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      52303
+    ],
+    "description": "Permet au Dinoz de cueillir une case supplémentaire",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 52404,
+    "name": "SurplisDhades",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      52304
+    ],
+    "description": "Permet au Dinoz d'être équipé avec un objet de combat supplémentaire",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 52405,
+    "name": "ReceptacleThermique",
+    "type": "A",
+    "element": "Air",
+    "parents": [
+      52304
+    ],
+    "description": "Annule les compétences sphériques Feu de type A et E d'un Dinoz",
+    "probability": 15,
+    "priority": 7,
+    "energy": 45
+  },
+  {
+    "id": 52501,
+    "name": "QiGong",
+    "type": "E",
+    "element": "Air",
+    "parents": [
+      52401
+    ],
+    "description": "Absorbe toute l'énergie d'un Dinoz lors d'un assaut",
+    "probability": 0,
+    "priority": 0,
+    "energy": 55
+  },
+  {
+    "id": 52502,
+    "name": "Sylphides",
+    "type": "A",
+    "element": "Air",
+    "parents": [
+      52402
+    ],
+    "description": "Les esprits du vent emportent un Dinoz adverse hors du combat",
+    "probability": 10,
+    "priority": 10,
+    "energy": 65
+  },
+  {
+    "id": 52503,
+    "name": "Messie",
+    "type": "P",
+    "element": "Air",
+    "parents": [
+      52403
+    ],
+    "description": "Augmente le nombre maximum de Dinoz actifs de 3",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 52504,
+    "name": "Mutinerie",
+    "type": "E",
+    "element": "Air",
+    "parents": [
+      52405
+    ],
+    "description": "Les clones adverses attaquent leurs propres maîtres",
+    "probability": 10,
+    "priority": 10,
+    "energy": 40
+  },
+  {
+    "id": 52505,
+    "name": "MainsCollantes",
+    "type": "E",
+    "element": "Air",
+    "parents": [
+      52404
+    ],
+    "description": "Annule la capacité d'esquive d'un adversaire",
+    "probability": 15,
+    "priority": 10,
+    "energy": 20
+  },
+  {
+    "id": 61119,
+    "name": "CompetenceDouble",
+    "type": "S",
+    "element": "Vide",
+    "parents": [],
+    "description": "Permet au Dinoz d'apprendre les compétences doubles",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61120,
+    "name": "LimiteBrisee",
+    "type": "S",
+    "element": "Vide",
+    "parents": [],
+    "description": "Permet au Dinoz d'évoluer au-delà de sa force initiale dans un nouvel arbre de compétences",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61121,
+    "name": "Invocateur",
+    "type": "S",
+    "element": "Vide",
+    "parents": [],
+    "description": "Permet au Dinoz d'apprendre les compétences d'invocation",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61101,
+    "name": "FrenesieCollective",
+    "type": "E",
+    "element": "Vide",
+    "parents": [],
+    "description": "Augmente la vitesse de tous les Dinoz du groupe de 50%",
+    "probability": 5,
+    "priority": 5,
+    "energy": 20
+  },
+  {
+    "id": 61102,
+    "name": "Coque",
+    "type": "P",
+    "element": "Vide",
+    "parents": [],
+    "description": "Augmente l'armure de 5%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61103,
+    "name": "ChargeCornue",
+    "type": "P",
+    "element": "Vide",
+    "parents": [],
+    "description": "Augmente la puissance du premier assaut de 20%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61104,
+    "name": "Rock",
+    "type": "S",
+    "element": "Vide",
+    "parents": [],
+    "description": "À chaque assaut des ennemis, le Dinoz a 50% de chance de devenir leur cible.",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61105,
+    "name": "Pietinement",
+    "type": "S",
+    "element": "Vide",
+    "parents": [],
+    "description": "Annule l'armure des ennemis",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61106,
+    "name": "Cuirasse",
+    "type": "S",
+    "element": "Vide",
+    "parents": [],
+    "description": "Réduit les dégâts subis lors d'un assaut adverse",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61107,
+    "name": "Insaisissable",
+    "type": "P",
+    "element": "Vide",
+    "parents": [],
+    "description": "Augmente les chances d'esquive de 10%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61108,
+    "name": "DeplacementInstantane",
+    "type": "S",
+    "element": "Vide",
+    "parents": [],
+    "description": "Augmente les chances d'esquiver les compétences offensives de 15%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61109,
+    "name": "Napomagicien",
+    "type": "S",
+    "element": "Vide",
+    "parents": [],
+    "description": "Permet d'équiper deux objets magiques simultanément",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61111,
+    "name": "GrosCostaud",
+    "type": "P",
+    "element": "Vide",
+    "parents": [],
+    "description": "Augmente la puissance de tous les **assauts** de 5",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61112,
+    "name": "OrigineCaushemeshenne",
+    "type": "P",
+    "element": "Vide",
+    "parents": [],
+    "description": "Augmente la puissance de tous les **assauts** de 30 si le Dinoz se trouve à Caushemesh",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61113,
+    "name": "Ecrasement",
+    "type": "A",
+    "element": "Vide",
+    "parents": [],
+    "description": "Propulse une onde de choc sur tous les adversaires environnants",
+    "probability": 25,
+    "priority": 2,
+    "energy": 20
+  },
+  {
+    "id": 61114,
+    "name": "ForceDeLumiere",
+    "type": "P",
+    "element": "Vide",
+    "parents": [],
+    "description": "Augmente la puissance de tous les **assauts** de 30 si le Dinoz se trouve dans le Monde Sombre",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61115,
+    "name": "ChargePigmou",
+    "type": "A",
+    "element": "Vide",
+    "parents": [],
+    "description": "Attaque un ennemi avec un pouvoir de Feu 5 + Bois 3",
+    "probability": 20,
+    "priority": 2,
+    "energy": 20
+  },
+  {
+    "id": 61116,
+    "name": "ForceDesTenebres",
+    "type": "P",
+    "element": "Vide",
+    "parents": [],
+    "description": "Augmente l’endurance et la récupération du Dinoz de 25%",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61117,
+    "name": "Bigmagnon",
+    "type": "A",
+    "element": "Vide",
+    "parents": [],
+    "description": "Le Dinoz charge son adversaire et l'étourdit pendant plusieurs tours",
+    "probability": 15,
+    "priority": 8,
+    "energy": 0
+  },
+  {
+    "id": 61118,
+    "name": "DurACuire",
+    "type": "P",
+    "element": "Vide",
+    "parents": [],
+    "description": "Augmente toutes les défenses de 6",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 41504,
+    "name": "Hercolubus",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      41501,
+      51312,
+      61121
+    ],
+    "description": "Une puissante attaque sur tous les ennemis (environ 50 de dégâts)",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 41505,
+    "name": "ReineDeLaRuche",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      21307,
+      51311,
+      61121
+    ],
+    "description": "Vide l'énergie de tous les dinozs adverses",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 51506,
+    "name": "BigMama",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      12502,
+      22504,
+      61121
+    ],
+    "description": " Vide l’énergie des Dinoz adverses et leur inflige 20 points de dégâts",
+    "probability": 15,
+    "priority": 6,
+    "energy": 50
+  },
+  {
+    "id": 41507,
+    "name": "Yggdrasil",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      21405,
+      51204
+    ],
+    "description": "Augmente la défense des alliés contre le Bois de 20",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 41508,
+    "name": "BaleineBlanche",
+    "type": "P",
+    "element": "Double",
+    "parents": [
+      41305,
+      31404
+    ],
+    "description": "Augmente la défense des alliés contre l'Eau de 20",
+    "probability": 10,
+    "priority": 4,
+    "energy": 50
+  },
+  {
+    "id": 61122,
+    "name": "GrosDormeur",
+    "type": "S",
+    "element": "Vide",
+    "parents": [],
+    "description": "Permet à votre Dinoz de récupérer une action supplémentaire chaque jour.",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61201,
+    "name": "Veilleuse",
+    "type": "S",
+    "element": "Vide",
+    "parents": [
+      61122
+    ],
+    "description": "Permet à tous les Dinoz suivant votre Dinoz de récupérer également une action supplémentaire chaque jour.",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  },
+  {
+    "id": 61301,
+    "name": "Matelasseur",
+    "type": "P",
+    "element": "Vide",
+    "parents": [
+      61201
+    ],
+    "description": "Tous vos Dinoz récupèrent une action supplémentaire chaque jour (non cumulable).",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0
+  }
+]
