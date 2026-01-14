@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script>
         const ALL_SKILLS = <%- JSON.stringify(skills) %>;
+        const USER_TREE_MODE = "<%= userTreeMode %>";
     </script>
 </head>
 <body class="hub-body">
@@ -38,22 +39,20 @@
                 <% const elements = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air']; %>
                 <% elements.forEach(elem => { %>
                     <div class="accordion-item <%= elem.toLowerCase() %>" onmouseenter="expandItem(this)">
-                        <div class="band-header">
-                            <h2><%= elem %></h2>
-                        </div>
                         <div class="tree-content" id="tree-container-<%= elem %>"></div>
                     </div>
                 <% }) %>
             </div>
 
             <div id="spheres-view" class="spheres-container" style="display: none;">
-                <div class="spheres-grid">
+                <div class="spheres-grid" id="spheres-grid-container">
+                    
                     <div class="grid-header">ÉLÉMENT</div>
                     <div class="grid-header">NIVEAU 1</div>
                     <div class="grid-header">NIVEAU 2</div>
                     <div class="grid-header">NIVEAU 3</div>
-                    <div id="spheres-rows"></div>
-                </div>
+
+                    </div>
             </div>
 
         </section>
@@ -78,4 +77,5 @@
 
     <script src="/js/arbres.js"></script>
 </body>
+
 </html>

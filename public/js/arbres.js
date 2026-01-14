@@ -1,25 +1,54 @@
 let currentTreeVersion = 1; 
-let isExpanded = false;
+
+// Récupération de la préférence serveur (si définie)
+let isExpanded = (typeof USER_TREE_MODE !== 'undefined' && USER_TREE_MODE === 'EXPANDED');
+
 let isSpheresView = false;
-const tooltip = document.getElementById('skill-tooltip');
+
+// On déclare la variable mais on ne la remplit pas tout de suite
+let tooltip = null; 
 
 document.addEventListener('DOMContentLoaded', () => {
+    // On récupère le tooltip ici, quand on est sûr que la page est chargée
+    tooltip = document.getElementById('skill-tooltip');
+
+    // 1. Appliquer visuellement l'état initial
+    const area = document.getElementById('main-display');
+    const btn = document.getElementById('btn-expand');
+    
+    if (isExpanded) {
+        area.classList.add('expanded');
+        area.classList.remove('compressed');
+        btn.innerText = "Réduire";
+    } else {
+        area.classList.add('compressed');
+        area.classList.remove('expanded');
+        btn.innerText = "Étendre";
+    }
+
+    // 2. Charger les arbres
     ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'].forEach(elem => renderTreeForElement(elem));
     renderSpheresTable();
 });
 
+// --- TOOLTIP QUI SUIT LA SOURIS ---
 document.addEventListener('mousemove', (e) => {
-    if (tooltip.style.display === 'block') {
-        const offset = 15;
-        let x = e.clientX + offset;
-        let y = e.clientY + offset;
-        if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
-        if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
-        tooltip.style.left = x + 'px';
-        tooltip.style.top = y + 'px';
-    }
-});
+    // Sécurité : si le tooltip n'est pas encore chargé, on arrête
+    if (!tooltip) tooltip = document.getElementById('skill-tooltip');
+    if (!tooltip) return;
 
+    // On déplace le tooltip (même s'il est caché, pour qu'il soit au bon endroit quand il apparait)
+    const offset = 15;
+    let x = e.clientX + offset;
+    let y = e.clientY + offset;
+
+    // Gestion des bords d'écran
+    if (x + tooltip.offsetWidth > window.innerWidth) x = e.clientX - tooltip.offsetWidth - offset;
+    if (y + tooltip.offsetHeight > window.innerHeight) y = e.clientY - tooltip.offsetHeight - offset;
+
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+});
 /* --- RENDU ARBRES --- */
 function renderTreeForElement(elementName) {
     const container = document.getElementById(`tree-container-${elementName}`);
@@ -128,56 +157,66 @@ function hideTooltip() { tooltip.style.display = 'none'; }
 function renderSpheresTable() {
     const container = document.getElementById('spheres-grid-container');
     
-    // On ne supprime que les cellules générées
+    // 1. Nettoyage : On supprime UNIQUEMENT les cellules de contenu (.sphere-cell)
+    // On garde les 4 headers (.grid-header) qui sont en dur dans le HTML
     const oldCells = container.querySelectorAll('.sphere-cell');
     oldCells.forEach(c => c.remove());
 
-    const elements = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+    // 2. Liste des 6 éléments
+    const elements = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air', 'Vide'];
     
     elements.forEach(elem => {
         const bgClass = `bg-${elem.toLowerCase()}`;
         
-        // Filtre très permissif (trim + lowerCase)
+        // 3. Filtrage : On cherche les compétences de Nature 3 (Sphères) pour cet élément
         const spheres = ALL_SKILLS.filter(s => 
             s.skillNature === 3 && 
             s.element && 
             s.element.trim().toLowerCase() === elem.toLowerCase()
         );
         
-        // DEBUG : Affiche le compte dans la console F12
-        console.log(`Sphères trouvées pour ${elem}:`, spheres.length);
-
+        // 4. Tri : On suppose que l'ID le plus petit est le Niveau 1, etc.
         spheres.sort((a,b) => a.id - b.id);
 
+        // --- Colonne 1 : Le Titre de l'élément ---
         const titleDiv = document.createElement('div');
         titleDiv.className = `sphere-cell elem-title ${bgClass}`;
         titleDiv.innerText = elem;
         container.appendChild(titleDiv);
 
+        // --- Colonnes 2, 3, 4 : Les Compétences (Niv 1, 2, 3) ---
+        // On boucle 3 fois pour garantir l'alignement de la grille (même si une sphère manque)
         for(let i=0; i<3; i++) {
             const skill = spheres[i];
             const cell = document.createElement('div');
             cell.className = `sphere-cell ${bgClass}`;
+            
             if (skill) {
                 cell.innerText = skill.name;
                 cell.style.cursor = 'help';
+                // Ajout des interactions (Tooltip)
                 cell.onmouseenter = () => showTooltip(skill);
                 cell.onmouseleave = () => hideTooltip();
             } else {
-                cell.innerText = "-";
+                // Case vide si pas de compétence
+                cell.innerText = "-"; 
+                cell.style.opacity = "0.5";
             }
             container.appendChild(cell);
         }
     });
 }
 
-/* --- NAVIGATION --- */
+/* --- NAVIGATION AVEC SAUVEGARDE --- */
 function toggleExpandMode() {
     const area = document.getElementById('main-display');
     const btn = document.getElementById('btn-expand');
     isExpanded = !isExpanded;
     
+    // Reset zoom
     document.querySelectorAll('.tree-scaler').forEach(s => s.style.transform = 'scale(1)');
+
+    const newMode = isExpanded ? 'EXPANDED' : 'COMPRESSED';
 
     if (isExpanded) {
         area.classList.add('expanded');
@@ -188,6 +227,13 @@ function toggleExpandMode() {
         area.classList.remove('expanded');
         btn.innerText = "Étendre";
     }
+
+    // SAUVEGARDE AJAX
+    fetch('/api/preference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'treeMode', value: newMode })
+    }).catch(err => console.error("Erreur sauvegarde pref:", err));
 }
 
 function toggleTreeVersion() {

@@ -443,7 +443,6 @@ app.get('/arbres', async (req, res) => {
     if (!req.session.userId) return res.redirect('/');
     
     const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
-    
     // Calcul des jours d'ancienneté
     const daysMember = Math.floor((new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
 
@@ -458,7 +457,27 @@ app.get('/arbres', async (req, res) => {
         user, 
         pseudo: user.pseudo,
         role: user.role,
-        daysMember: daysMember, // On passe la variable ici
-        skills: allSkills
+        daysMember: daysMember,
+        skills: allSkills,
+        userTreeMode: user.treeMode || "COMPRESSED"
     });
+});
+
+
+// --- API : SAUVEGARDER PRÉFÉRENCES ---
+app.post('/api/preference', async (req, res) => {
+    if (!req.session.userId) return res.status(401).json({ error: 'Non connecté' });
+    
+    const { key, value } = req.body;
+    
+    // Sécurité simple : on n'autorise que la modif de treeMode pour l'instant
+    if (key === 'treeMode') {
+        await prisma.user.update({
+            where: { id: req.session.userId },
+            data: { treeMode: value }
+        });
+        return res.json({ success: true });
+    }
+    
+    res.status(400).json({ error: 'Champ invalide' });
 });

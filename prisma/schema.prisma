@@ -20,6 +20,9 @@ model User {
   
   // Relation : Un user a plusieurs Dinozs
   dinozs       Dinoz[]
+
+  // Préférence pour affichage des arbres
+  treeMode     String   @default("COMPRESSED") // "COMPRESSED" ou "EXPANDED"
 }
 
 

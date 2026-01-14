@@ -29,127 +29,107 @@ body { margin: 0; overflow: hidden; }
     border-bottom: 1px solid #000;
     overflow: hidden;
     transition: flex 0.4s ease;
+    
+    /* MODIF 1 : Fond de base (gris par défaut, sera écrasé par les couleurs ci-dessous) */
     background-color: rgba(0,0,0,0.3);
+    
     display: flex;
     flex-direction: column;
     position: relative;
 }
 
-.accordion-item.feu { border-left: 8px solid #d32f2f; }
-.accordion-item.bois { border-left: 8px solid #388e3c; }
-.accordion-item.eau { border-left: 8px solid #1976d2; }
-.accordion-item.foudre { border-left: 8px solid #fbc02d; }
-.accordion-item.air { border-left: 8px solid #90a4ae; }
+/* --- COULEURS DE FOND & BORDURE (Compressé ET Étendu) --- */
+/* On applique ici la couleur pâle que tu aimes pour tout le monde */
 
-/* --- HEADER CENTRÉ VERTICALEMENT (MODIF 3) --- */
+.accordion-item.feu {
+    border-left: 8px solid #d32f2f;
+    background-color: rgba(211, 47, 47, 0.15); /* Rouge pâle */
+}
+.accordion-item.bois {
+    border-left: 8px solid #388e3c;
+    background-color: rgba(56, 142, 60, 0.15); /* Vert pâle */
+}
+.accordion-item.eau {
+    border-left: 8px solid #1976d2;
+    background-color: rgba(25, 118, 210, 0.15); /* Bleu pâle */
+}
+.accordion-item.foudre {
+    border-left: 8px solid #fbc02d;
+    background-color: rgba(251, 192, 45, 0.15); /* Jaune pâle */
+}
+.accordion-item.air {
+    border-left: 8px solid #90a4ae;
+    background-color: rgba(144, 164, 174, 0.15); /* Gris/Bleu pâle */
+}
+
+/* HEADER TITRE */
 .band-header {
-    /* Taille réduite */
     height: 25px; 
     padding: 0 10px;
-    
     background: rgba(0,0,0,0.6);
     color: white;
     font-weight: bold;
     text-transform: uppercase;
     font-size: 0.75rem;
-    
-    /* CENTRAGE PARFAIT (Vertical + Horizontal) */
-    display: flex;
-    align-items: center;    /* Vertical */
-    justify-content: center; /* Horizontal */
-    
-    flex-shrink: 0;
-    z-index: 10;
-    transition: all 0.2s;
-    
-    white-space: nowrap;
-    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; z-index: 10; transition: all 0.2s;
+    white-space: nowrap; overflow: hidden;
 }
 
-/* Disparition dynamique du titre */
-.tree-area.compressed .accordion-item:hover .band-header {
-    opacity: 0;
-    height: 0;
-    padding: 0;
-}
+.tree-area.compressed .accordion-item:hover .band-header { opacity: 0; height: 0; padding: 0; }
 .tree-area.expanded .band-header { display: none; }
-
 
 /* Comportement Accordéon */
 .tree-area.compressed .accordion-item:hover {
     flex: 15;
-    background-color: rgba(0,0,0,0.2);
+    /* On fonce légèrement au survol pour l'effet interactif */
+    filter: brightness(1.2); 
 }
-.tree-area.compressed .accordion-item:hover .tree-content {
-    opacity: 1;
-    overflow: hidden;
-}
-
+.tree-area.compressed .accordion-item:hover .tree-content { opacity: 1; overflow: hidden; }
 .tree-area.expanded { overflow-y: auto; display: block; }
 .tree-area.expanded .accordion-container { display: block; }
 .tree-area.expanded .accordion-item { height: auto; min-height: 250px; flex: none; border-bottom: 5px solid #000; }
 
 .tree-content {
     flex-grow: 1;
-    opacity: 0.4;
-    transition: opacity 0.3s;
-    background: #1b2838;
-    position: relative;
-    padding: 20px;
-    display: flex;
-    align-items: center; 
-    justify-content: flex-start;
+    background: transparent; /* Fond transparent pour voir la couleur de l'accordéon */
+    position: relative; padding: 20px;
+    display: flex; align-items: center; justify-content: flex-start;
 }
 
-.tree-scaler {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    transform-origin: top left;
-    transition: transform 0.3s ease;
-}
-
+.tree-scaler { display: flex; flex-direction: column; gap: 5px; transform-origin: top left; transition: transform 0.3s ease; }
 .skill-branch { display: flex; flex-direction: row; }
 
+/* --- BRIQUES : STYLE PAR DÉFAUT (Mode Compressé) --- */
+/* --- BRIQUES : STYLE PAR DÉFAUT (Mode Compressé = SOMBRE) --- */
 .skill-brick {
-    width: 180px; 
-    min-height: 35px;
+    width: 180px; min-height: 35px;
     display: flex; align-items: center; justify-content: center; padding: 0 5px;
     border: 1px solid rgba(255,255,255,0.2); margin-bottom: -1px; margin-right: -1px;
-    color: #eee; font-size: 0.75rem; text-align: center; cursor: help; box-sizing: border-box; background-color: rgba(0,0,0,0.2);
+    color: #eee; font-size: 0.75rem; text-align: center; cursor: help; box-sizing: border-box; 
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .skill-brick:hover { filter: brightness(1.3); color: white; border-color: white; z-index: 5; }
+.brick-foudre:hover { filter: brightness(1.3); color: black; border-color: black; z-index: 5; }
 
-.brick-feu { background-color: #8b0000; }
-.brick-bois { background-color: #2e7d32; }
-.brick-eau { background-color: #1565c0; }
-.brick-foudre { background-color: #f9a825; color: black; }
-.brick-air { background-color: #546e7a; }
+/* COULEURS DES BRIQUES */
+.brick-feu { background-color: #d32f2f; }       
+.brick-bois { background-color: #388e3c; }      
+.brick-eau { background-color: #1976d2; }       
+.brick-foudre { background-color: #fbc02d; color: black; } 
+.brick-air { background-color: #78909c; }     
+.brick-vide { background-color: #ab47bc; }     
+
 
 .children-column { display: flex; flex-direction: column; }
 .children-column > .skill-branch { flex-grow: 1; }
 
-.floating-tooltip {
-    position: fixed;
-    display: none;
-    background: rgba(12, 20, 30, 0.98);
-    border: 1px solid #89cff0;
-    padding: 10px;
-    border-radius: 4px;
-    color: white;
-    font-size: 0.8rem;
-    z-index: 99999;
-    pointer-events: none;
-    max-width: 300px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.8);
-}
+/* TOOLTIP & SPHERES & SIDEBAR (Reste inchangé) */
+.floating-tooltip { position: fixed; display: none; background: rgba(12, 20, 30, 0.98); border: 1px solid #89cff0; padding: 10px; border-radius: 4px; color: white; font-size: 0.8rem; z-index: 99999; pointer-events: none; max-width: 300px; box-shadow: 0 4px 15px rgba(0,0,0,0.8); }
 .tooltip-title { color: #ffd700; font-weight: bold; font-size: 0.9rem; display: block; border-bottom: 1px solid #444; margin-bottom: 5px; padding-bottom: 3px;}
 .tooltip-meta { color: #aaa; font-size: 0.7rem; display: block; margin-bottom: 5px; font-family: monospace;}
 .tooltip-desc { line-height: 1.3; color: #ddd; }
 
-
-/* SPHERES */
 .spheres-container { padding: 0; background: #111; height: 100%; overflow-y: auto; }
 .spheres-grid { display: grid; grid-template-columns: 150px 1fr 1fr 1fr; width: 100%; background: #000; gap: 1px; border: 1px solid #000; }
 .grid-header { background: #1e2a38; color: #89cff0; padding: 15px; text-align: center; font-weight: bold; text-transform: uppercase; position: sticky; top: 0; z-index: 50; border-bottom: 2px solid #000; font-size: 0.85rem;}
@@ -159,62 +139,10 @@ body { margin: 0; overflow: hidden; }
 .bg-eau { background-color: #4fc3f7; }
 .bg-foudre { background-color: #fff176; }
 .bg-air { background-color: #e0f7fa; }
+.bg-vide { background-color: #ce93d8; }
 
-
-/* --- SIDEBAR & BOUTONS --- */
-.viewer-sidebar {
-    flex: 1;
-    background: #08121e;
-    padding: 20px;
-    box-shadow: -5px 0 10px rgba(0,0,0,0.5);
-    display: flex;
-    flex-direction: column;
-}
-
-.sidebar-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    width: 100%;
-}
-
-.sidebar-content h3 {
-    color: #89cff0;
-    border-bottom: 1px solid #333;
-    padding-bottom: 5px;
-    margin: 20px 0 20px 0;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    text-align: center;
-    width: 90%;
-}
-
-/* BOUTONS AVEC MARGE (MODIF 2) */
-.btn-ice {
-    background: linear-gradient(180deg, #29b6f6, #0277bd);
-    border: 2px solid rgba(255, 255, 255, 0.4); 
-    border-radius: 15px;
-    color: white;
-    
-    width: 80%;
-    /* Marge explicite : Haut 0, Droite Auto, Bas 10px, Gauche Auto */
-    margin: 0 auto 15px auto; 
-    
-    padding: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none; /* Important pour les liens */
-    display: block; /* Important pour que margin s'applique bien */
-    
-    box-shadow: 0 4px 0 #01579b;
-    text-shadow: 1px 1px 1px black;
-    transition: all 0.2s;
-    font-size: 0.85rem;
-}
-
-.btn-ice:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 0 #01579b;
-    background: linear-gradient(180deg, #81d4fa, #039be5);
-}
+.viewer-sidebar { flex: 1; background: #08121e; padding: 20px; box-shadow: -5px 0 10px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+.sidebar-content { display: flex; flex-direction: column; align-items: center; width: 100%; }
+.sidebar-content h3 { color: #89cff0; border-bottom: 1px solid #333; padding-bottom: 5px; margin: 20px 0 15px 0; font-size: 0.9rem; text-transform: uppercase; text-align: center; width: 90%; }
+.btn-ice { background: linear-gradient(180deg, #29b6f6, #0277bd); border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 15px; color: white; width: 80%; margin: 0 auto 10px auto; padding: 10px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; display: block; box-shadow: 0 4px 0 #01579b; text-shadow: 1px 1px 1px black; transition: all 0.2s; font-size: 0.85rem; }
+.btn-ice:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #01579b; background: linear-gradient(180deg, #81d4fa, #039be5); }
