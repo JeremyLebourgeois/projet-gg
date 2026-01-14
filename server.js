@@ -436,3 +436,29 @@ app.post('/dinoz/reincarnate', async (req, res) => {
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
+
+
+// --- PAGE : VISUALISEUR D'ARBRES ---
+app.get('/arbres', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/');
+    
+    const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
+    
+    // Calcul des jours d'ancienneté
+    const daysMember = Math.floor((new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
+
+    const allSkills = await prisma.refSkill.findMany({
+        include: {
+            parents: { select: { id: true } },
+            children: { select: { id: true } }
+        }
+    });
+
+    res.render('arbres', { 
+        user, 
+        pseudo: user.pseudo,
+        role: user.role,
+        daysMember: daysMember, // On passe la variable ici
+        skills: allSkills
+    });
+});

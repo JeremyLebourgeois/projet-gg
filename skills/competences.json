@@ -1,14 +1,16 @@
 [
   {
     "id": 11101,
-    "name": "GriffesEnflammees",
+    "name": "Griffes Enflammees",
     "type": "P",
     "element": "Feu",
     "parents": [],
     "description": "Augmente la puissance de tous les **assauts** de Feu de 7",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11102,
@@ -19,7 +21,9 @@
     "description": "Augmente la puissance du prochain assaut de 25%",
     "probability": 20,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11103,
@@ -30,7 +34,9 @@
     "description": "Augmente la puissance de tous les **assauts** de 1",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11104,
@@ -41,11 +47,13 @@
     "description": "Attaque tous les ennemis avec un pouvoir Feu de 3",
     "probability": 25,
     "priority": 1,
-    "energy": 30
+    "energy": 30,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 11201,
-    "name": "SouffleArdent",
+    "name": "Souffle Ardent",
     "type": "A",
     "element": "Feu",
     "parents": [
@@ -54,7 +62,9 @@
     "description": "Attaque tous les ennemis avec un pouvoir de Feu 5",
     "probability": 10,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11202,
@@ -67,11 +77,13 @@
     "description": "Augmente la puissance du premier assaut de 5",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11203,
-    "name": "SangChaud",
+    "name": "Sang Chaud",
     "type": "P",
     "element": "Feu",
     "parents": [
@@ -80,7 +92,9 @@
     "description": "Augmente l'initiative de 4",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11204,
@@ -93,11 +107,13 @@
     "description": "Augmente la puissance de tous les **assauts** de 3 et diminue toutes les **défenses** de 2",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11205,
-    "name": "ChasseurDeGoupignon",
+    "name": "Chasseur De Goupignon",
     "type": "C",
     "element": "Feu",
     "parents": [
@@ -106,11 +122,13 @@
     "description": "Permet au Dinoz de chasser des petits animaux dans certains lieux",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11206,
-    "name": "ArtsMartiaux",
+    "name": "Arts Martiaux",
     "type": "P",
     "element": "Feu",
     "parents": [
@@ -119,7 +137,9 @@
     "description": "Augmente la puissance de tous les **assauts** de 2",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11207,
@@ -132,11 +152,13 @@
     "description": "Le Dinoz perd 5 PV et gagne 15 d'initiative",
     "probability": 10,
     "priority": 1,
-    "energy": 60
+    "energy": 60,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 11208,
-    "name": "PropulsionDivine",
+    "name": "Propulsion Divine",
     "type": "P",
     "element": "Feu",
     "parents": [
@@ -145,7 +167,9 @@
     "description": "Augmente la vitesse des attaques Feu de 30%. Réduit l'élément Feu de 2.",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11301,
@@ -158,11 +182,13 @@
     "description": "Augmente la défense Feu de 5",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11302,
-    "name": "CoeurArdent",
+    "name": "Coeur Ardent",
     "type": "P",
     "element": "Feu",
     "parents": [
@@ -171,11 +197,13 @@
     "description": "Augmente la puissance de tous les **assauts** de Feu de 12 et augmente le maximum de points de vie de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11303,
-    "name": "CouleeDeLave",
+    "name": "Coulee De Lave",
     "type": "A",
     "element": "Feu",
     "parents": [
@@ -184,7 +212,9 @@
     "description": "Attaque un ennemi avec un pouvoir de Feu 12",
     "probability": 5,
     "priority": 8,
-    "energy": 25
+    "energy": 25,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11304,
@@ -197,7 +227,9 @@
     "description": "Le Dinoz regagne jusqu'à 20 points de vie et s'endort",
     "probability": 5,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11305,
@@ -210,11 +242,13 @@
     "description": "Attaque un ennemi avec un pouvoir de Feu 15 puis le Dinoz perd la moitié de sa vie",
     "probability": 5,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11306,
-    "name": "ChasseurDeGeant",
+    "name": "Chasseur De Geant",
     "type": "C",
     "element": "Feu",
     "parents": [
@@ -223,11 +257,13 @@
     "description": "Permet au Dinoz de chasser des animaux moyens dans certains lieux",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11307,
-    "name": "BouleDeFeu",
+    "name": "Boule De Feu",
     "type": "A",
     "element": "Feu",
     "parents": [
@@ -236,7 +272,9 @@
     "description": "Attaque un ennemi avec un pouvoir de Feu 7",
     "probability": 15,
     "priority": 2,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11308,
@@ -249,11 +287,13 @@
     "description": "Augmente les chances de contre-attaque de 10% et le maximum de points de vie de 20. Diminue l'initiative du Dinoz de 5",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11309,
-    "name": "AuraIncandescente",
+    "name": "Aura Incandescente",
     "type": "P",
     "element": "Feu",
     "parents": [
@@ -262,7 +302,9 @@
     "description": "Augmente l'élément Feu de 2",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11310,
@@ -275,7 +317,9 @@
     "description": "Augmente les chances de contre-attaque de 5%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11311,
@@ -288,11 +332,13 @@
     "description": "Tous les ennemis perdent des points de vie égaux à leur élément Bois (soumis équilibrage)",
     "probability": 10,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11312,
-    "name": "PaumeChalumeau",
+    "name": "Paume Chalumeau",
     "type": "A",
     "element": "Feu",
     "parents": [
@@ -301,11 +347,13 @@
     "description": "Attaque un ennemi avec un pouvoir de Feu 10 puis diminue l'initiative du Dinoz de 15",
     "probability": 15,
     "priority": 2,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11313,
-    "name": "CoeurDuPhenix",
+    "name": "Coeur Du Phenix",
     "type": "P",
     "element": "Feu",
     "parents": [
@@ -314,12 +362,14 @@
     "description": "Augmente le nombre de PV récupérés lors du repos de 15%",
     "probability": 0,
     "priority": 0,
-    "energy": 75
+    "energy": 75,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 11314,
     "name": "Bouddha",
-    "type": "P",
+    "type": "I",
     "element": "Double",
     "parents": [
       41201,
@@ -330,11 +380,13 @@
     "description": "Renforce la défense dans chaque élément de 10 points pour toute l'équipe",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11315,
-    "name": "GriffesInfernales",
+    "name": "Griffes Infernales",
     "type": "S",
     "element": "Feu",
     "parents": [
@@ -343,11 +395,13 @@
     "description": "Enflamme l'adversaire et lui inflige des dégâts de Feu à chaque tour, basés sur la valeur de son élément Feu",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11401,
-    "name": "ChasseurDeDragon",
+    "name": "Chasseur De Dragon",
     "type": "C",
     "element": "Feu",
     "parents": [
@@ -356,7 +410,9 @@
     "description": "Permet au Dinoz de chasser des animaux très rares et dangereux dans certains lieux",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11402,
@@ -369,7 +425,9 @@
     "description": "Augmente la puissance du premier assaut de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11403,
@@ -382,11 +440,13 @@
     "description": "Le Dinoz s'enflamme et perd 1 PV par tour. Les ennemis attaquant le Dinoz en mêlée subissent des dégâts relatifs à l'élément Feu du Dinoz enflammé soumis à équilibrage.",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11404,
-    "name": "SelfControl",
+    "name": "Self Control",
     "type": "S",
     "element": "Feu",
     "parents": [
@@ -395,7 +455,9 @@
     "description": "Immunise le Dinoz contre tous les effets négatifs et diminue son initiative de 3",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11405,
@@ -410,7 +472,9 @@
     "description": "Augmente l'initiative de 6",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11406,
@@ -425,7 +489,9 @@
     "description": "Augmente les chances de contre-attaque de 20%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11407,
@@ -438,11 +504,13 @@
     "description": "Attaque tous les ennemis avec un pouvoir de Feu 10",
     "probability": 7,
     "priority": 4,
-    "energy": 35
+    "energy": 35,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11408,
-    "name": "ChefDeGuerre",
+    "name": "Chef De Guerre",
     "type": "P",
     "element": "Feu",
     "parents": [
@@ -451,11 +519,13 @@
     "description": "Augmente la puissance de tous les **assauts** de tous les Dinoz du Groupe de 2",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11409,
-    "name": "ArmureDeBasalte",
+    "name": "Armure De Basalte",
     "type": "P",
     "element": "Double",
     "parents": [
@@ -466,11 +536,13 @@
     "description": "Augmente l'armure de 15%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11410,
-    "name": "MaitreElementaire",
+    "name": "Maitre Elementaire",
     "type": "P",
     "element": "Double",
     "parents": [
@@ -481,12 +553,14 @@
     "description": "Augmente les éléments Eau et Feu de 2",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11411,
     "name": "Salamandre",
-    "type": "P",
+    "type": "I",
     "element": "Double",
     "parents": [
       31305,
@@ -496,12 +570,14 @@
     "description": "Attaque un ennemi avec une invocation de Feu 30",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11412,
     "name": "Vulcain",
-    "type": "P",
+    "type": "I",
     "element": "Double",
     "parents": [
       11303,
@@ -511,12 +587,14 @@
     "description": "Attaque tous les ennemis avec une invocation de Feu 20",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11413,
-    "name": "ArmureDIfrit",
-    "type": "P",
+    "name": "Armure DIfrit",
+    "type": "I",
     "element": "Double",
     "parents": [
       11307,
@@ -526,7 +604,9 @@
     "description": "Augmente la défense des alliés contre le Feu de 20",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 11501,
@@ -539,18 +619,22 @@
     "description": "Le Dinoz ne pourra plus faire partie d'un Groupe. Augmente l'élément Feu de 6, le maximum de vie de 50 et la vitesse de 15%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 12101,
-    "name": "ProteinesDinozienne",
+    "name": "Proteines Dinozienne",
     "type": "P",
     "element": "Feu",
     "parents": [],
     "description": "Augmente l'endurance du Dinoz de 30%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12201,
@@ -563,7 +647,9 @@
     "description": "Diminue de 25% la capacité de récupération d'un adversaire",
     "probability": 15,
     "priority": 4,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12202,
@@ -576,11 +662,13 @@
     "description": "Augmente la puissance de tous les **assauts** de 20 lorsque le Dinoz se trouve au Grand-tout-chaud",
     "probability": 10,
     "priority": 7,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12301,
-    "name": "CarapaceDeMagma",
+    "name": "Carapace De Magma",
     "type": "P",
     "element": "Feu",
     "parents": [
@@ -589,11 +677,13 @@
     "description": "Augmente le maximum de points de vie de 30 et la puissance des **assauts** Feu de 5",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12302,
-    "name": "CriDeGuerre",
+    "name": "Cri De Guerre",
     "type": "A",
     "element": "Feu",
     "parents": [
@@ -602,11 +692,13 @@
     "description": "Le Dinoz lancera sa compétence A la plus puissante au prochain tour",
     "probability": 10,
     "priority": 7,
-    "energy": 25
+    "energy": 25,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12401,
-    "name": "FievreBrulante",
+    "name": "Fievre Brulante",
     "type": "P",
     "element": "Feu",
     "parents": [
@@ -615,11 +707,13 @@
     "description": "Augmente les chances de multi-coups de 30%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12402,
-    "name": "BenedictionDArtemis",
+    "name": "Benediction DArtemis",
     "type": "S",
     "element": "Feu",
     "parents": [
@@ -628,7 +722,9 @@
     "description": "Permet de chasser dans une case supplémentaire",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12403,
@@ -641,11 +737,13 @@
     "description": "Augmente ou diminue (50/50) la vitesse du Dinoz de 25% au début d'un combat",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12404,
-    "name": "ArmureDeFeu",
+    "name": "Armure De Feu",
     "type": "P",
     "element": "Feu",
     "parents": [
@@ -654,11 +752,13 @@
     "description": "Augmente la défense contre le Bois de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12501,
-    "name": "PaysDeCendre",
+    "name": "Pays De Cendre",
     "type": "E",
     "element": "Feu",
     "parents": [
@@ -667,11 +767,13 @@
     "description": "Les Dinoz (alliés et ennemis) avec un élément Feu inférieur à 10 ne pourront plus utiliser de compétences A et E durant les 3 prochains tours du lanceur",
     "probability": 20,
     "priority": 3,
-    "energy": 35
+    "energy": 35,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12502,
-    "name": "ReceptacleRocheux",
+    "name": "Receptacle Rocheux",
     "type": "A",
     "element": "Feu",
     "parents": [
@@ -680,11 +782,13 @@
     "description": "Annule les compétences sphériques A et E de type Bois sur un Dinoz",
     "probability": 15,
     "priority": 7,
-    "energy": 35
+    "energy": 35,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12503,
-    "name": "PlumesDePhoenix",
+    "name": "Plumes De Phoenix",
     "type": "E",
     "element": "Feu",
     "parents": [
@@ -693,24 +797,28 @@
     "description": "Le Dinoz est ramené une fois à la vie avec 12 PV et gagne +10 en vitesse et en initiative, mais ne peut plus se régénérer",
     "probability": 0,
     "priority": 0,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12504,
-    "name": "AcclamationFraternelle",
+    "name": "Acclamation Fraternelle",
     "type": "A",
     "element": "Feu",
     "parents": [
-      12402
+      12403
     ],
     "description": "Augmente la récupération d'énergie de tous les Dinoz de 30%",
     "probability": 15,
     "priority": 6,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 12505,
-    "name": "PoingDeFeu",
+    "name": "Poing De Feu",
     "type": "P",
     "element": "Feu",
     "parents": [
@@ -719,7 +827,9 @@
     "description": "Augmente de 20 la puissance des **assauts** Feu",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 21101,
@@ -730,7 +840,9 @@
     "description": "Augmente l'armure de 5%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21102,
@@ -741,7 +853,9 @@
     "description": "Augmente la puissance des **assauts** de Bois de 5",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21103,
@@ -752,18 +866,22 @@
     "description": "Augmente la défense Bois de 2",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21104,
-    "name": "LanceurDeGland",
+    "name": "Lanceur De Gland",
     "type": "A",
     "element": "Bois",
     "parents": [],
     "description": "Lance un gland sur un ennemi avec un pouvoir Bois de 5",
     "probability": 15,
     "priority": 3,
-    "energy": 25
+    "energy": 25,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 21201,
@@ -776,11 +894,13 @@
     "description": "Diminue l'initiative d'un ennemi au sol de 15",
     "probability": 20,
     "priority": 2,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21202,
-    "name": "RenfortsKorgon",
+    "name": "Renforts Korgon",
     "type": "E",
     "element": "Bois",
     "parents": [
@@ -789,7 +909,9 @@
     "description": "Appelle un korgon pour aider à combattre",
     "probability": 15,
     "priority": 3,
-    "energy": 30
+    "energy": 30,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21203,
@@ -802,7 +924,9 @@
     "description": "Le Dinoz peut être suivi par un Dinoz supplémentaire",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21204,
@@ -815,7 +939,9 @@
     "description": "Augmente le minimum de dégâts de 1",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21205,
@@ -828,7 +954,9 @@
     "description": "Permet au Dinoz de trouver des artefacts dans certains lieux",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21206,
@@ -841,7 +969,9 @@
     "description": "Augmente la puissance de tous les **assauts** de 1 et augmente le maximum de points de vie de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21207,
@@ -854,11 +984,13 @@
     "description": "Permet au Dinoz de chercher une case supplémentaire",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 21301,
-    "name": "EtatPrimal",
+    "name": "Etat Primal",
     "type": "E",
     "element": "Bois",
     "parents": [
@@ -867,7 +999,9 @@
     "description": "Annule tous les statuts positifs des ennemis et tous les statuts négatifs des alliés",
     "probability": 10,
     "priority": 3,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21302,
@@ -880,7 +1014,9 @@
     "description": "Permet au Dinoz de chercher des artefacts rares à certains endroits",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21303,
@@ -893,11 +1029,13 @@
     "description": "Augmente de 2 les PV récupérés par heure lors du repos",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21304,
-    "name": "InstinctSauvage",
+    "name": "Instinct Sauvage",
     "type": "P",
     "element": "Bois",
     "parents": [
@@ -906,11 +1044,13 @@
     "description": "Augmente de 2 l'élément Bois",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21305,
-    "name": "LargeMachoire",
+    "name": "Large Machoire",
     "type": "P",
     "element": "Bois",
     "parents": [
@@ -919,7 +1059,9 @@
     "description": "Augmente la puissance des **assauts** de Bois de 15",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21306,
@@ -932,11 +1074,13 @@
     "description": "Augmente la vitesse du Dinoz de 15%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21307,
-    "name": "PrintempsPrecoce",
+    "name": "Printemps Precoce",
     "type": "E",
     "element": "Bois",
     "parents": [
@@ -945,7 +1089,9 @@
     "description": "Tous les autres combattants alliés regagnent jusqu'à autant de points de vie que l'élément Bois du Dinoz",
     "probability": 10,
     "priority": 2,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21308,
@@ -958,11 +1104,13 @@
     "description": "Le Dinoz peut être suivi par un Dinoz supplémentaire",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21309,
-    "name": "ResistanceALaMagie",
+    "name": "Resistance ALa Magie",
     "type": "E",
     "element": "Bois",
     "parents": [
@@ -971,7 +1119,9 @@
     "description": "Annule tous les effets négatifs de ce Dinoz",
     "probability": 50,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21310,
@@ -984,11 +1134,13 @@
     "description": "Permet au Dinoz de chercher une case supplémentaire",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21311,
-    "name": "HeritageFaroe",
+    "name": "Heritage Faroe",
     "type": "P",
     "element": "Bois",
     "parents": [
@@ -997,11 +1149,13 @@
     "description": "Augmente la puissance des **assauts** Bois de 12 et l'armure de 10%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21312,
-    "name": "ExpertEnFouille",
+    "name": "Expert En Fouille",
     "type": "C",
     "element": "Bois",
     "parents": [
@@ -1010,11 +1164,13 @@
     "description": "Permet au Dinoz de chercher une case de plus lors d'une action de fouille",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21313,
-    "name": "GrosseBeigne",
+    "name": "Grosse Beigne",
     "type": "E",
     "element": "Bois",
     "parents": [
@@ -1023,11 +1179,13 @@
     "description": "Double la puissance du prochain assaut",
     "probability": 10,
     "priority": 4,
-    "energy": 45
+    "energy": 45,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 21401,
-    "name": "EspritGorilloz",
+    "name": "Esprit Gorilloz",
     "type": "E",
     "element": "Bois",
     "parents": [
@@ -1036,7 +1194,9 @@
     "description": "Appelle un esprit Gorilloz pour aider à combattre",
     "probability": 20,
     "priority": 4,
-    "energy": 40
+    "energy": 40,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21402,
@@ -1049,7 +1209,9 @@
     "description": "Augmente le nombre maximum de Dinoz actifs de 3 (non cumulable)",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21403,
@@ -1062,7 +1224,9 @@
     "description": "Tous les Dinoz débloquent un emplacement d'équipement supplémentaire (non cumulable)",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21404,
@@ -1075,11 +1239,13 @@
     "description": "Augmente la puissance de tous les **assauts** de 5, augmente le maximum de points de vie de 30 et diminue la vitesse de 20%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21405,
-    "name": "GardeForestier",
+    "name": "Garde Forestier",
     "type": "P",
     "element": "Bois",
     "parents": [
@@ -1088,7 +1254,9 @@
     "description": "Augmente de 3 la défense Bois de tous les Dinoz du groupe",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21406,
@@ -1101,12 +1269,14 @@
     "description": "Permet au Dinoz de trouver des artefacts rares ou exceptionnels à certains endroits",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21407,
-    "name": "BenedictionDesFees",
-    "type": "P",
+    "name": "Benediction Des Fees",
+    "type": "I",
     "element": "Double",
     "parents": [
       11302,
@@ -1116,7 +1286,9 @@
     "description": "Ajoute 10 points d'initiative à tous les Dinoz de l'équipe",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21408,
@@ -1131,12 +1303,14 @@
     "description": "Ajoute la valeur de l'élément Bois sur les **assauts** Foudre, et vice-versa",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21409,
-    "name": "LoupGarou",
-    "type": "P",
+    "name": "Loup Garou",
+    "type": "I",
     "element": "Double",
     "parents": [
       21304,
@@ -1146,7 +1320,9 @@
     "description": "Attaque tous les ennemis avec une invocation de Bois 30",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 21501,
@@ -1159,18 +1335,22 @@
     "description": "Augmente la puissance de tous les **assauts** de 15, augmente le maximum de points de vie de 30 et diminue la vitesse de 20%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 22101,
-    "name": "OxygenationMusculaire",
+    "name": "Oxygenation Musculaire",
     "type": "P",
     "element": "Bois",
     "parents": [],
     "description": "Augmente l'endurance du Dinoz de 20%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22102,
@@ -1181,11 +1361,13 @@
     "description": "Augmente la puissance de tous les **assauts** de 20 quand le Dinoz se trouve dans la Forêt de Grumhel",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22201,
-    "name": "SourceDeVie",
+    "name": "Source De Vie",
     "type": "S",
     "element": "Bois",
     "parents": [
@@ -1194,11 +1376,13 @@
     "description": "Si un assaut touche le Dinoz, il peut absorber jusqu'à 5% de la vie de son adversaire",
     "probability": 0,
     "priority": 0,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22202,
-    "name": "VideEnergetique",
+    "name": "Vide Energetique",
     "type": "S",
     "element": "Bois",
     "parents": [
@@ -1207,11 +1391,13 @@
     "description": "Diminue de 15% la capacité de récupération d’un adversaire lors d'un assaut",
     "probability": 0,
     "priority": 0,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22203,
-    "name": "BouclierDinoz",
+    "name": "Bouclier Dinoz",
     "type": "E",
     "element": "Bois",
     "parents": [
@@ -1220,11 +1406,13 @@
     "description": "Protège le Dinoz avec le moins de PV en prenant les dégâts à sa place pendant la durée du combat",
     "probability": 10,
     "priority": 9,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22204,
-    "name": "AcideLactique",
+    "name": "Acide Lactique",
     "type": "P",
     "element": "Bois",
     "parents": [
@@ -1233,11 +1421,13 @@
     "description": "Diminue l'endurance du Dinoz de 15%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22301,
-    "name": "LancerDeRoche",
+    "name": "Lancer De Roche",
     "type": "A",
     "element": "Bois",
     "parents": [
@@ -1246,7 +1436,9 @@
     "description": "Propulse un rocher sur l'ennemi avec un pouvoir Bois de 10",
     "probability": 10,
     "priority": 7,
-    "energy": 35
+    "energy": 35,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22302,
@@ -1259,11 +1451,13 @@
     "description": "Diminue l'énergie maximale d'un adversaire de 30%",
     "probability": 10,
     "priority": 5,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22303,
-    "name": "ForceControl",
+    "name": "Force Control",
     "type": "P",
     "element": "Bois",
     "parents": [
@@ -1272,11 +1466,13 @@
     "description": "Le Dinoz inflige au minimum 10 points de dégâts lors d'un assaut",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22304,
-    "name": "PeauDeFer",
+    "name": "Peau De Fer",
     "type": "P",
     "element": "Bois",
     "parents": [
@@ -1285,7 +1481,9 @@
     "description": "Augmente les PV max de 50",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22401,
@@ -1298,11 +1496,13 @@
     "description": "Permet au Dinoz de chercher une fois de plus lors d'une action de fouille",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22402,
-    "name": "CourantDeVie",
+    "name": "Courant De Vie",
     "type": "P",
     "element": "Bois",
     "parents": [
@@ -1311,7 +1511,9 @@
     "description": "Augmente les **défenses** Eau de 20 et les **assauts** Bois de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22403,
@@ -1324,11 +1526,13 @@
     "description": "Double la puissance des **assauts**, mais empêche l'utilisation des compétences A et E pendant toute la durée du combat",
     "probability": 10,
     "priority": 8,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22404,
-    "name": "RiviereDeVie",
+    "name": "Riviere De Vie",
     "type": "P",
     "element": "Bois",
     "parents": [
@@ -1337,11 +1541,13 @@
     "description": "Augmente l'initiative du Dinoz de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22501,
-    "name": "MurDeBoue",
+    "name": "Mur De Boue",
     "type": "A",
     "element": "Bois",
     "parents": [
@@ -1350,7 +1556,24 @@
     "description": "Absorbe jusqu'à 30 points de dégâts avant de disparaître. Est vulnérable à Rayon Kaar-Sher.",
     "probability": 5,
     "priority": 8,
-    "energy": 45
+    "energy": 45,
+    "skillNature": 2,
+    "raceId": null
+  },
+  {
+    "id": 22502,
+    "name": "Peau DAcier",
+    "type": "P",
+    "element": "Bois",
+    "parents": [
+      22401
+    ],
+    "description": "Augmente les PV max de 100",
+    "probability": 0,
+    "priority": 0,
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22503,
@@ -1363,7 +1586,9 @@
     "description": "Copie une compétence utilisée par l'adversaire et la conserve pendant toute la durée du combat",
     "probability": 0,
     "priority": 0,
-    "energy": 45
+    "energy": 45,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22504,
@@ -1376,11 +1601,13 @@
     "description": "Tous les Dinoz (alliés et ennemis) avec un élément Bois inférieur à 10 ne pourront plus utiliser de compétences A et E pendant les 3 prochains tours du lanceur à moins qu'ils ne subissent plus de 10 points de dégâts",
     "probability": 20,
     "priority": 3,
-    "energy": 40
+    "energy": 40,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 22505,
-    "name": "ReceptacleAqueux",
+    "name": "Receptacle Aqueux",
     "type": "A",
     "element": "Bois",
     "parents": [
@@ -1389,18 +1616,22 @@
     "description": "Annule les compétences sphériques A de type Eau",
     "probability": 15,
     "priority": 7,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 31101,
-    "name": "CanonAEau",
+    "name": "Canon AEau",
     "type": "A",
     "element": "Eau",
     "parents": [],
     "description": "Attaque un ennemi avec un pouvoir Eau de 6",
     "probability": 25,
     "priority": 1,
-    "energy": 5
+    "energy": 5,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31102,
@@ -1411,7 +1642,9 @@
     "description": "Augmente la puissance de tous les **assauts** Eau de 4, et permet au Dinoz d'annuler l'effet intangible à chaque assaut. Annule également l'effet des compétences coup sournois et coup fatal.",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31103,
@@ -1422,7 +1655,9 @@
     "description": "Augmente les PV max de 30",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31104,
@@ -1433,7 +1668,9 @@
     "description": "Augmente les PV max de 10",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 31201,
@@ -1446,11 +1683,13 @@
     "description": "Attaque un ennemi avec un pouvoir Eau de 5. L'ennemi est ensuite ralenti.",
     "probability": 10,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31202,
-    "name": "DoucheEcossaise",
+    "name": "Douche Ecossaise",
     "type": "E",
     "element": "Eau",
     "parents": [
@@ -1459,11 +1698,13 @@
     "description": "Attaque tous les ennemis avec un pouvoir Eau de 2",
     "probability": 40,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31203,
-    "name": "CoupsSournois",
+    "name": "Coups Sournois",
     "type": "A",
     "element": "Eau",
     "parents": [
@@ -1472,11 +1713,13 @@
     "description": "Attaque un ennemi. En cas de réussite l'ennemi perd la moitié de ses points de vie (soumis à équilibrage) s'il n'a pas la compétence perception. Note : ne fonctionne pas sur les boss.",
     "probability": 7,
     "priority": 3,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31204,
-    "name": "ApprentiPecheur",
+    "name": "Apprenti Pecheur",
     "type": "C",
     "element": "Eau",
     "parents": [
@@ -1485,11 +1728,13 @@
     "description": "Permet au Dinoz de pêcher de petits poissons à certains endroits",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31205,
-    "name": "PocheVentrale",
+    "name": "Poche Ventrale",
     "type": "S",
     "element": "Eau",
     "parents": [
@@ -1498,11 +1743,13 @@
     "description": "Déverrouille un emplacement d'équipement supplémentaire",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31206,
-    "name": "KarateSousMarin",
+    "name": "Karate Sous Marin",
     "type": "P",
     "element": "Eau",
     "parents": [
@@ -1511,11 +1758,13 @@
     "description": "Augmente la puissance de tous les **assauts** et **pouvoirs** d'Eau de 10",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31207,
-    "name": "EcaillesLuminescentes",
+    "name": "Ecailles Luminescentes",
     "type": "P",
     "element": "Eau",
     "parents": [
@@ -1524,11 +1773,13 @@
     "description": "Augmente l'armure de 10%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31208,
-    "name": "MoignonsLiquides",
+    "name": "Moignons Liquides",
     "type": "A",
     "element": "Eau",
     "parents": [
@@ -1537,11 +1788,13 @@
     "description": "Diminue l'initiative d'un ennemi de 25",
     "probability": 8,
     "priority": 4,
-    "energy": 75
+    "energy": 75,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 31301,
-    "name": "ZeroAbsolu",
+    "name": "Zero Absolu",
     "type": "P",
     "element": "Eau",
     "parents": [
@@ -1550,7 +1803,9 @@
     "description": "Augmente la défense contre le Feu de 25",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31302,
@@ -1563,7 +1818,9 @@
     "description": "Pétrifie un ennemi pour une durée moyenne, il ne peut plus agir mais son armure augmente de 50%",
     "probability": 10,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31303,
@@ -1576,7 +1833,9 @@
     "description": "Régénère 1 PV par tour, les assaillants en mêlée prennent 1 point de dégât.",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31304,
@@ -1589,11 +1848,13 @@
     "description": "Augmente la probabilité d'utilisation des équipements de 50%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31305,
-    "name": "CoupFatal",
+    "name": "Coup Fatal",
     "type": "A",
     "element": "Eau",
     "parents": [
@@ -1602,11 +1863,13 @@
     "description": "Attaque un ennemi. S'il est touché, il perd tous ses points de vie (soumis à équilibrage) s'il n'a pas la compétence perception. Note : ne fonctionne pas sur les boss.",
     "probability": 2,
     "priority": 4,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31306,
-    "name": "EntrainementSousMarin",
+    "name": "Entrainement Sous Marin",
     "type": "P",
     "element": "Eau",
     "parents": [
@@ -1615,11 +1878,13 @@
     "description": "Augmente les PV max de 10",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31307,
-    "name": "PecheurConfirme",
+    "name": "Pecheur Confirme",
     "type": "C",
     "element": "Eau",
     "parents": [
@@ -1628,7 +1893,9 @@
     "description": "Permet au Dinoz de pêcher de gros poissons à certains endroits",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31308,
@@ -1641,7 +1908,9 @@
     "description": "Ralentit tous les ennemis de 50% pour une durée moyenne",
     "probability": 15,
     "priority": 6,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31309,
@@ -1654,11 +1923,13 @@
     "description": "Augmente les PV max de 100",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31310,
-    "name": "SansPitie",
+    "name": "Sans Pitie",
     "type": "S",
     "element": "Eau",
     "parents": [
@@ -1667,11 +1938,13 @@
     "description": "Les **assauts** ciblent l'ennemi avec le moins de PV",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31311,
-    "name": "CloneAqueux",
+    "name": "Clone Aqueux",
     "type": "E",
     "element": "Eau",
     "parents": [
@@ -1680,11 +1953,13 @@
     "description": "Crée une copie du lanceur avec 1 PV. La copie hérite seulement des statistiques de bases du lanceur (attaque, défense, esquive, multi-coups, contre).",
     "probability": 15,
     "priority": 8,
-    "energy": 35
+    "energy": 35,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31312,
-    "name": "GriffesEmpoisonnees",
+    "name": "Griffes Empoisonnees",
     "type": "S",
     "element": "Eau",
     "parents": [
@@ -1693,7 +1968,9 @@
     "description": "Si un **assaut** d'Eau du Dinoz touche un ennemi, il est empoisonné pour une durée moyenne et le poison inflige 14 dégâts",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31313,
@@ -1706,11 +1983,13 @@
     "description": "Attaque tous les ennemis avec un pouvoir Eau de 10, et diminue leur initiative de 8",
     "probability": 5,
     "priority": 5,
-    "energy": 75
+    "energy": 75,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 31314,
-    "name": "PeauDeSerpent",
+    "name": "Peau De Serpent",
     "type": "P",
     "element": "Eau",
     "parents": [
@@ -1719,11 +1998,13 @@
     "description": "Augmente les chances d'esquive de 10%. Réduit la vitesse des attaques Eau de 15%.",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31401,
-    "name": "RayonKaarSher",
+    "name": "Rayon Kaar Sher",
     "type": "A",
     "element": "Eau",
     "parents": [
@@ -1732,7 +2013,9 @@
     "description": "Attaque tous les ennemis avec un pouvoir Eau de 7",
     "probability": 20,
     "priority": 1,
-    "energy": 40
+    "energy": 40,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31402,
@@ -1745,11 +2028,13 @@
     "description": "Augmente la capacité maximale de l'inventaire du joueur de 50% (non cumulable)",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31403,
-    "name": "EntrainementSousMarinAvance",
+    "name": "Entrainement Sous Marin Avance",
     "type": "P",
     "element": "Eau",
     "parents": [
@@ -1758,11 +2043,13 @@
     "description": "Augmente les PV max de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31404,
-    "name": "MaitrePecheur",
+    "name": "Maitre Pecheur",
     "type": "C",
     "element": "Eau",
     "parents": [
@@ -1771,7 +2058,9 @@
     "description": "Permet au Dinoz de pêcher des poissons rares et exceptionnels à certains endroits",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31405,
@@ -1784,11 +2073,13 @@
     "description": "Augmente le gain de PV des objets de 10% pour tous les Dinoz (non cumulable)",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31406,
-    "name": "SangAcide",
+    "name": "Sang Acide",
     "type": "S",
     "element": "Eau",
     "parents": [
@@ -1797,7 +2088,9 @@
     "description": "Les ennemis attaquant le Dinoz en mêlée ont une chance de subir des dégâts relatifs à l'élément Eau du Dinoz (soumis à équilibrage)",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31407,
@@ -1812,7 +2105,9 @@
     "description": "Enveloppe le Dinoz dans une bulle réduisant les dégâts des sorts élémentaux de type autre que le Bois. L'efficacité est basée sur la proportion des éléments Eau et Air devant les autres éléments.",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31408,
@@ -1827,12 +2122,14 @@
     "description": "Augmente toutes les défenses de 2",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31409,
     "name": "Ondine",
-    "type": "P",
+    "type": "I",
     "element": "Double",
     "parents": [
       11310,
@@ -1842,11 +2139,13 @@
     "description": "Attaque un ennemi avec un pouvoir Eau de 30",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31501,
-    "name": "MaitreNageur",
+    "name": "Maitre Nageur",
     "type": "S",
     "element": "Eau",
     "parents": [
@@ -1855,12 +2154,14 @@
     "description": "Augmente l'élément Eau de 5",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 31502,
     "name": "Leviathan",
-    "type": "P",
+    "type": "I",
     "element": "Double",
     "parents": [
       31406,
@@ -1870,22 +2171,26 @@
     "description": "Attaque tous les ennemis avec une invocation d'Eau 20",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 32101,
-    "name": "EauDivine",
+    "name": "Eau Divine",
     "type": "S",
     "element": "Eau",
     "parents": [],
     "description": "Double les PV récupérés lors du repos",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32201,
-    "name": "RadiationsGamma",
+    "name": "Radiations Gamma",
     "type": "P",
     "element": "Eau",
     "parents": [
@@ -1894,7 +2199,9 @@
     "description": "Augmente la puissance de tous les **assauts** de 5, le maximum de points de vie 30, et diminue l'initiative de 10",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32202,
@@ -1907,11 +2214,13 @@
     "description": "Augmente la puissance de tous les **assauts** de 20 lorsque le Dinoz est aux Îles Atlantéinées",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32301,
-    "name": "MueAcqueuse",
+    "name": "Mue Acqueuse",
     "type": "P",
     "element": "Eau",
     "parents": [
@@ -1920,11 +2229,13 @@
     "description": "Augmente la défense contre la Foudre de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32302,
-    "name": "CarapaceBlindee",
+    "name": "Carapace Blindee",
     "type": "P",
     "element": "Eau",
     "parents": [
@@ -1933,11 +2244,13 @@
     "description": "Augmente l'armure de 50%, réduit la vitesse de 20%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32303,
-    "name": "DieteChromatique",
+    "name": "Diete Chromatique",
     "type": "E",
     "element": "Eau",
     "parents": [
@@ -1946,11 +2259,13 @@
     "description": "Inflige le statut mono-élément à un ennemi (verrouille son élément actuel)",
     "probability": 15,
     "priority": 8,
-    "energy": 45
+    "energy": 45,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32401,
-    "name": "EffluveAphrodisiaque",
+    "name": "Effluve Aphrodisiaque",
     "type": "S",
     "element": "Eau",
     "parents": [
@@ -1959,7 +2274,9 @@
     "description": "Le Dinoz peut être suivi par un Dinoz supplémentaire",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32402,
@@ -1972,7 +2289,9 @@
     "description": "Le Dinoz peut pêcher dans une case supplémentaire",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32403,
@@ -1985,7 +2304,9 @@
     "description": "Empêche un des Dinoz adverses d'utiliser des objets non magiques pendant le combat. Se lance au début du combat.",
     "probability": 0,
     "priority": 0,
-    "energy": 45
+    "energy": 45,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32404,
@@ -1998,11 +2319,13 @@
     "description": "Tous les Dinoz (alliés et ennemis) avec un élément Eau inférieur à 10 verront la puissance de tous leurs **assauts** et attaques diminuée de 25% pour les 3 prochains tours du lanceur",
     "probability": 20,
     "priority": 3,
-    "energy": 35
+    "energy": 35,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32405,
-    "name": "BanniDesDieux",
+    "name": "Banni Des Dieux",
     "type": "E",
     "element": "Eau",
     "parents": [
@@ -2011,11 +2334,13 @@
     "description": "Le Dinoz ciblé ne peut plus utiliser son invocation",
     "probability": 10,
     "priority": 8,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32501,
-    "name": "TourbillonMagique",
+    "name": "Tourbillon Magique",
     "type": "P",
     "element": "Eau",
     "parents": [
@@ -2024,7 +2349,9 @@
     "description": "Augmente la puissance des **assauts** Eau de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32502,
@@ -2037,11 +2364,13 @@
     "description": "Diminue l'endurance de tous les Dinoz ennemis de 20%",
     "probability": 15,
     "priority": 8,
-    "energy": 55
+    "energy": 55,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32503,
-    "name": "TherapieDeGroupe",
+    "name": "Therapie De Groupe",
     "type": "E",
     "element": "Eau",
     "parents": [
@@ -2050,11 +2379,13 @@
     "description": "Récupère autant de PV que l'équipe adverse lorsqu'elle utilise une compétence de soin sur le Dinoz lanceur",
     "probability": 0,
     "priority": 0,
-    "energy": 55
+    "energy": 55,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32504,
-    "name": "ReceptacleTesla",
+    "name": "Receptacle Tesla",
     "type": "A",
     "element": "Eau",
     "parents": [
@@ -2063,11 +2394,13 @@
     "description": "Annule les compétences sphériques A et E de type Foudre d'un Dinoz",
     "probability": 15,
     "priority": 7,
-    "energy": 45
+    "energy": 45,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 32505,
-    "name": "VitaliteMarine",
+    "name": "Vitalite Marine",
     "type": "P",
     "element": "Eau",
     "parents": [
@@ -2076,7 +2409,9 @@
     "description": "Augmente les PV max de 80",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 41101,
@@ -2087,7 +2422,9 @@
     "description": "Augmente l'XP gagnée de 5%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41102,
@@ -2098,7 +2435,9 @@
     "description": "Augmente la puissance du prochain assaut d'un bonus de Foudre 1",
     "probability": 30,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41103,
@@ -2109,7 +2448,9 @@
     "description": "Augmente la vitesse du Dinoz de 15%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41104,
@@ -2120,7 +2461,9 @@
     "description": "Augmente l'initiative de 5",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 41201,
@@ -2133,11 +2476,13 @@
     "description": "Les **assauts** ciblent toujours le même ennemi",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41202,
-    "name": "AttaqueEclair",
+    "name": "Attaque Eclair",
     "type": "P",
     "element": "Foudre",
     "parents": [
@@ -2146,7 +2491,9 @@
     "description": "Augmente la vitesse des attaques Foudre de 40%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41203,
@@ -2159,11 +2506,13 @@
     "description": "Permet au Dinoz d'absorber l'énergie de la Foudre à certains endroits",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41204,
-    "name": "CoupDouble",
+    "name": "Coup Double",
     "type": "P",
     "element": "Foudre",
     "parents": [
@@ -2172,7 +2521,9 @@
     "description": "Augmente les chances de multi-coups de 20%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41205,
@@ -2185,11 +2536,13 @@
     "description": "Augmente de 2 les PV récupérés par heure lors du repos",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41206,
-    "name": "PremiersSoins",
+    "name": "Premiers Soins",
     "type": "S",
     "element": "Foudre",
     "parents": [
@@ -2198,11 +2551,13 @@
     "description": "Permet au Dinoz de récupérer un point de vie à la fin du combat s'il a perdu de la vie",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41207,
-    "name": "EclairSinueux",
+    "name": "Eclair Sinueux",
     "type": "A",
     "element": "Foudre",
     "parents": [
@@ -2211,7 +2566,9 @@
     "description": "Frappe 3 ennemis avec un pouvoir Foudre de 10",
     "probability": 10,
     "priority": 3,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 41301,
@@ -2224,11 +2581,13 @@
     "description": "Attaque un ennemi avec un pouvoir Foudre de 10",
     "probability": 10,
     "priority": 4,
-    "energy": 25
+    "energy": 25,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41302,
-    "name": "FissionElementaire",
+    "name": "Fission Elementaire",
     "type": "C",
     "element": "Foudre",
     "parents": [
@@ -2237,11 +2596,13 @@
     "description": "Permet au Dinoz d'absorber tous types d'énergie élémentaire à certains endroits",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41303,
-    "name": "VoieDeKaos",
+    "name": "Voie De Kaos",
     "type": "P",
     "element": "Foudre",
     "parents": [
@@ -2250,11 +2611,13 @@
     "description": "Augmente la puissance des **assauts** Feu et Foudre de 6",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41304,
-    "name": "PlanDeCarriere",
+    "name": "Plan De Carriere",
     "type": "S",
     "element": "Foudre",
     "parents": [
@@ -2263,7 +2626,9 @@
     "description": "Permet au Dinoz de retirer au sort l'élément à chaque changement de niveau. Limité à une fois par niveau.",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41305,
@@ -2276,11 +2641,13 @@
     "description": "Augmente la vitesse des attaques Foudre de 50%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41306,
-    "name": "VoieDeGaia",
+    "name": "Voie De Gaia",
     "type": "P",
     "element": "Foudre",
     "parents": [
@@ -2289,7 +2656,9 @@
     "description": "Augmente les défenses Bois et Foudre de 3",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41307,
@@ -2302,11 +2671,13 @@
     "description": "Permet de récupérer jusqu'à 3 PV à la fin d'un combat",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41308,
-    "name": "DanseFoudroyante",
+    "name": "Danse Foudroyante",
     "type": "A",
     "element": "Foudre",
     "parents": [
@@ -2315,7 +2686,9 @@
     "description": "Attaque 5 fois avec un pouvoir Foudre de 3",
     "probability": 10,
     "priority": 3,
-    "energy": 35
+    "energy": 35,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41309,
@@ -2328,11 +2701,13 @@
     "description": "Augmente l'initiative de 7",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41310,
-    "name": "PureeSalvatrice",
+    "name": "Puree Salvatrice",
     "type": "E",
     "element": "Foudre",
     "parents": [
@@ -2341,11 +2716,13 @@
     "description": "Annule tous les effets négatifs du groupe",
     "probability": 15,
     "priority": 3,
-    "energy": 45
+    "energy": 45,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41311,
-    "name": "AuraHermetique",
+    "name": "Aura Hermetique",
     "type": "E",
     "element": "Foudre",
     "parents": [
@@ -2354,11 +2731,13 @@
     "description": "Le Dinoz se donne le statut bouclier (augmente l'armure de 20%)",
     "probability": 30,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41312,
-    "name": "CrocsDiamant",
+    "name": "Crocs Diamant",
     "type": "P",
     "element": "Foudre",
     "parents": [
@@ -2367,7 +2746,9 @@
     "description": "Augmente la puissance de tous les **assauts** de 2",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41313,
@@ -2380,11 +2761,13 @@
     "description": "En cas de mort, le Dinoz est réanimé une fois avec 12 PV",
     "probability": 0,
     "priority": 0,
-    "energy": 65
+    "energy": 65,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 41401,
-    "name": "AubeFeuillue",
+    "name": "Aube Feuillue",
     "type": "A",
     "element": "Foudre",
     "parents": [
@@ -2393,7 +2776,9 @@
     "description": "Régénère les PV de tous les Dinoz du groupe jusqu'à Foudre 2 + Bois 2",
     "probability": 10,
     "priority": 3,
-    "energy": 65
+    "energy": 65,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41402,
@@ -2406,22 +2791,28 @@
     "description": "Permet à un autre Dinoz du groupe de récupérer jusqu'à 5 PV à la fin d'un combat",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41403,
     "name": "Benediction",
     "type": "E",
     "element": "Foudre",
-    "parents": [],
+    "parents": [
+      41310
+    ],
     "description": "Donne le statut béni à tous les Dinoz du groupe",
     "probability": 25,
     "priority": 3,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41404,
-    "name": "CrepusculeFlambloyant",
+    "name": "Crepuscule Flambloyant",
     "type": "A",
     "element": "Foudre",
     "parents": [
@@ -2430,7 +2821,9 @@
     "description": "Attaque tous les ennemis avec un pouvoir Feu 6 + Foudre 6",
     "probability": 5,
     "priority": 3,
-    "energy": 40
+    "energy": 40,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41405,
@@ -2443,7 +2836,9 @@
     "description": "Diminue tous les prix de la boutique de Dinoland de 10% (non cumulable)",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41406,
@@ -2456,7 +2851,9 @@
     "description": "Permet au Dinoz de se réincarner une fois à partir du niveau 40 en mourant. Le Dinoz recommencera niveau 1, sans statut, compétence et missions mais recevra 5 points d'éléments supplémentaires répartis aléatoirement suivant ses affinités élémentaires.",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41408,
@@ -2471,7 +2868,9 @@
     "description": "Augmente les chances de multi-coups de 15%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41409,
@@ -2486,12 +2885,14 @@
     "description": "Augmente la vitesse de tous les Dinoz du groupe de 5%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41410,
     "name": "Golem",
-    "type": "P",
+    "type": "I",
     "element": "Double",
     "parents": [
       41302,
@@ -2501,12 +2902,14 @@
     "description": "Augmente la défense des alliés contre la Foudre de 20",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41411,
     "name": "Raijin",
-    "type": "P",
+    "type": "I",
     "element": "Double",
     "parents": [
       41301,
@@ -2516,12 +2919,14 @@
     "description": "Attaque tous les ennemis avec une invocation de Foudre 20",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41412,
     "name": "Quetzacoatl",
-    "type": "P",
+    "type": "I",
     "element": "Foudre",
     "parents": [
       41301
@@ -2529,12 +2934,14 @@
     "description": "Attaque tous les ennemis avec un pouvoir Foudre de 40",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41413,
-    "name": "RoiDesSinges",
-    "type": "P",
+    "name": "Roi Des Singes",
+    "type": "I",
     "element": "Double",
     "parents": [
       21308,
@@ -2544,11 +2951,13 @@
     "description": "Les alliés gagnent 20% de chance d'esquive",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41501,
-    "name": "ArchangeCorrosif",
+    "name": "Archange Corrosif",
     "type": "P",
     "element": "Foudre",
     "parents": [
@@ -2557,11 +2966,13 @@
     "description": "Augmente l'élément Feu de 2 et l'élément Foudre de 1",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41502,
-    "name": "ArchangeGenesif",
+    "name": "Archange Genesif",
     "type": "P",
     "element": "Foudre",
     "parents": [
@@ -2570,7 +2981,9 @@
     "description": "Augmente l'élément Bois de 2 et l'élément Foudre de 1",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41503,
@@ -2583,22 +2996,26 @@
     "description": "Augmente de 1 les PV récupérés par heure lors du repos pour tous les Dinoz (non cumulable)",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 42101,
-    "name": "SoutienMoral",
+    "name": "Soutien Moral",
     "type": "P",
     "element": "Foudre",
     "parents": [],
     "description": "Augmente l'endurance du Dinoz de 10%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 42201,
-    "name": "StimulationCardiaque",
+    "name": "Stimulation Cardiaque",
     "type": "P",
     "element": "Foudre",
     "parents": [
@@ -2607,7 +3024,9 @@
     "description": "Augmente la capacité de récupération du Dinoz de 20%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 42202,
@@ -2620,11 +3039,13 @@
     "description": "Augmente la puissance de tous les **assauts** de 20 quand le Dinoz est aux Steppes Magnétiques",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 42301,
-    "name": "MorsureDuSoleil",
+    "name": "Morsure Du Soleil",
     "type": "E",
     "element": "Foudre",
     "parents": [
@@ -2633,11 +3054,13 @@
     "description": "Éblouit le Dinoz adverse pour une durée moyenne. Ses **assauts** auront une chance sur 3 de toucher leur cible.",
     "probability": 15,
     "priority": 7,
-    "energy": 30
+    "energy": 30,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 42302,
-    "name": "CrampeChronique",
+    "name": "Crampe Chronique",
     "type": "E",
     "element": "Foudre",
     "parents": [
@@ -2646,11 +3069,13 @@
     "description": "Le Dinoz perd 10 points d'énergie, et diminue de 15% la capacité de récupération du lanceur",
     "probability": 10,
     "priority": 7,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 42401,
-    "name": "BatterieSupplementaire",
+    "name": "Batterie Supplementaire",
     "type": "P",
     "element": "Foudre",
     "parents": [
@@ -2659,7 +3084,9 @@
     "description": "Augmente les PV max de 50 et réduit l'initiative de 15",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 42402,
@@ -2672,11 +3099,13 @@
     "description": "Permet au Dinoz d'énergétiser une case supplémentaire",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 42403,
-    "name": "BarriereElectrifiee",
+    "name": "Barriere Electrifiee",
     "type": "P",
     "element": "Foudre",
     "parents": [
@@ -2685,7 +3114,9 @@
     "description": "Augmente la défense contre l'Air de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 42404,
@@ -2698,11 +3129,13 @@
     "description": "Double le taux de lancement de l'invocation lors d'un combat",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 42501,
-    "name": "ReceptacleAerien",
+    "name": "Receptacle Aerien",
     "type": "A",
     "element": "Foudre",
     "parents": [
@@ -2711,11 +3144,13 @@
     "description": "Annule les compétences sphériques A et E de type Air d'un Dinoz",
     "probability": 15,
     "priority": 7,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 42502,
-    "name": "FeuDeStElme",
+    "name": "Feu De St Elme",
     "type": "A",
     "element": "Foudre",
     "parents": [
@@ -2724,11 +3159,13 @@
     "description": "Les Dinoz (alliés et ennemis) avec un élément Foudre inférieur à 10 perdent 5% de leur vie à chaque tour pendant les 3 prochains tours du lanceur",
     "probability": 20,
     "priority": 3,
-    "energy": 40
+    "energy": 40,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 42503,
-    "name": "ForceDeZeus",
+    "name": "Force De Zeus",
     "type": "P",
     "element": "Foudre",
     "parents": [
@@ -2737,11 +3174,13 @@
     "description": "Augmente la puissance de tous les **assauts** Foudre de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 42504,
-    "name": "RemanenceHertzienne",
+    "name": "Remanence Hertzienne",
     "type": "P",
     "element": "Foudre",
     "parents": [
@@ -2750,7 +3189,9 @@
     "description": "Augmente les chances d'esquive de 20%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 51101,
@@ -2761,7 +3202,9 @@
     "description": "Augmente la puissance des **assauts** Air de 5",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51102,
@@ -2772,7 +3215,9 @@
     "description": "Adopte la meilleure stratégie d'attaque en fonction des défenses ennemies",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51103,
@@ -2783,7 +3228,9 @@
     "description": "Attaque tous les ennemis avec un pouvoir Air de 3",
     "probability": 15,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51104,
@@ -2794,7 +3241,9 @@
     "description": "Attaque un ennemi avec un pouvoir Air de 3",
     "probability": 15,
     "priority": 1,
-    "energy": 35
+    "energy": 35,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 51105,
@@ -2805,7 +3254,9 @@
     "description": "Le Dinoz effectue un assaut puis s'envole. Réservé aux dinozs volants.",
     "probability": 30,
     "priority": 1,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51201,
@@ -2818,7 +3269,9 @@
     "description": "Augmente les chances d'esquive de 10%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51202,
@@ -2831,7 +3284,9 @@
     "description": "Permet aux **assauts** de toucher les ennemis volants",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51203,
@@ -2844,7 +3299,9 @@
     "description": "Choisit la meilleure cible pour chaque attaque",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51204,
@@ -2857,11 +3314,13 @@
     "description": "Permet au Dinoz de collecter des plantes à certains endroits",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51205,
-    "name": "TaiChi",
+    "name": "Tai Chi",
     "type": "P",
     "element": "Air",
     "parents": [
@@ -2870,7 +3329,9 @@
     "description": "Augmente la puissance des **assauts** Air de 15. Diminue la vitesse des attaques Air de 20%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51206,
@@ -2883,11 +3344,13 @@
     "description": "Attaque tous les ennemis avec un pouvoir Air de 10 et fait tomber les ennemis volants au sol",
     "probability": 3,
     "priority": 5,
-    "energy": 30
+    "energy": 30,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51207,
-    "name": "AuraPuante",
+    "name": "Aura Puante",
     "type": "S",
     "element": "Air",
     "parents": [
@@ -2896,11 +3359,13 @@
     "description": "Empoisonne les assaillants en mêlée pour une durée moyenne, le poison inflige 10 dégâts",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 51301,
-    "name": "DisqueVacuum",
+    "name": "Disque Vacuum",
     "type": "A",
     "element": "Air",
     "parents": [
@@ -2909,7 +3374,9 @@
     "description": "Attaque un ennemi avec un pouvoir Air de 12",
     "probability": 7,
     "priority": 8,
-    "energy": 35
+    "energy": 35,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51302,
@@ -2922,11 +3389,13 @@
     "description": "Augmente la puissance des **assauts** Air de 10 et augmente la défense Air de 3",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51303,
-    "name": "AttaquePlongeante",
+    "name": "Attaque Plongeante",
     "type": "A",
     "element": "Air",
     "parents": [
@@ -2935,7 +3404,9 @@
     "description": "Attaque avec un assaut possédant un bonus Air de 2",
     "probability": 20,
     "priority": 5,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51304,
@@ -2948,7 +3419,9 @@
     "description": "Augmente de 2 les défenses Air, Eau et Foudre",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51305,
@@ -2961,11 +3434,13 @@
     "description": "Retire l'élément le plus faible du cycle élémentaire des **assauts**",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51306,
-    "name": "TalonDAchille",
+    "name": "Talon DAchille",
     "type": "P",
     "element": "Air",
     "parents": [
@@ -2974,11 +3449,13 @@
     "description": "Augmente la puissance de tous les **assauts** de 2",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51307,
-    "name": "NuageToxique",
+    "name": "Nuage Toxique",
     "type": "A",
     "element": "Air",
     "parents": [
@@ -2987,11 +3464,13 @@
     "description": "Empoisonne tous les ennemis pour une durée moyenne, les dégâts par tour sont strictement égaux à l'élément Air du lanceur",
     "probability": 10,
     "priority": 3,
-    "energy": 45
+    "energy": 45,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51308,
-    "name": "OeilDeLynx",
+    "name": "Oeil De Lynx",
     "type": "C",
     "element": "Air",
     "parents": [
@@ -3000,7 +3479,9 @@
     "description": "Permet au Dinoz de trouver des plantes exotiques à certains endroits",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51309,
@@ -3013,11 +3494,13 @@
     "description": "Diminue la vitesse des attaques Air de 20%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51310,
-    "name": "PaumeEjectable",
+    "name": "Paume Ejectable",
     "type": "A",
     "element": "Air",
     "parents": [
@@ -3026,11 +3509,13 @@
     "description": "Attaque avec un assaut de puissance doublée, puis le Dinoz perd 15 en initiative",
     "probability": 15,
     "priority": 2,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51311,
-    "name": "VentVif",
+    "name": "Vent Vif",
     "type": "E",
     "element": "Air",
     "parents": [
@@ -3039,11 +3524,13 @@
     "description": "Donne le statut accéléré (Augmente la vitesse de 50%)",
     "probability": 15,
     "priority": 2,
-    "energy": 25
+    "energy": 25,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51312,
-    "name": "FormeVaporeuse",
+    "name": "Forme Vaporeuse",
     "type": "S",
     "element": "Air",
     "parents": [
@@ -3052,7 +3539,9 @@
     "description": "Le Dinoz a 6% de chance de devenir intangible pour une durée courte juste avant de subir une attaque",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51313,
@@ -3065,7 +3554,9 @@
     "description": "Un des ennemis est placé sous hypnose et vient se battre à vos côtés",
     "probability": 5,
     "priority": 7,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 51314,
@@ -3080,11 +3571,13 @@
     "description": "Frappe le sol avec un pouvoir Bois 4 + Air 4 sur tous les ennemis",
     "probability": 20,
     "priority": 2,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51401,
-    "name": "TrouNoir",
+    "name": "Trou Noir",
     "type": "A",
     "element": "Air",
     "parents": [
@@ -3093,11 +3586,13 @@
     "description": "Envoie un ennemi dans une dimension parallèle. Note : n'affecte pas les boss et non utilisable dans certains combats compétitifs (Dojo).",
     "probability": 3,
     "priority": 10,
-    "energy": 60
+    "energy": 60,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51402,
-    "name": "MaitreLevitateur",
+    "name": "Maitre Levitateur",
     "type": "S",
     "element": "Air",
     "parents": [
@@ -3106,11 +3601,13 @@
     "description": "Permet à tous les Dinoz du groupe d'attaquer les ennemis volants",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51403,
-    "name": "HaleineFetive",
+    "name": "Haleine Fetive",
     "type": "S",
     "element": "Air",
     "parents": [
@@ -3119,11 +3616,13 @@
     "description": "Empoisonne les ennemis touchés par un assaut pour une longue durée, les dégâts par tour sont strictement égaux à l'élément Air du lanceur",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51404,
-    "name": "MeditationSolitaire",
+    "name": "Meditation Solitaire",
     "type": "P",
     "element": "Air",
     "parents": [
@@ -3132,7 +3631,9 @@
     "description": "Augmente la défense Air de 3, diminue la vitesse des attaques Air de 50%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51405,
@@ -3145,11 +3646,13 @@
     "description": "Augmente l'expérience gagnée par tous les Dinoz de 5% (non cumulable)",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51406,
-    "name": "SouffleDeVie",
+    "name": "Souffle De Vie",
     "type": "S",
     "element": "Air",
     "parents": [
@@ -3158,12 +3661,14 @@
     "description": "Le Dinoz est immunisé au poison et aux malédictions",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51407,
-    "name": "TotemAncestralAeroporte",
-    "type": "P",
+    "name": "Totem Ancestral Aeroporte",
+    "type": "I",
     "element": "Double",
     "parents": [
       11311,
@@ -3173,12 +3678,14 @@
     "description": "Attaque un ennemi avec une invocation Air 30",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51408,
     "name": "Fujin",
-    "type": "P",
+    "type": "I",
     "element": "Double",
     "parents": [
       41308,
@@ -3188,11 +3695,13 @@
     "description": "Double la vitesse des Dinoz de l'équipe",
     "probability": 10,
     "priority": 4,
-    "energy": 80
+    "energy": 80,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51501,
-    "name": "MeditationTranscendantale",
+    "name": "Meditation Transcendantale",
     "type": "P",
     "element": "Air",
     "parents": [
@@ -3201,12 +3710,14 @@
     "description": "Augmente la défense Air de 6, diminue la vitesse des attaques Air de 50%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51502,
     "name": "Djinn",
-    "type": "P",
+    "type": "I",
     "element": "Double",
     "parents": [
       11201,
@@ -3216,12 +3727,14 @@
     "description": "Attaque tous les ennemis avec une invocation d'Air 20",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51503,
     "name": "Hades",
-    "type": "P",
+    "type": "I",
     "element": "Double",
     "parents": [
       51403,
@@ -3232,11 +3745,13 @@
     "description": "Empoisonne et ralentit tous les adversaires",
     "probability": 10,
     "priority": 4,
-    "energy": 60
+    "energy": 60,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51601,
-    "name": "FormeEtherale",
+    "name": "Forme Etherale",
     "type": "S",
     "element": "Air",
     "parents": [
@@ -3245,18 +3760,22 @@
     "description": "Le Dinoz apparaît avec le statut intangible pour une durée infinie",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 52101,
-    "name": "MaitriseCorporelle",
+    "name": "Maitrise Corporelle",
     "type": "P",
     "element": "Air",
     "parents": [],
     "description": "Augmente de 25% la vitesse de récupération du Dinoz",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52201,
@@ -3269,7 +3788,9 @@
     "description": "Augmente les **assauts** de 20 du Dinoz s'il se trouve à Nimbao",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52202,
@@ -3282,11 +3803,13 @@
     "description": "Réduit l’endurance du Dinoz de 25%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52301,
-    "name": "DoubleFace",
+    "name": "Double Face",
     "type": "P",
     "element": "Air",
     "parents": [
@@ -3295,7 +3818,9 @@
     "description": "50% de chance d'augmenter ou réduire l'initiative du lanceur de 10 au début d'un combat",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52302,
@@ -3308,11 +3833,13 @@
     "description": "Réduit de 15% la vitesse de récupération",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52303,
-    "name": "SouffleDange",
+    "name": "Souffle Dange",
     "type": "P",
     "element": "Air",
     "parents": [
@@ -3321,7 +3848,9 @@
     "description": "Augmente la défense contre le Feu de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52304,
@@ -3334,7 +3863,9 @@
     "description": "Augmente la puissance des **assauts** Air de 20",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52401,
@@ -3347,7 +3878,9 @@
     "description": "Les Dinoz (alliés et ennemis) ayant un élément Air inférieur à 10 voient la vitesse de leurs **assauts** diminuée de 50% pour les 3 prochains tours du lanceur",
     "probability": 20,
     "priority": 3,
-    "energy": 45
+    "energy": 45,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52402,
@@ -3360,11 +3893,13 @@
     "description": "Augmente l'endurance du Dinoz de 50%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52403,
-    "name": "LonDuhaut",
+    "name": "Lon Duhaut",
     "type": "P",
     "element": "Air",
     "parents": [
@@ -3373,11 +3908,13 @@
     "description": "Permet au Dinoz de cueillir une case supplémentaire",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52404,
-    "name": "SurplisDhades",
+    "name": "Surplis Dhades",
     "type": "P",
     "element": "Air",
     "parents": [
@@ -3386,11 +3923,13 @@
     "description": "Permet au Dinoz d'être équipé avec un objet de combat supplémentaire",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52405,
-    "name": "ReceptacleThermique",
+    "name": "Receptacle Thermique",
     "type": "A",
     "element": "Air",
     "parents": [
@@ -3399,11 +3938,13 @@
     "description": "Annule les compétences sphériques Feu de type A et E d'un Dinoz",
     "probability": 15,
     "priority": 7,
-    "energy": 45
+    "energy": 45,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52501,
-    "name": "QiGong",
+    "name": "Qi Gong",
     "type": "E",
     "element": "Air",
     "parents": [
@@ -3412,7 +3953,9 @@
     "description": "Absorbe toute l'énergie d'un Dinoz lors d'un assaut",
     "probability": 0,
     "priority": 0,
-    "energy": 55
+    "energy": 55,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52502,
@@ -3425,7 +3968,9 @@
     "description": "Les esprits du vent emportent un Dinoz adverse hors du combat",
     "probability": 10,
     "priority": 10,
-    "energy": 65
+    "energy": 65,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52503,
@@ -3438,7 +3983,9 @@
     "description": "Augmente le nombre maximum de Dinoz actifs de 3",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52504,
@@ -3451,11 +3998,13 @@
     "description": "Les clones adverses attaquent leurs propres maîtres",
     "probability": 10,
     "priority": 10,
-    "energy": 40
+    "energy": 40,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 52505,
-    "name": "MainsCollantes",
+    "name": "Mains Collantes",
     "type": "E",
     "element": "Air",
     "parents": [
@@ -3464,29 +4013,35 @@
     "description": "Annule la capacité d'esquive d'un adversaire",
     "probability": 15,
     "priority": 10,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 2,
+    "raceId": null
   },
   {
     "id": 61119,
-    "name": "CompetenceDouble",
+    "name": "Competence Double",
     "type": "S",
     "element": "Vide",
     "parents": [],
     "description": "Permet au Dinoz d'apprendre les compétences doubles",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61120,
-    "name": "LimiteBrisee",
+    "name": "Limite Brisee",
     "type": "S",
     "element": "Vide",
     "parents": [],
     "description": "Permet au Dinoz d'évoluer au-delà de sa force initiale dans un nouvel arbre de compétences",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61121,
@@ -3497,18 +4052,22 @@
     "description": "Permet au Dinoz d'apprendre les compétences d'invocation",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61101,
-    "name": "FrenesieCollective",
+    "name": "Frenesie Collective",
     "type": "E",
     "element": "Vide",
     "parents": [],
     "description": "Augmente la vitesse de tous les Dinoz du groupe de 50%",
     "probability": 5,
     "priority": 5,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61102,
@@ -3519,18 +4078,22 @@
     "description": "Augmente l'armure de 5%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61103,
-    "name": "ChargeCornue",
+    "name": "Charge Cornue",
     "type": "P",
     "element": "Vide",
     "parents": [],
     "description": "Augmente la puissance du premier assaut de 20%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61104,
@@ -3541,7 +4104,9 @@
     "description": "À chaque assaut des ennemis, le Dinoz a 50% de chance de devenir leur cible.",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61105,
@@ -3552,7 +4117,9 @@
     "description": "Annule l'armure des ennemis",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61106,
@@ -3563,7 +4130,9 @@
     "description": "Réduit les dégâts subis lors d'un assaut adverse",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61107,
@@ -3574,18 +4143,22 @@
     "description": "Augmente les chances d'esquive de 10%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61108,
-    "name": "DeplacementInstantane",
+    "name": "Deplacement Instantane",
     "type": "S",
     "element": "Vide",
     "parents": [],
     "description": "Augmente les chances d'esquiver les compétences offensives de 15%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61109,
@@ -3596,29 +4169,35 @@
     "description": "Permet d'équiper deux objets magiques simultanément",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61111,
-    "name": "GrosCostaud",
+    "name": "Gros Costaud",
     "type": "P",
     "element": "Vide",
     "parents": [],
     "description": "Augmente la puissance de tous les **assauts** de 5",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61112,
-    "name": "OrigineCaushemeshenne",
+    "name": "Origine Caushemeshenne",
     "type": "P",
     "element": "Vide",
     "parents": [],
     "description": "Augmente la puissance de tous les **assauts** de 30 si le Dinoz se trouve à Caushemesh",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61113,
@@ -3629,40 +4208,48 @@
     "description": "Propulse une onde de choc sur tous les adversaires environnants",
     "probability": 25,
     "priority": 2,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61114,
-    "name": "ForceDeLumiere",
+    "name": "Force De Lumiere",
     "type": "P",
     "element": "Vide",
     "parents": [],
     "description": "Augmente la puissance de tous les **assauts** de 30 si le Dinoz se trouve dans le Monde Sombre",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61115,
-    "name": "ChargePigmou",
+    "name": "Charge Pigmou",
     "type": "A",
     "element": "Vide",
     "parents": [],
     "description": "Attaque un ennemi avec un pouvoir de Feu 5 + Bois 3",
     "probability": 20,
     "priority": 2,
-    "energy": 20
+    "energy": 20,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61116,
-    "name": "ForceDesTenebres",
+    "name": "Force Des Tenebres",
     "type": "P",
     "element": "Vide",
     "parents": [],
     "description": "Augmente l’endurance et la récupération du Dinoz de 25%",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61117,
@@ -3673,23 +4260,27 @@
     "description": "Le Dinoz charge son adversaire et l'étourdit pendant plusieurs tours",
     "probability": 15,
     "priority": 8,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61118,
-    "name": "DurACuire",
+    "name": "Dur ACuire",
     "type": "P",
     "element": "Vide",
     "parents": [],
     "description": "Augmente toutes les défenses de 6",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41504,
     "name": "Hercolubus",
-    "type": "P",
+    "type": "I",
     "element": "Double",
     "parents": [
       41501,
@@ -3699,12 +4290,14 @@
     "description": "Une puissante attaque sur tous les ennemis (environ 50 de dégâts)",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41505,
-    "name": "ReineDeLaRuche",
-    "type": "P",
+    "name": "Reine De La Ruche",
+    "type": "I",
     "element": "Double",
     "parents": [
       21307,
@@ -3714,12 +4307,14 @@
     "description": "Vide l'énergie de tous les dinozs adverses",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 51506,
-    "name": "BigMama",
-    "type": "P",
+    "name": "Big Mama",
+    "type": "I",
     "element": "Double",
     "parents": [
       12502,
@@ -3729,12 +4324,14 @@
     "description": " Vide l’énergie des Dinoz adverses et leur inflige 20 points de dégâts",
     "probability": 15,
     "priority": 6,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41507,
     "name": "Yggdrasil",
-    "type": "P",
+    "type": "I",
     "element": "Double",
     "parents": [
       21405,
@@ -3743,12 +4340,14 @@
     "description": "Augmente la défense des alliés contre le Bois de 20",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 41508,
-    "name": "BaleineBlanche",
-    "type": "P",
+    "name": "Baleine Blanche",
+    "type": "I",
     "element": "Double",
     "parents": [
       41305,
@@ -3757,18 +4356,22 @@
     "description": "Augmente la défense des alliés contre l'Eau de 20",
     "probability": 10,
     "priority": 4,
-    "energy": 50
+    "energy": 50,
+    "skillNature": 1,
+    "raceId": null
   },
   {
     "id": 61122,
-    "name": "GrosDormeur",
+    "name": "Gros Dormeur",
     "type": "S",
     "element": "Vide",
     "parents": [],
     "description": "Permet à votre Dinoz de récupérer une action supplémentaire chaque jour.",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 61201,
@@ -3781,7 +4384,9 @@
     "description": "Permet à tous les Dinoz suivant votre Dinoz de récupérer également une action supplémentaire chaque jour.",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 3,
+    "raceId": null
   },
   {
     "id": 61301,
@@ -3794,6 +4399,8 @@
     "description": "Tous vos Dinoz récupèrent une action supplémentaire chaque jour (non cumulable).",
     "probability": 0,
     "priority": 0,
-    "energy": 0
+    "energy": 0,
+    "skillNature": 3,
+    "raceId": null
   }
 ]

@@ -1,14 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 
-// --- CONFIGURATION ---
 const MTS_FILE = 'SkillList.mts';
 const DESC_FILE = 'skillDescription.json';
 const OUTPUT_FILE = 'competences.json';
 
+// --- CONFIGURATION ---
+
+// 1. AJOUT DE 'I' POUR LES INVOCATIONS
 const TYPE_MAP = {
     'SkillType.P': 'P', 'SkillType.A': 'A', 'SkillType.E': 'E',
-    'SkillType.S': 'S', 'SkillType.C': 'C', 'SkillType.M': 'M'
+    'SkillType.S': 'S', 'SkillType.C': 'C', 'SkillType.M': 'M',
+    'SkillType.I': 'I' 
 };
 
 const ELEMENT_MAP = {
@@ -18,19 +21,46 @@ const ELEMENT_MAP = {
     'ElementType.Nothing': 'Neutre'
 };
 
+const RACE_MAP = {
+    'RaceEnum.CASTIVORE': 'Castivore', 'RaceEnum.FEROSS': 'Feross',
+    'RaceEnum.GORILLOZ': 'Gorilloz', 'RaceEnum.KABUKI': 'Kabuki',
+    'RaceEnum.MOUEFFE': 'Moueffe', 'RaceEnum.NUAGEOZ': 'Nuageoz',
+    'RaceEnum.PIGMOU': 'Pigmou', 'RaceEnum.PLANALE': 'Planaille',
+    'RaceEnum.PLANAILLE': 'Planaille', 'RaceEnum.QUETZU': 'Quetzu',
+    'RaceEnum.ROCKY': 'Rocky', 'RaceEnum.SANTAZ': 'Santaz',
+    'RaceEnum.SIRAIN': 'Sirain', 'RaceEnum.TOUFUFU': 'Toufufu',
+    'RaceEnum.WANWAN': 'Wanwan', 'RaceEnum.WINKS': 'Winks',
+    'RaceEnum.HIPPOCLAMP': 'Hippoclamp', 'RaceEnum.PTEROZ': 'Pteroz'
+};
+
+const MANUAL_FIXES = {
+    'PeauDAcier': { nature: 2 },
+};
+
+// --- FONCTIONS ---
+
 function parseEnergy(energyCode) {
     if (!energyCode || energyCode === 'Energy.NONE') return 0;
     const num = energyCode.replace('Energy.E', '').replace('Energy.', '');
     return parseInt(num) || 0;
 }
 
-function normalizeName(name) {
+function formatPrettyName(name) {
     if (!name) return "";
-    return name.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    let pretty = name.replace(/([a-z])([A-Z])/g, '$1 $2');
+    pretty = pretty.replace(/\sD\s/g, " D'");
+    pretty = pretty.replace(/D\sArtemis/g, "D'Artemis");
+    return pretty;
+}
+
+function normalizeNameForSearch(name) {
+    if (!name) return "";
+    return name.toLowerCase()
+               .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                .replace(/\s+/g, '').replace(/'/g, '').replace(/-/g, '');
 }
 
-console.log("🔄 Extraction avec FILTRE (Uniquement avec description)...");
+console.log("🔄 Extraction V7 : Type I & Correctifs...");
 
 try {
     const mtsPath = path.join(__dirname, MTS_FILE);
@@ -44,7 +74,12 @@ try {
     let descRaw = fs.readFileSync(descPath, 'utf8').trim();
     if (!descRaw.startsWith('{')) descRaw = '{' + descRaw + '}';
     const descContent = JSON.parse(descRaw);
-    const descriptions = descContent.description || descContent;
+    
+    const rawDescriptions = descContent.description || descContent;
+    const descriptionsNormalized = {};
+    for (const [key, value] of Object.entries(rawDescriptions)) {
+        descriptionsNormalized[normalizeNameForSearch(key)] = value;
+    }
 
     const skillIdMap = {};
     const enumRegex = /(\w+)\s*=\s*(\d+),/g;
@@ -55,7 +90,6 @@ try {
 
     const skillsList = [];
     const startRegex = /\[(Skill\.\w+)\]:\s*\{/g;
-    let ignoredCount = 0;
     
     while ((match = startRegex.exec(mtsContent)) !== null) {
         const skillVarName = match[1];
@@ -65,7 +99,6 @@ try {
         const startIndex = match.index + match[0].length - 1;
         let braceCount = 1;
         let endIndex = -1;
-        
         for (let i = startIndex + 1; i < mtsContent.length; i++) {
             if (mtsContent[i] === '{') braceCount++;
             else if (mtsContent[i] === '}') braceCount--;
@@ -76,21 +109,15 @@ try {
         const blockBody = mtsContent.substring(startIndex, endIndex + 1);
 
         const nameMatch = blockBody.match(/name:\s*'([^']+)'/);
-        const name = nameMatch ? nameMatch[1] : 'Inconnu';
+        const rawName = nameMatch ? nameMatch[1] : 'Inconnu';
+        const prettyName = formatPrettyName(rawName);
 
-        // --- RECHERCHE DESCRIPTION ---
-        const cleanName = normalizeName(name);
-        let desc = descriptions[name] || descriptions[cleanName];
-        if (!desc && descriptions[cleanName.replace(/s$/, '')]) desc = descriptions[cleanName.replace(/s$/, '')];
+        const searchName = normalizeNameForSearch(rawName);
+        let desc = descriptionsNormalized[searchName];
+        if (!desc && searchName.endsWith('s')) desc = descriptionsNormalized[searchName.slice(0, -1)];
+        if (!desc) continue;
 
-        // --- LE FILTRE EST ICI ---
-        if (!desc) {
-            ignoredCount++;
-            // On passe à la suivante sans l'ajouter
-            continue;
-        }
-
-        // Si on a une description, on continue l'extraction des autres infos
+        // Extraction Type corrigée pour inclure 'I'
         const typeMatch = blockBody.match(/type:\s*(SkillType\.\w+)/);
         let type = typeMatch ? TYPE_MAP[typeMatch[1]] : 'P';
         
@@ -103,42 +130,67 @@ try {
         let finalElement = elements.length > 1 ? 'Double' : (elements[0] || 'Vide');
         if (elements.length === 0 && elementStr.includes('VOID')) finalElement = 'Vide';
 
-        const parentMatch = blockBody.match(/unlockedFrom:\s*\[(.*?)\]/);
+        const parentMatch = blockBody.match(/unlockedFrom:\s*\[([\s\S]*?)\]/);
         let parentIds = [];
         if (parentMatch && parentMatch[1].trim() !== '') {
-            const parentsRaw = parentMatch[1].split(',');
+            const parentsRaw = parentMatch[1].split(',').map(s => s.trim());
             parentsRaw.forEach(p => {
-                const pClean = p.trim();
-                if (skillIdMap[pClean]) parentIds.push(skillIdMap[pClean]);
+                if (!p) return;
+                if (skillIdMap[p]) parentIds.push(skillIdMap[p]);
+                else if (!isNaN(parseInt(p))) parentIds.push(parseInt(p));
             });
         }
 
         const probMatch = blockBody.match(/probability:\s*(\d+)/);
         const prob = probMatch ? parseInt(probMatch[1]) : 0;
-
         const prioMatch = blockBody.match(/priority:\s*(\d+)/);
         const prio = prioMatch ? parseInt(prioMatch[1]) : 0;
-
         const energyMatch = blockBody.match(/energy:\s*(Energy\.\w+)/);
         const energyRaw = energyMatch ? energyMatch[1] : 'Energy.NONE';
         const energy = parseEnergy(energyRaw);
-        
+
+        const sphereMatch = blockBody.match(/isSphereSkill:\s*(true|false)/);
+        const isSphere = sphereMatch && sphereMatch[1] === 'true';
+        const treeMatch = blockBody.match(/tree:\s*(SkillTreeType\.\w+)/);
+        const treeType = treeMatch ? treeMatch[1] : 'SkillTreeType.VANILLA';
+
+        let nature = 1;
+        if (isSphere) {
+            nature = 3;
+        } else if (treeType === 'SkillTreeType.ETHER') {
+            nature = 2;
+        }
+        // J'ai retiré le bloc qui forçait nature=2 pour les types I
+
+        if (MANUAL_FIXES[rawName]) {
+            const fix = MANUAL_FIXES[rawName];
+            if (fix.nature) nature = fix.nature;
+            if (fix.forceParent) parentIds = fix.forceParent;
+        }
+
+        const raceMatch = blockBody.match(/race:\s*(RaceEnum\.\w+)/);
+        let raceId = null;
+        if (raceMatch && raceMatch[1]) {
+            raceId = RACE_MAP[raceMatch[1]] || null;
+        }
+
         skillsList.push({
             id: id,
-            name: name,
-            type: type || 'P',
+            name: prettyName,
+            type: type || 'P', // Si Type I détecté, il sera 'I'
             element: finalElement,
             parents: parentIds,
             description: desc,
             probability: prob,
             priority: prio,
-            energy: energy
+            energy: energy,
+            skillNature: nature,
+            raceId: raceId
         });
     }
 
     fs.writeFileSync(path.join(__dirname, OUTPUT_FILE), JSON.stringify(skillsList, null, 2), 'utf8');
-    console.log(`✅ SUCCÈS ! ${skillsList.length} compétences valides extraites.`);
-    console.log(`🗑️  ${ignoredCount} compétences ignorées (car sans description).`);
+    console.log(`✅ ${skillsList.length} compétences extraites.`);
 
 } catch (err) {
     console.error("❌ Erreur :", err.message);

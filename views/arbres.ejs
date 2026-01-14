@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Arbres de Compétences - Guerriers du Givre</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/arbres.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        const ALL_SKILLS = <%- JSON.stringify(skills) %>;
+    </script>
+</head>
+<body class="hub-body">
+
+    <header class="hub-header">
+        <div class="header-overlay">
+            <div class="header-content">
+                <div class="user-info">
+                    <h1><%= pseudo %></h1>
+                    <p class="status"><strong><%= role %></strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
+                </div>
+
+                <div class="nav-menu">
+                    <a href="/dashboard" class="nav-btn" title="Accueil"><i class="fas fa-home"></i></a>
+                    <a href="/clan" class="nav-btn" title="Mon Clan"><i class="fas fa-chess-rook"></i></a>
+                    <a href="/arbres" class="nav-btn active" title="Plans"><i class="fas fa-scroll"></i></a>
+                    <a href="#" class="nav-btn disabled" title="Travaux"><i class="fas fa-hammer"></i></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="viewer-container">
+        
+        <section id="main-display" class="tree-area compressed">
+            
+            <div id="trees-view" class="accordion-container">
+                <% const elements = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air']; %>
+                <% elements.forEach(elem => { %>
+                    <div class="accordion-item <%= elem.toLowerCase() %>" onmouseenter="expandItem(this)">
+                        <div class="band-header">
+                            <h2><%= elem %></h2>
+                        </div>
+                        <div class="tree-content" id="tree-container-<%= elem %>"></div>
+                    </div>
+                <% }) %>
+            </div>
+
+            <div id="spheres-view" class="spheres-container" style="display: none;">
+                <div class="spheres-grid">
+                    <div class="grid-header">ÉLÉMENT</div>
+                    <div class="grid-header">NIVEAU 1</div>
+                    <div class="grid-header">NIVEAU 2</div>
+                    <div class="grid-header">NIVEAU 3</div>
+                    <div id="spheres-rows"></div>
+                </div>
+            </div>
+
+        </section>
+
+        <aside class="viewer-sidebar">
+            <div class="sidebar-content">
+                <h3>Navigation</h3>
+                <a href="/architecte" class="btn-ice">Créer un Plan</a>
+                <a href="/plans" class="btn-ice">Voir mes Plans</a>
+                <a href="/clan/plans" class="btn-ice">Plans du Clan</a>
+
+                <h3>Affichage</h3>
+                <button id="btn-expand" class="btn-ice" onclick="toggleExpandMode()">Étendre / Réduire</button>
+                <button id="btn-tree-switch" class="btn-ice" onclick="toggleTreeVersion()">Voir Arbre 2</button>
+                <button id="btn-spheres-switch" class="btn-ice" onclick="toggleSpheresView()">Voir Sphères</button>
+            </div>
+        </aside>
+
+    </main>
+
+    <div id="skill-tooltip" class="floating-tooltip"></div>
+
+    <script src="/js/arbres.js"></script>
+</body>
+</html>

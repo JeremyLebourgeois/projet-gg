@@ -1,16 +1,3 @@
-import { ElementType } from '../enums/ElementType.mjs';
-import { Energy } from '../enums/Energy.mjs';
-import { Stat } from '../enums/SkillStat.mjs';
-import { SkillTreeType } from '../enums/SkillTreeType.mjs';
-import { SkillType } from '../enums/SkillType.mjs';
-import { SkillDetails } from './SkillDetails.mjs';
-import { SkillVisualEffect } from '../enums/SkillVisualEffect.mjs';
-import { AuraFxType, DamagesEffect, GotoEffect, LifeEffect, SkillFxType } from '../fight/transpiler.mjs';
-import { RaceEnum } from '../enums/RaceEnum.mjs';
-import { SkillFightConditionEnum } from './SkillFightCondition.mjs';
-import { AllFighterTypeExceptBoss, FighterType, FightStatus } from '../fight/DetailedFighter.mjs';
-import { Operator } from '../enums/Parser.mjs';
-
 export enum Skill {
 	GRIFFES_ENFLAMMEES = 11101,
 	COLERE = 11102,
@@ -1189,7 +1176,7 @@ export const skillList: Readonly<Record<Skill, SkillDetails>> = {
 		element: [ElementType.FIRE],
 		activatable: true,
 		tree: SkillTreeType.ETHER,
-		unlockedFrom: [Skill.BENEDICTION_DARTEMIS],
+		unlockedFrom: [Skill.JOKER],
 		isBaseSkill: false,
 		isSphereSkill: false,
 		priority: 6,

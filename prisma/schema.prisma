@@ -64,23 +64,29 @@ model Dinoz {
 
 // Table de Référence des Compétences (L'arbre)
 model RefSkill {
-  id          Int     @id @default(autoincrement())
+  id          Int     @id 
   name        String  @unique
-  
-  // infos générales
+   
+  // Infos générales
   type        String? // "A", "E", "P", "C", "S"
   element     String? // "Feu", "Bois"...
+  // 1 = Normal, 2 = Arbre 2 (Invoc/50+), 3 = Sphère
+  skillNature Int     @default(1)
+  description String?
+  raceId      String? // Ex: "Wanwan", "Kabuki", ou null
+  
+  // Stats techniques
   energy      Int?    @default(0)
   probability Int?    @default(0)
   priority    Int?    @default(0)
-  description String?
-
+ 
   // Relations inverses vers les Dinozs
   dinozsLearned   Dinoz[] @relation("LearnedSkills")
   dinozsUnlocked  Dinoz[] @relation("UnlockedSkills")
-
+ 
   // --- RELATION PARENT/ENFANT (Arbre de compétences) ---
-  parentSkillId Int?
-  parent        RefSkill?  @relation("SkillTree", fields: [parentSkillId], references: [id])
-  children      RefSkill[] @relation("SkillTree")
+  // On supprime "parentSkillId" !
+  // On met des crochets [] des deux côtés pour dire "Plusieurs parents possibles"
+  parents      RefSkill[] @relation("SkillTree")
+  children     RefSkill[] @relation("SkillTree")
 }
