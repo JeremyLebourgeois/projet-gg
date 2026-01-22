@@ -3,6 +3,8 @@ const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const session = require('express-session'); 
 const bcrypt = require('bcrypt');
+const { exec } = require('child_process');
+const RACES_DATA = require('./data/racesData');
 
 
 // 2. On configure le serveur
@@ -167,6 +169,155 @@ app.post('/change-password', async (req, res) => {
     }
 });
 
+// --- MIDDLEWARE DE SÉCURITÉ ADMIN ---
+// Vérifie si l'utilisateur est connecté ET s'il est "LEADER"
+const checkLeader = async (req, res, next) => {
+    if (!req.session.userId) return res.redirect('/login');
+    
+    const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
+    
+    if (user && user.role === 'LEADER') {
+        next(); // C'est bon, on passe à la suite
+    } else {
+        res.redirect('/dashboard'); // Pas autorisé -> retour maison
+    }
+};
+
+// --- ROUTE : AFFICHER LA PAGE ADMIN ---
+app.get('/admin', checkLeader, async (req, res) => {
+    // On récupère la liste de tous les utilisateurs pour l'afficher
+    // On les trie par ID pour que ce soit propre
+    const users = await prisma.user.findMany({
+        orderBy: { id: 'asc' }
+    });
+
+    // On récupère aussi l'utilisateur courant pour éviter qu'il ne se supprime lui-même
+    const currentUser = await prisma.user.findUnique({ where: { id: req.session.userId } });
+
+    res.render('admin', { users, currentUser });
+});
+
+// --- ROUTE : CRÉER UN UTILISATEUR (ADMIN) ---
+app.post('/admin/create-user', checkLeader, async (req, res) => {
+    const { pseudo, password, role } = req.body;
+
+    try {
+        // On hache le mot de passe (comme dans change-password)
+        // Note : On met firstLogin: true pour qu'il puisse changer son mdp à la première connexion
+        // Ou false si tu veux lui donner un mdp définitif. Ici je mets true par sécurité.
+        
+        // Si firstLogin est true, on stocke le mdp en clair ou haché ?
+        // Dans ta logique de login actuelle :
+        // Cas 1 (FirstLogin) -> compare passwordHash brut
+        // Cas 2 (Normal) -> compare bcrypt
+        
+        // Pour simplifier l'admin : on va stocker le mdp en CLAIR (comme tu faisais au début)
+        // et mettre firstLogin = true. Comme ça il devra le changer et ça deviendra haché.
+        
+        await prisma.user.create({
+            data: {
+                pseudo: pseudo,
+                passwordHash: password, // En clair pour le premier login
+                role: role,
+                firstLogin: true
+            }
+        });
+
+        res.redirect('/admin'); // On recharge la page pour voir le nouveau membre
+    } catch (error) {
+        console.error("Erreur création user:", error);
+        // Si le pseudo existe déjà, Prisma va crier. On pourrait gérer l'erreur mieux mais restons simples.
+        res.redirect('/admin'); 
+    }
+});
+
+// --- ROUTE : SUPPRIMER UN UTILISATEUR ---
+app.post('/admin/delete-user', checkLeader, async (req, res) => {
+    const { userId } = req.body;
+
+    // Sécurité : On ne peut pas se supprimer soi-même
+    if (parseInt(userId) === req.session.userId) {
+        return res.redirect('/admin');
+    }
+
+    try {
+        // Attention : Il faut d'abord supprimer les Dinozs du joueur (Contrainte Clé Étrangère)
+        // Prisma a une option "Cascade" dans le schema, mais faisons-le manuellement par sécurité
+        await prisma.dinoz.deleteMany({
+            where: { userId: parseInt(userId) }
+        });
+
+        // Puis on supprime le joueur
+        await prisma.user.delete({
+            where: { id: parseInt(userId) }
+        });
+
+        res.redirect('/admin');
+    } catch (error) {
+        console.error("Erreur suppression user:", error);
+        res.redirect('/admin');
+    }
+});
+
+// --- ROUTE : LANCER LE SCRIPT SYNC-SKILLS ---
+app.post('/admin/sync-skills', checkLeader, (req, res) => {
+    console.log("🔄 Lancement du script sync-skills...");
+
+    // Exécute la commande 'node sync-skills.js' dans le dossier racine
+    exec('node scripts/sync-skills.js', (error, stdout, stderr) => {
+        if (error) {
+            console.error(`❌ Erreur d'exécution : ${error.message}`);
+            // Idéalement on enverrait une erreur à l'écran, mais pour l'instant on redirect
+            return res.redirect('/admin'); 
+        }
+        if (stderr) {
+            console.error(`⚠️ Stderr : ${stderr}`);
+        }
+        
+        // Affiche le résultat du script dans la console du serveur
+        console.log(`✅ Résultat :\n${stdout}`);
+        
+        // Retourne à la page admin une fois fini
+        res.redirect('/admin');
+    });
+});
+
+// --- ROUTE : RAZ SERVEUR (SUPPRIMER TOUS LES DINOZS) ---
+app.post('/admin/reset-dinozs', checkLeader, async (req, res) => {
+    try {
+        // Supprime TOUTES les entrées de la table Dinoz
+        await prisma.dinoz.deleteMany({}); 
+        console.log("⚠️ TOUS LES DINOZS ONT ÉTÉ SUPPRIMÉS PAR L'ADMIN.");
+        
+        res.redirect('/admin');
+    } catch (error) {
+        console.error("Erreur RAZ Dinozs:", error);
+        res.redirect('/admin');
+    }
+});
+
+// --- ROUTE : MODIFIER LE RÔLE D'UN UTILISATEUR ---
+app.post('/admin/update-role', checkLeader, async (req, res) => {
+    const { userId, newRole } = req.body;
+
+    // Sécurité : On ne touche pas à son propre grade (évite de se rétrograder par erreur)
+    if (parseInt(userId) === req.session.userId) {
+        return res.redirect('/admin');
+    }
+
+    try {
+        await prisma.user.update({
+            where: { id: parseInt(userId) },
+            data: { role: newRole }
+        });
+        // Pas besoin de message, on recharge juste la page
+        res.redirect('/admin');
+    } catch (error) {
+        console.error("Erreur update role:", error);
+        res.redirect('/admin');
+    }
+});
+
 // 4. On allume le serveur
 app.listen(PORT, () => {
     console.log(`Serveur lancé sur http://localhost:${PORT}`);
@@ -198,37 +349,49 @@ app.get('/dinozs', async (req, res) => {
     });
 });
 
+
 // --- Route: Créer un nouveau Dinoz ---
 app.post('/dinozs/create', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
 
     const { name, race, imageUrl, skinType } = req.body;
 
-    // Logique de l'image :
-    // Si l'utilisateur a coché "Skin de Glace" (skinType === 'default'), on met null dans la DB.
-    // (Car ton code EJS gère déjà : si null -> affiche l'image /img/race.png)
-    // Sinon, on prend l'URL fournie.
+    // Gestion Image
     let finalImage = null;
     if (skinType !== 'default' && imageUrl && imageUrl.trim() !== "") {
         finalImage = imageUrl;
     }
 
+    // --- NOUVEAU : CALCUL DES STATS DE DÉPART ---
+    // 1. On nettoie le nom de la race (minuscule) pour chercher dans notre fichier
+    const raceKey = race.toLowerCase(); 
+    
+    // 2. On récupère les stats, ou des zéros par défaut si la race est inconnue
+    const baseStats = RACES_DATA[raceKey] || { 
+        statFire: 0, statWood: 0, statWater: 0, statBolt: 0, statAir: 0 
+    };
+
     try {
         await prisma.dinoz.create({
             data: {
                 name: name,
-                race: race,
-                level: 1, // On commence niveau 1
+                race: race, // On garde la casse d'origine (ex: "Sirain") pour l'affichage
+                level: 1,
                 imageUrl: finalImage,
                 userId: req.session.userId,
-                // Initialiser les stats ici selon la race
-               
+
+                // --- ON INJECTE LES STATS ICI ---
+                statFire: baseStats.statFire,
+                statWood: baseStats.statWood,
+                statWater: baseStats.statWater,
+                statBolt: baseStats.statBolt, // Rappel : Bolt = Foudre
+                statAir: baseStats.statAir
             }
         });
-        res.redirect('/dinozs'); // On recharge la page pour voir le nouveau bébé
+        res.redirect('/dinozs'); 
     } catch (error) {
         console.error("Erreur création dinoz:", error);
-        res.redirect('/dinozs'); // En cas d'erreur on redirige quand même pour l'instant
+        res.redirect('/dinozs'); 
     }
 });
 

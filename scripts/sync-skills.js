@@ -7,10 +7,30 @@ const prisma = new PrismaClient();
 const URL_MTS = 'https://gitlab.com/eternaltwin/dinorpg/dinorpg/-/raw/4a30477dd01753d356e1af06e829f5893ca74b96/core/src/models/dinoz/SkillList.mts';
 const URL_DESC = 'https://gitlab.com/eternaltwin/dinorpg/dinorpg/-/raw/4a30477dd01753d356e1af06e829f5893ca74b96/ed-ui/src/i18n/locales/fr.json';
 
+// --- CONFIGURATION MANUELLE (NOUVEAU) ---
+
+// 1. Force une race pour les compétences mal définies (ex: Invocations)
+// Format : 'nom_nettoye': 'NomRace'
+const MANUAL_RACE_FIX = {
+    'bigmama': 'Moueffe',          // Invocation Moueffe
+    'invocationtriceragnon': 'Moueffe',
+    'totem': 'Castivore',          // Exemple (à vérifier)
+    'spirit': 'Gorilloz',          // Exemple (à vérifier)
+    'kamikaz': 'Kabuki'            // Exemple
+};
+
+// 2. Force des valeurs spécifiques (Écrase tout le reste)
+const SKILL_OVERRIDES = {
+    'envol': { raceId: null },    // <--- CORRECTION DEMANDÉE : Envol pour tous (Race = NULL)
+    'flight': { raceId: null }
+};
+
+
 // --- TRADUCTIONS & MAPPINGS ---
 const TYPE_MAP = {
     'SkillType.P': 'P', 'SkillType.A': 'A', 'SkillType.E': 'E', 'SkillType.U': 'U',
-    'SkillType.S': 'S', 'SkillType.C': 'C', 'SkillType.M': 'M', 'SkillType.I': 'I'
+    'SkillType.S': 'S', 'SkillType.C': 'C', 'SkillType.M': 'M', 'SkillType.I': 'I',
+    'SkillType.U': 'U'
 };
 
 const ELEMENT_MAP = {
@@ -28,7 +48,8 @@ const RACE_MAP = {
     'RaceEnum.ROCKY': 'Rocky', 'RaceEnum.SANTAZ': 'Santaz',
     'RaceEnum.SIRAIN': 'Sirain', 'RaceEnum.TOUFUFU': 'Toufufu',
     'RaceEnum.WANWAN': 'Wanwan', 'RaceEnum.WINKS': 'Winks',
-    'RaceEnum.HIPPOCLAMP': 'Hippoclamp', 'RaceEnum.PTEROZ': 'Pteroz'
+    'RaceEnum.HIPPOCLAMP': 'Hippoclamp', 'RaceEnum.PTEROZ': 'Pteroz',
+    'RaceEnum.MAHAMUTI': 'Mahamuti'
 };
 
 // --- OUTILS ---
@@ -45,16 +66,14 @@ function parseEnergy(energyCode) {
 
 function formatPrettyName(name) {
     if (!name) return "";
-    // Ajoute un espace entre minuscule et Majuscule (ex: "CanonAEau" -> "Canon A Eau")
     let pretty = name.replace(/([a-z])([A-Z])/g, '$1 $2');
-    // Cas particuliers (D'...)
     pretty = pretty.replace(/\sD\s/g, " D'");
     pretty = pretty.replace(/D\sArtemis/g, "D'Artemis");
     return pretty;
 }
 
 async function syncSkills() {
-    console.log("🚀 DÉMARRAGE SYNCHRO (Mode Strict - Sans Fix Manuel)...");
+    console.log("🚀 DÉMARRAGE SYNCHRO (Avec Correctifs Envol & Invocations)...");
 
     try {
         // 1. TÉLÉCHARGEMENT
@@ -79,7 +98,6 @@ async function syncSkills() {
 
         // 3. PRÉPARATION DE L'ENUM (Variable -> ID)
         const skillIdMap = {};
-        // Regex pour trouver "NOM_CONSTANTE = 123,"
         const enumRegex = /(\w+)\s*=\s*(\d+)/g;
         let match;
         while ((match = enumRegex.exec(mtsText)) !== null) {
@@ -90,13 +108,12 @@ async function syncSkills() {
         // 4. PARSING DES BLOCS DE COMPÉTENCES
         const skillsToUpsert = [];
         const startRegex = /\[(Skill\.\w+)\]:\s*\{/g;
-        const usedNames = new Set(); // Pour gérer les doublons de noms
+        const usedNames = new Set(); 
 
         while ((match = startRegex.exec(mtsText)) !== null) {
-            const skillVarName = match[1]; // Ex: Skill.CANON_A_EAU
+            const skillVarName = match[1]; 
             const id = skillIdMap[skillVarName];
             
-            // Si pas d'ID trouvé pour cette variable, on ignore
             if (!id) continue;
 
             // Isolation du bloc { ... }
@@ -122,10 +139,8 @@ async function syncSkills() {
             let desc = descriptionsMap[searchKey];
             if (!desc && searchKey.endsWith('s')) desc = descriptionsMap[searchKey.slice(0, -1)];
             
-            // Gestion Nom Unique (Prisma @unique)
             let prettyName = formatPrettyName(rawName);
             if (usedNames.has(prettyName)) {
-                // Si le nom existe déjà, on ajoute l'ID entre parenthèses
                 prettyName = `${prettyName} (${id})`;
             }
             usedNames.add(prettyName);
@@ -158,42 +173,69 @@ async function syncSkills() {
             const energyRaw = energyMatch ? energyMatch[1] : 'Energy.NONE';
             const energy = parseEnergy(energyRaw);
 
-            // D. Nature (Logique stricte sans manual fix)
+            // D. Nature
             const sphereMatch = blockBody.match(/isSphereSkill:\s*(true|false)/);
             const isSphere = sphereMatch && sphereMatch[1] === 'true';
             
             const treeMatch = blockBody.match(/tree:\s*(SkillTreeType\.\w+)/);
             const treeType = treeMatch ? treeMatch[1] : 'SkillTreeType.VANILLA';
 
-            let nature = 1; // Défaut
+            let nature = 1;
             if (isSphere) {
-                nature = 3; // C'est une sphère
+                nature = 3; 
             } else if (treeType === 'SkillTreeType.ETHER') {
-                nature = 2; // C'est l'arbre 2 (New tree / Level 50+)
+                nature = 2; 
             }
 
-            // E. Race
-            const raceMatch = blockBody.match(/race:\s*(RaceEnum\.\w+)/);
+            // E. Race (LOGIQUE MIXTE : AUTO + MANUELLE)
+            let raceEnum = null;
             let raceId = null;
-            if (raceMatch && raceMatch[1]) raceId = RACE_MAP[raceMatch[1]] || null;
+            
+            // 1. Détection automatique
+            const raceMatchStandard = blockBody.match(/race:\s*(RaceEnum\.\w+)/);
+            if (raceMatchStandard) raceEnum = raceMatchStandard[1];
+            
+            if (!raceEnum) {
+                const availableMatch = blockBody.match(/availableFor:\s*\[\s*(RaceEnum\.\w+)/);
+                if (availableMatch) raceEnum = availableMatch[1];
+            }
+
+            if (!raceEnum) {
+                const anyRaceMatch = blockBody.match(/(RaceEnum\.\w+)/);
+                if (anyRaceMatch) raceEnum = anyRaceMatch[1];
+            }
+
+            if (raceEnum) raceId = RACE_MAP[raceEnum] || null;
+
+            // 2. Correction Manuelle (Ex: Big Mama -> Moueffe)
+            // S'applique si aucune race n'a été trouvée OU pour forcer un changement
+            if (MANUAL_RACE_FIX[searchKey]) {
+                // Si la fix est définie, on l'applique (écrasement ou remplissage)
+                // Ici on remplit seulement si c'est vide, ou tu peux décider d'écraser.
+                // Pour l'instant, on écrase si c'est présent dans la liste FIX.
+                raceId = MANUAL_RACE_FIX[searchKey];
+            }
+
+            // 3. Overrides Spécifiques (Ex: Envol -> NULL)
+            if (SKILL_OVERRIDES[searchKey]) {
+                const overrides = SKILL_OVERRIDES[searchKey];
+                if (overrides.raceId !== undefined) {
+                    raceId = overrides.raceId;
+                }
+            }
 
             // F. Parents (UnlockedFrom)
             const parentMatch = blockBody.match(/unlockedFrom:\s*\[([\s\S]*?)\]/);
             let parentIds = [];
             
             if (parentMatch && parentMatch[1].trim() !== '') {
-                // On récupère "Skill.ABC, 123, Skill.DEF"
                 const parentsRaw = parentMatch[1].split(',').map(s => s.trim());
                 
                 parentsRaw.forEach(p => {
                     if (!p) return;
-
-                    // CAS 1 : C'est une constante (ex: Skill.CANON)
                     if (skillIdMap[p]) {
                         parentIds.push(skillIdMap[p]);
                     } 
-                    // CAS 2 : C'est un ID brut numérique (ex: 12)
-                    // On vérifie si c'est un nombre valide
                     else if (!isNaN(p) && parseInt(p) > 0) {
                         parentIds.push(parseInt(p));
                     }
@@ -220,13 +262,10 @@ async function syncSkills() {
 
         console.log(`✅ Parsing terminé. ${skillsToUpsert.length} compétences prêtes à l'envoi.`);
 
-        // 5. INSERTION EN BASE DE DONNÉES (2 Passes)
+        // 5. INSERTION EN BASE DE DONNÉES
         if (skillsToUpsert.length > 0) {
-            
-            // PASSE 1 : Créer les compétences (sans liens pour éviter erreurs de clé étrangère)
             console.log("💾 1/2 : Enregistrement des compétences...");
             let count = 0;
-            // On utilise une boucle série pour éviter de surcharger SQLite/Postgres
             for (const item of skillsToUpsert) {
                 await prisma.refSkill.upsert({
                     where: { id: item.data.id },
@@ -234,16 +273,13 @@ async function syncSkills() {
                     create: item.data
                 });
                 count++;
-                if (count % 50 === 0) process.stdout.write('.'); // Barre de progression
+                if (count % 50 === 0) process.stdout.write('.');
             }
             console.log(`\n✅ ${count} compétences insérées/mises à jour.`);
 
-            // PASSE 2 : Créer les liens Parents -> Enfants
             console.log("🔗 2/2 : Tissage des liens (Arbres)...");
             for (const item of skillsToUpsert) {
-                // On vide d'abord les parents existants pour éviter les doublons si on relance le script
-                // (Astuce : on set: [] ne marche pas toujours en update direct, mais set: [...] remplace tout)
-                
+                // Gestion correcte des parents (écrasement)
                 if (item.parentIds.length > 0) {
                     await prisma.refSkill.update({
                         where: { id: item.data.id },
@@ -254,7 +290,6 @@ async function syncSkills() {
                         }
                     });
                 } else {
-                     // Si pas de parents, on s'assure qu'il n'y en a pas en base (Cas racine)
                      await prisma.refSkill.update({
                         where: { id: item.data.id },
                         data: { parents: { set: [] } }
@@ -273,5 +308,4 @@ async function syncSkills() {
     }
 }
 
-// Lancer le script
 syncSkills();

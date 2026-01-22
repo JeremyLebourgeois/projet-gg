@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Administration - Guerriers du Givre</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-container { max-width: 900px; margin: 40px auto; padding: 20px; }
+        .admin-section { background: rgba(12, 36, 61, 0.8); border: 2px solid #4fc3f7; border-radius: 10px; padding: 20px; margin-bottom: 30px; }
+        .admin-section h2 { color: #4fc3f7; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-top: 0; }
+        
+        /* Table des utilisateurs */
+        .user-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .user-table th, .user-table td { padding: 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .user-table th { background: rgba(0,0,0,0.3); color: #81d4fa; }
+        
+        /* Zone Danger */
+        .danger-zone { border-color: #ef5350; }
+        .danger-zone h2 { color: #ef5350; }
+        .btn-danger { background: #c0392b; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn-danger:hover { background: #e74c3c; }
+        
+        /* Formulaires */
+        .admin-form { display: flex; gap: 10px; align-items: flex-end; }
+        .form-group { display: flex; flex-direction: column; }
+    </style>
+</head>
+<body class="hub-body">
+
+    <header class="hub-header" style="height: 100px;">
+        <div class="header-overlay">
+            <div class="header-content" style="align-items: center;">
+                <h1 style="color: white; margin: 0;">Administration</h1>
+                <a href="/dashboard" class="btn-logout">Retour au QG</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="admin-container">
+
+        <div class="admin-section">
+            <h2><i class="fas fa-user-plus"></i> Créer un nouveau membre</h2>
+            <form action="/admin/create-user" method="POST" class="admin-form">
+                <div class="form-group">
+                    <label>Pseudo</label>
+                    <input type="text" name="pseudo" required placeholder="Ex: Gandalf">
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe provisoire</label>
+                    <input type="text" name="password" required placeholder="Ex: dino123">
+                </div>
+                <div class="form-group">
+                    <label>Rôle</label>
+                    <select name="role" style="padding: 10px; border-radius: 5px; background: rgba(0,0,0,0.5); color: white; border: 1px solid #4fc3f7;">
+                        <option value="MEMBRE">Membre</option>
+                        <option value="CHEF-ADJOINT">Chef-Adjoint</option>
+                        <option value="LEADER">Leader</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-tool btn-new">Créer</button>
+            </form>
+        </div>
+
+        <div class="admin-section">
+            <h2><i class="fas fa-users-cog"></i> Liste des Membres</h2>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Pseudo</th>
+                        <th>Rôle</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(u => { %>
+                        <tr>
+                            <td><%= u.id %></td>
+                            <td><strong><%= u.pseudo %></strong></td>
+                            
+                            <td>
+                                <% if (u.id !== currentUser.id) { %>
+                                    <form action="/admin/update-role" method="POST" style="display:flex; gap:5px;">
+                                        <input type="hidden" name="userId" value="<%= u.id %>">
+                                        <select name="newRole" style="padding:5px; border-radius:4px; background:#0c243d; color:white; border:1px solid #4fc3f7;">
+                                            <option value="MEMBRE" <%= u.role === 'MEMBRE' ? 'selected' : '' %>>Membre</option>
+                                            <option value="CHEF-ADJOINT" <%= u.role === 'CHEF-ADJOINT' ? 'selected' : '' %>>Chef-Adj.</option>
+                                            <option value="LEADER" <%= u.role === 'LEADER' ? 'selected' : '' %>>Leader</option>
+                                        </select>
+                                        <button type="submit" class="btn-tool" style="padding:5px 10px; font-size:0.8rem;"><i class="fas fa-check"></i></button>
+                                    </form>
+                                <% } else { %>
+                                    <span style="color:#4fc3f7; font-weight:bold;"><%= u.role %></span>
+                                <% } %>
+                            </td>
+
+                            <td>
+                                <% if (u.id !== currentUser.id) { %>
+                                    <form action="/admin/delete-user" method="POST" onsubmit="return confirm('Supprimer définitivement ce joueur et ses Dinozs ?');">
+                                        <input type="hidden" name="userId" value="<%= u.id %>">
+                                        <button type="submit" class="btn-danger" style="padding: 5px 10px; font-size: 0.8rem;"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                <% } else { %>
+                                    <span style="color: #aaa; font-style: italic;">C'est vous</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="admin-section" style="border-color: #f39c12;">
+            <h2 style="color: #f39c12;"><i class="fas fa-tools"></i> Maintenance Technique</h2>
+            <p>Mettre à jour la base de données des compétences depuis le fichier local.</p>
+            
+            <form action="/admin/sync-skills" method="POST">
+                <button type="submit" class="btn-tool" style="background: #e67e22; width: 100%; font-weight:bold;">
+                    <i class="fas fa-sync-alt"></i> LANCER SYNC-SKILLS
+                </button>
+            </form>
+        </div>
+
+        <div class="admin-section danger-zone">
+            <h2><i class="fas fa-exclamation-triangle"></i> Zone de Danger</h2>
+            <p>Attention, ces actions sont irréversibles.</p>
+            
+            <form action="/admin/reset-dinozs" method="POST" onsubmit="return confirm('ATTENTION : Cela va supprimer TOUS les Dinozs de TOUS les joueurs. Êtes-vous ABSOLUMENT sûr ?');">
+                <button type="submit" class="btn-danger" style="width: 100%;">
+                    <i class="fas fa-meteor"></i> SUPPRIMER TOUS LES DINOZS (RAZ SERVEUR)
+                </button>
+            </form>
+        </div>
+
+    </main>
+
+</body>
+</html>

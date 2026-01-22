@@ -18,8 +18,16 @@
                         <strong><%= role %></strong> des Guerriers du Givre depuis <%= daysMember %> jours
                     </p>
                 </div>
-                <a href="/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
-            </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <% if (role === 'LEADER') { %>
+                        <a href="/admin" class="btn-logout" style="background: linear-gradient(180deg, #e67e22, #d35400); border-color: #e67e22;">
+                            <i class="fas fa-cogs"></i> Admin
+                        </a>
+                    <% } %>
+                    <a href="/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                </div>
+                </div>
         </div>
     </header>
 

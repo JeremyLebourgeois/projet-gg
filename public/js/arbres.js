@@ -129,9 +129,11 @@ function expandItem(element) {
 }
 
 /* --- TOOLTIP --- */
+/* --- TOOLTIP --- */
 function showTooltip(skill) {
     let statsHtml = '';
     
+    // 1. Affichage des stats de combat (Type, Energie, Proba...)
     if (['A', 'E', 'I'].includes(skill.type)) {
         const proba = skill.probability > 0 ? `${skill.probability}%` : '-';
         const prio = skill.priority > 0 ? skill.priority : '-';
@@ -144,10 +146,16 @@ function showTooltip(skill) {
         statsHtml = `<span class="tooltip-meta">Type: ${skill.type}</span>`;
     }
 
+    // 2. NOUVEAU : Affichage de la Race requise si elle existe
+    if (skill.raceId) {
+        // J'ajoute une couleur dorée (#f1c40f) pour bien le mettre en valeur
+        statsHtml += `<span class="tooltip-meta" style="color: #f1c40f; font-weight: bold; margin-top: 5px;">Spécial : ${skill.raceId}</span>`;
+    }
+
     tooltip.innerHTML = `
         <span class="tooltip-title">${skill.name}</span>
         ${statsHtml}
-        <div class="tooltip-desc">${skill.description}</div>
+        <div class="tooltip-desc">${skill.description || ''}</div>
     `;
     tooltip.style.display = 'block';
 }
