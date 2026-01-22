@@ -47,7 +47,7 @@
             <% dinozs.forEach(dino => { %>
                 <a href="/dinoz/<%= dino.id %>" class="dino-card" style="text-decoration: none; color: inherit; display: block;">
                     <div class="card-img-container">
-                        <img src="<%= dino.imageUrl ? dino.imageUrl : '/img/' + dino.race.toLowerCase() + '.png' %>" alt="<%= dino.race %>">
+                        <img src="<%= dino.imageUrl ? dino.imageUrl : '/img/races/' + dino.race.toLowerCase() + '.png' %>" alt="<%= dino.race %>">
                     </div>
                     <div class="card-info">
                         <h3><%= dino.name %></h3>
@@ -159,7 +159,7 @@
                 // On met juste l'image, sans texte comme demandé
                 raceCard.innerHTML = `
                     <div class="card-img-container" style="height: 100%;">
-                        <img src="/img/${race.toLowerCase()}.png" alt="${race}" title="${race}" style="max-height: 100%;">
+                        <img src="/img/races/${race.toLowerCase()}.png" alt="${race}" title="${race}" style="max-height: 100%;">
                     </div>
                 `;
 
@@ -177,7 +177,7 @@
                 if (raceGrid.classList.contains('hidden')) {
                     userGrid.classList.add('hidden');       // Cache les dinozs
                     raceGrid.classList.remove('hidden');    // Montre les races
-                    btnRace.innerHTML = 'Retour <i class="fas fa-undo"></i>'; // Change le texte du bouton
+                    btnRace.innerHTML = 'Retour  <i class="fas fa-undo"></i> '; // Change le texte du bouton
                 } else {
                     // Sinon on revient à l'affichage normal (tous les dinozs)
                     resetView();

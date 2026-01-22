@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Architecte - Créer un Plan</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/arbres.css"> 
+    <link rel="stylesheet" href="/css/architecte.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="hub-body" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
+
+    <header class="hub-header">
+        <div class="header-overlay">
+            <div class="header-content">
+                <div class="user-info">
+                    <h1><%= pseudo %></h1>
+                    <p class="status"><strong><%= role %></strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
+                </div>
+                <div class="nav-menu">
+                    <a href="/dashboard" class="nav-btn" title="Accueil"><i class="fas fa-home"></i></a>
+                    <a href="/dinozs" class="nav-btn" title="Mes Dinozs"><i class="fas fa-paw"></i></a>
+                    <a href="/clan" class="nav-btn" title="Mon Clan"><i class="fas fa-chess-rook"></i></a>
+                    <a href="/arbres" class="nav-btn active" title="Plans"><i class="fas fa-scroll"></i></a>
+                    <a href="#" class="nav-btn disabled" title="Travaux"><i class="fas fa-hammer"></i></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="architect-top-bar">
+        <a href="/arbres" class="btn-back-dino" style="margin: 0; align-self: center; background: #34495e; padding: 10px 15px; border-radius: 5px; color: white; text-decoration: none;">
+            <i class="fas fa-arrow-left"></i> Retour
+        </a>
+
+        <div class="control-group" style="flex: 2;">
+            <label>Nom du Plan</label>
+            <input type="text" id="plan-name" class="input-architect" placeholder="Ex: Wanwan Vitesse...">
+        </div>
+
+        <div class="control-group" style="flex: 1;">
+            <label>Race Cible</label>
+            <select id="plan-race" class="input-architect" style="text-transform: capitalize;">
+                <% raceList.forEach(r => { %>
+                    <option value="<%= r %>"><%= r %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>Visibilité</label>
+            <label class="checkbox-wrapper">
+                <input type="checkbox" id="plan-public">
+                <span style="color:#bbb; font-size:0.9em;">Partager (Clan)</span>
+            </label>
+        </div>
+
+        <button class="btn-save" onclick="savePlan()">
+            <i class="fas fa-save"></i> Enregistrer
+        </button>
+    </section>
+
+    <div class="architect-main-layout">
+        
+        <main class="tree-container-scroll">
+            <div id="trees-view" class="trees-grid">
+                <% ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'].forEach(elem => { %>
+                    <div class="element-block bg-<%= elem.toLowerCase() %>">
+                        <div class="element-header">
+                            <img src="/img/elements/<%= {Feu:'fire', Bois:'wood', Eau:'water', Foudre:'lightning', Air:'air'}[elem] %>.webp" style="width:24px;">
+                            <span><%= elem %></span>
+                        </div>
+                        <div class="tree-wrapper" id="tree-container-<%= elem %>"></div>
+                    </div>
+                <% }) %>
+            </div>
+        </main>
+
+        <aside class="stats-sidebar">
+            
+            <div class="level-target-box">
+                <div class="lvl-title">Niveau Requis</div>
+                <div class="lvl-value" id="level-display">1</div>
+            </div>
+
+            <div class="ups-details-box">
+                <div class="ups-title">Détail des Ups</div>
+                
+                <div class="ups-row zero" id="row-fire">
+                    <img src="/img/elements/fire.webp"> <span id="count-fire">0</span>
+                </div>
+                <div class="ups-row zero" id="row-wood">
+                    <img src="/img/elements/wood.webp"> <span id="count-wood">0</span>
+                </div>
+                <div class="ups-row zero" id="row-water">
+                    <img src="/img/elements/water.webp"> <span id="count-water">0</span>
+                </div>
+                <div class="ups-row zero" id="row-lightning">
+                    <img src="/img/elements/lightning.webp"> <span id="count-lightning">0</span>
+                </div>
+                <div class="ups-row zero" id="row-air">
+                    <img src="/img/elements/air.webp"> <span id="count-air">0</span>
+                </div>
+            </div>
+
+        </aside>
+
+    </div>
+
+    <div id="skill-tooltip"></div>
+
+    <script>
+        const ALL_SKILLS = <%- JSON.stringify(skills) %>;
+        let selectedSkills = new Set();
+        let skillTiers = new Map();
+        
+        // --- GESTION TOOLTIP ---
+        const tooltip = document.getElementById('skill-tooltip');
+
+        document.addEventListener('mousemove', (e) => {
+            if (tooltip && tooltip.style.display === 'block') {
+                const offsetX = 15; 
+                const offsetY = 15;
+                
+                // On évite que ça sorte de l'écran à droite ou en bas
+                let left = e.pageX + offsetX;
+                let top = e.pageY + offsetY;
+                
+                if (left + 280 > window.innerWidth) left = e.pageX - 295; 
+                if (top + 150 > window.innerHeight) top = e.pageY - 160; 
+
+                tooltip.style.left = left + 'px';
+                tooltip.style.top = top + 'px';
+            }
+        });
+
+        function showTooltip(skill) {
+            let statsHtml = '';
+            
+            if (['A', 'E', 'I'].includes(skill.type)) {
+                const proba = skill.probability > 0 ? `${skill.probability}%` : '-';
+                const prio = skill.priority > 0 ? skill.priority : '-';
+                statsHtml = `
+                    <span class="tooltip-meta">Type: ${skill.type} | E: ${skill.energy || 0}</span>
+                    <span class="tooltip-meta">Prio: ${prio} | Proba: ${proba}</span>
+                `;
+            } else {
+                statsHtml = `<span class="tooltip-meta">Type: ${skill.type}</span>`;
+            }
+
+            // Affichage Race ID en doré (Copie de Arbres.js)
+            if (skill.raceId) {
+                statsHtml += `<span class="tooltip-meta" style="color: #f1c40f; font-weight: bold; margin-top: 5px;">Spécial : ${skill.raceId}</span>`;
+            }
+
+            tooltip.innerHTML = `
+                <span class="tooltip-title">${skill.name}</span>
+                ${statsHtml}
+                <div class="tooltip-desc">${skill.description || ''}</div>
+            `;
+            tooltip.style.display = 'block';
+        }
+
+        function hideTooltip() {
+            tooltip.style.display = 'none';
+        }
+
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            calculateAllTiers(); 
+            ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'].forEach(elem => renderTreeForElement(elem));
+        });
+
+        function calculateAllTiers() {
+            let changed = true;
+            let pass = 0;
+            while(changed && pass < 10) {
+                changed = false;
+                ALL_SKILLS.forEach(skill => {
+                    if (skillTiers.has(skill.id)) return;
+                    if (!skill.parents || skill.parents.length === 0) {
+                        skillTiers.set(skill.id, 1);
+                        changed = true;
+                    } else {
+                        let maxParentTier = 0;
+                        let allParentsKnown = true;
+                        for(let p of skill.parents) {
+                            if (skillTiers.has(p.id)) {
+                                maxParentTier = Math.max(maxParentTier, skillTiers.get(p.id));
+                            } else {
+                                const parentExists = ALL_SKILLS.find(s => s.id === p.id);
+                                if(parentExists) allParentsKnown = false;
+                            }
+                        }
+                        if (allParentsKnown) {
+                            skillTiers.set(skill.id, maxParentTier + 1);
+                            changed = true;
+                        }
+                    }
+                });
+                pass++;
+            }
+        }
+
+        function renderTreeForElement(elementName) {
+            const container = document.getElementById(`tree-container-${elementName}`);
+            container.innerHTML = ''; 
+            const scaler = document.createElement('div');
+            scaler.className = 'tree-scaler'; 
+
+            const relevantSkills = ALL_SKILLS.filter(s => {
+                const isExactElem = s.element === elementName;
+                const isTree1 = s.skillNature === 1;   
+                const isNotDouble = s.element !== 'Double'; 
+                const isNotInvocation = s.type !== 'I'; 
+                return isExactElem && isTree1 && isNotDouble && isNotInvocation;
+            });
+
+            if (relevantSkills.length === 0) {
+                container.innerHTML = '<div style="color:#aaa; font-style:italic;">Vide</div>';
+                return;
+            }
+
+            const roots = relevantSkills.filter(s => {
+                const hasParentInList = s.parents.some(p => relevantSkills.find(rs => rs.id === p.id));
+                return !hasParentInList;
+            });
+            roots.sort((a,b) => a.id - b.id);
+
+            roots.forEach(root => {
+                scaler.appendChild(buildInteractiveBranch(root, relevantSkills, elementName));
+            });
+            
+            container.appendChild(scaler);
+        }
+
+        function buildInteractiveBranch(skill, contextSkills, elementName) {
+            const branchContainer = document.createElement('div');
+            branchContainer.className = 'skill-branch';
+
+            const brick = document.createElement('div');
+            brick.className = `skill-brick brick-${elementName.toLowerCase()}`;
+            brick.id = `skill-${skill.id}`;
+            brick.innerText = skill.name;
+            
+            // Interaction Clic
+            brick.onclick = (e) => {
+                e.stopPropagation();
+                toggleSkillSelection(skill);
+            };
+
+            // Interaction Tooltip (Souris)
+            brick.addEventListener('mouseenter', () => showTooltip(skill));
+            brick.addEventListener('mouseleave', () => hideTooltip());
+
+            branchContainer.appendChild(brick);
+
+            const children = contextSkills.filter(s => s.parents.some(p => p.id === skill.id));
+            if (children.length > 0) {
+                const col = document.createElement('div');
+                col.className = 'children-column';
+                children.sort((a,b) => a.id - b.id);
+                children.forEach(child => {
+                    col.appendChild(buildInteractiveBranch(child, contextSkills, elementName));
+                });
+                branchContainer.appendChild(col);
+            }
+
+            return branchContainer;
+        }
+
+        function toggleSkillSelection(skill) {
+            const brick = document.getElementById(`skill-${skill.id}`);
+            if (selectedSkills.has(skill.id)) {
+                deselectRecursively(skill);
+            } else {
+                selectedSkills.add(skill.id);
+                brick.classList.add('selected');
+                selectParentsRecursively(skill);
+            }
+            updateStatsDisplay();
+        }
+
+        function selectParentsRecursively(skill) {
+            if (skill.parents && skill.parents.length > 0) {
+                skill.parents.forEach(parentRef => {
+                    const parentSkill = ALL_SKILLS.find(s => s.id === parentRef.id);
+                    if (parentSkill && !selectedSkills.has(parentSkill.id)) {
+                        selectedSkills.add(parentSkill.id);
+                        const parentBrick = document.getElementById(`skill-${parentSkill.id}`);
+                        if(parentBrick) parentBrick.classList.add('selected');
+                        selectParentsRecursively(parentSkill); 
+                    }
+                });
+            }
+        }
+
+        function deselectRecursively(skill) {
+            selectedSkills.delete(skill.id);
+            const brick = document.getElementById(`skill-${skill.id}`);
+            if(brick) brick.classList.remove('selected');
+
+            const children = ALL_SKILLS.filter(s => s.parents && s.parents.some(p => p.id === skill.id));
+            children.forEach(child => {
+                if(selectedSkills.has(child.id)) {
+                    deselectRecursively(child);
+                }
+            });
+        }
+
+        // --- CALCUL STATS (CORRIGÉ) ---
+        function updateStatsDisplay() {
+            const elements = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+            
+            // CORRECTION MAP : 'Foudre' -> 'lightning' pour correspondre à l'ID HTML
+            const idMap = { 'Feu':'fire', 'Bois':'wood', 'Eau':'water', 'Foudre':'lightning', 'Air':'air' };
+            
+            let totalLevel = 1;
+
+            elements.forEach(elem => {
+                let skillCount = 0;
+                let maxTier = 0;
+                
+                selectedSkills.forEach(id => {
+                    const skill = ALL_SKILLS.find(s => s.id === id);
+                    if (skill && skill.element === elem) {
+                        skillCount++;
+                        const tier = skillTiers.get(id) || 1;
+                        if (tier > maxTier) maxTier = tier;
+                    }
+                });
+
+                let unlocks = 0;
+                if (maxTier > 0) unlocks = maxTier - 1;
+
+                const elementTotal = skillCount + unlocks;
+                totalLevel += elementTotal;
+
+                // Mise à jour DOM
+                const domId = `count-${idMap[elem]}`;
+                const rowId = `row-${idMap[elem]}`;
+                
+                const elSpan = document.getElementById(domId);
+                const elRow = document.getElementById(rowId);
+                
+                if (elSpan) elSpan.innerText = elementTotal;
+                
+                if (elementTotal > 0) elRow.classList.remove('zero');
+                else elRow.classList.add('zero');
+            });
+
+            document.getElementById('level-display').innerText = totalLevel;
+        }
+
+        async function savePlan() {
+            const name = document.getElementById('plan-name').value;
+            const race = document.getElementById('plan-race').value;
+            const isPublic = document.getElementById('plan-public').checked;
+            
+            if (selectedSkills.size === 0) return alert("Sélectionnez au moins une compétence !");
+            if (!name) return alert("Donnez un nom à votre plan !");
+
+            try {
+                const res = await fetch('/architecte/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        race,
+                        isPublic,
+                        selectedSkillIds: Array.from(selectedSkills)
+                    })
+                });
+                const json = await res.json();
+                if (json.success) {
+                    alert("Plan sauvegardé avec succès !");
+                    window.location.href = '/arbres'; 
+                } else {
+                    alert("Erreur : " + json.error);
+                }
+            } catch(e) {
+                console.error(e);
+                alert("Erreur serveur.");
+            }
+        }
+    </script>
+</body>
+</html>

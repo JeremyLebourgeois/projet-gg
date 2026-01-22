@@ -39,7 +39,7 @@
                 <% if (dino.imageUrl) { %>
                     <img src="<%= dino.imageUrl %>" alt="<%= dino.name %>" class="dino-img">
                 <% } else { %>
-                    <img src="/img/<%= dino.race.toLowerCase() %>.png" alt="<%= dino.race %>" class="dino-img">
+                    <img src="/img/races/<%= dino.race.toLowerCase() %>.png" alt="<%= dino.race %>" class="dino-img">
                 <% } %>
                 </div>
                 <div class="dino-header-info">
@@ -83,6 +83,7 @@
                 <div class="mode-buttons">
                     <button class="btn-ice" id="btn-open-reincarnate">Réincarner</button>
                     <button class="btn-ice">Simulation</button>
+                    <button class="btn-ice" id="btn-open-spheres">Sphères</button>
                 </div>
             <% } %>
 
@@ -162,7 +163,7 @@
             <div id="tab-missions" class="tab-content">
                 <div style="text-align:center; margin-top:50px; color:#89cff0;">
                     <i class="fas fa-map-marked-alt" style="font-size:3em; margin-bottom:15px;"></i>
-                    <p>Journal de Quêtes</p>
+                    <p>Journal des Missions</p>
                     <p style="font-size:0.8em; opacity:0.7;">Bientôt disponible</p>
                 </div>
             </div>
@@ -229,8 +230,78 @@
         </div>
     </div>
 
+    <div id="spheres-modal" class="modal-overlay hidden">
+        <div class="ice-theme" style="width: 550px;">
+            <h2 style="color: #4fc3f7; text-align: center; margin-bottom: 20px;">Utiliser une Sphère Élémentaire</h2>
+            <p style="text-align: center; font-size: 0.9em; margin-bottom: 20px; color: #aaa;">
+                Ajoute une compétence unique. <br>
+                <em>(Max 3 par élément)</em>
+            </p>
+
+            <div class="spheres-grid-selection" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 10px;">
+                <% 
+                   const spheresData = [
+                       { id: 'fire', name: 'Feu', count: dino.sphereFire },
+                       { id: 'wood', name: 'Bois', count: dino.sphereWood },
+                       { id: 'water', name: 'Eau', count: dino.sphereWater },
+                       { id: 'lightning', name: 'Foudre', count: dino.sphereBolt },
+                       { id: 'air', name: 'Air', count: dino.sphereAir },
+                       { id: 'void', name: 'Vide', count: dino.sphereVoid }
+                   ];
+                %>
+                
+                <% spheresData.forEach(s => { %>
+                    <div class="sphere-option <%= s.count >= 3 ? 'disabled' : '' %>" 
+                         onclick="<%= s.count >= 3 ? '' : `useSphere('${s.id}')` %>">
+                        
+                        <img src="/img/spheres/item_<%= s.id %>_sphere.webp" class="sphere-img" >
+                        
+                        <div class="sphere-label"><%= s.name %></div>
+                        
+                        <div class="sphere-dots">
+                            <span class="dot <%= s.count >= 1 ? 'filled' : '' %>"></span>
+                            <span class="dot <%= s.count >= 2 ? 'filled' : '' %>"></span>
+                            <span class="dot <%= s.count >= 3 ? 'filled' : '' %>"></span>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeSpheresModal()">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-alert-modal" class="modal-overlay hidden" style="z-index: 3000;">
+        <div class="ice-theme" style="width: 400px; text-align: center; border: 2px solid #4fc3f7;">
+            <h2 id="custom-alert-title" style="color: #4fc3f7; margin-bottom: 15px;">Notification</h2>
+            
+            <p id="custom-alert-message" style="color: white; margin-bottom: 25px; font-size: 1.1em;"></p>
+            
+            <button class="btn-ice" onclick="closeCustomAlert()" style="width: 100%;">Compris !</button>
+        </div>
+    </div>
+
+    <div id="confirm-action-modal" class="modal-overlay hidden" style="z-index: 2500;">
+        <div class="ice-theme" style="width: 450px; text-align: center; border: 2px solid #f39c12;">
+            <h2 style="color: #f39c12; margin-bottom: 15px;">Confirmation Requise</h2>
+            
+            <p id="confirm-message" style="color: white; margin-bottom: 25px; font-size: 1.1em;">
+                </p>
+
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button class="btn-cancel" onclick="closeConfirmModal()">Annuler</button>
+                <button class="btn-ice" id="btn-confirm-yes" style="background: linear-gradient(180deg, #f39c12, #d35400); border-color: #e67e22;">
+                    Confirmer
+                </button>
+            </div>
+        </div>
+    </div>
+
 <script>
     const ALL_SKILLS = <%- JSON.stringify(allSkills) %>;
+    const SERVER_LEARNED_IDS = <%- JSON.stringify(dino.learnedSkills.map(s => s.id)) %>;
     const DINO_RACE = "<%= dino.race %>"; 
 
     // MAPPING
@@ -240,7 +311,7 @@
     };
     const CSS_MAP = { 
         'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'lightning', 'Air': 'air', 
-        'Neutre': 'neutre', 'Vide': 'vide',
+        'Neutre': 'neutre', 'Vide': 'void',
         'Inconnu': 'up'
     };
 
@@ -303,7 +374,12 @@
     // --- LOGIQUE PRINCIPALE (MOTEUR) ---
     function updateFullLogic() {
         const rows = document.querySelectorAll('#progression-table tbody tr');
-        let state = { learnedIds: new Set(), pendingUnlocks: {}, availableSkills: {}, hasPDC: false };
+        let state = { 
+            learnedIds: new Set(SERVER_LEARNED_IDS), 
+            pendingUnlocks: {}, 
+            availableSkills: {}, 
+            hasPDC: false 
+        };
 
         // MODIF 1 : On laisse passer l'Arbre 2 (ne filtre que Sphères)
         const level1Skills = ALL_SKILLS.filter(s => 
@@ -569,7 +645,6 @@
     }
 
     // --- UI HELPERS ---
-
     function openSkillModal(targetCell, options) {
         const modal = document.getElementById('skill-selector-modal');
         const list = document.getElementById('modal-skill-list');
@@ -818,6 +893,100 @@
             if (response.ok) window.location.reload();
             else alert("Erreur lors de la réincarnation !");
         } catch (err) { console.error(err); }
+    });
+
+    // --- GESTION SPHERES ---
+    const modalSpheres = document.getElementById('spheres-modal');
+    const btnSpheres = document.getElementById('btn-open-spheres');
+
+    if(btnSpheres) {
+        btnSpheres.addEventListener('click', () => {
+            modalSpheres.classList.remove('hidden');
+        });
+    }
+
+    window.closeSpheresModal = function() {
+        modalSpheres.classList.add('hidden');
+    }
+
+    // --- SYSTEME D'ALERTE CUSTOM ---
+    let reloadOnAlert = false;
+
+    function showCustomAlert(title, message, reload = false) {
+        document.getElementById('custom-alert-title').innerText = title;
+        document.getElementById('custom-alert-message').innerText = message;
+        reloadOnAlert = reload;
+        document.getElementById('custom-alert-modal').classList.remove('hidden');
+    }
+
+    window.closeCustomAlert = function() {
+        document.getElementById('custom-alert-modal').classList.add('hidden');
+        if (reloadOnAlert) {
+            window.location.reload();
+        }
+    }
+
+    // --- GESTION SPHERES MISE À JOUR ---
+    let pendingSphereElement = null; // Stocke l'élément en attente de validation
+
+    // --- 1. FONCTION DÉCLENCHÉE AU CLIC SUR L'ICONE ---
+    window.useSphere = function(element) {
+        // On stocke l'élément choisi (ex: 'fire')
+        pendingSphereElement = element;
+
+        // On met à jour le texte de la modale
+        const message = `Voulez-vous vraiment consommer une sphère <strong style="color:#4fc3f7">${element.toUpperCase()}</strong> ?<br><span style="font-size:0.8em; color:#aaa;">Cette action est définitive.</span>`;
+        document.getElementById('confirm-message').innerHTML = message;
+
+        // On ouvre la modale de confirmation
+        document.getElementById('confirm-action-modal').classList.remove('hidden');
+    };
+
+    // --- 2. FONCTION POUR FERMER LA MODALE ---
+    window.closeConfirmModal = function() {
+        document.getElementById('confirm-action-modal').classList.add('hidden');
+        pendingSphereElement = null; // On nettoie
+    };
+
+    // --- 3. FONCTION DÉCLENCHÉE QUAND ON CLIQUE SUR "OUI" ---
+    document.getElementById('btn-confirm-yes').addEventListener('click', async () => {
+        
+        // CORRECTION : On récupère l'élément AVANT de fermer la modale
+        const element = pendingSphereElement; 
+
+        // Sécurité : si pas d'élément en attente, on arrête
+        if (!element) return;
+
+        // Maintenant on peut fermer (ce qui va remettre pendingSphereElement à null, mais on a sauvegardé 'element')
+        closeConfirmModal();
+
+        try {
+            const dinoId = "<%= dino.id %>";
+            const response = await fetch('/dinoz/add-sphere', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ dinoId, element })
+            });
+            
+            const json = await response.json();
+            
+            if (response.ok) {
+                // FERMER LA MODALE DE SÉLECTION DES SPHÈRES
+                if (typeof closeSpheresModal === 'function') closeSpheresModal();
+                
+                // AFFICHER LE SUCCÈS
+                showCustomAlert(
+                    "Sphère Consommée !", 
+                    `Votre dinoz a appris la compétence ${json.skillName} !`, 
+                    true // Reload = true
+                );
+            } else {
+                showCustomAlert("Erreur", "Impossible d'utiliser la sphère : " + json.error, false);
+            }
+        } catch (err) {
+            console.error(err);
+            showCustomAlert("Erreur", "Problème technique avec le serveur.", false);
+        }
     });
 </script>
 </body>

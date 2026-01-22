@@ -23,6 +23,9 @@ model User {
 
   // Préférence pour affichage des arbres
   treeMode     String   @default("COMPRESSED") // "COMPRESSED" ou "EXPANDED"
+
+  // Relation inverse : Un user a créé plusieurs plans
+  skillPlans   SkillPlan[]
 }
 
 
@@ -35,12 +38,21 @@ model Dinoz {
   level     Int     @default(1)
   notes     String?
   
-  // Stats
+// Stats
   statFire  Int     @default(0)
   statWood  Int     @default(0)
   statWater Int     @default(0)
   statBolt  Int     @default(0)
   statAir   Int     @default(0)
+
+// Compteurs de Sphères (0 à 3)
+  sphereFire    Int @default(0)
+  sphereWood    Int @default(0)
+  sphereWater   Int @default(0)
+  sphereBolt    Int @default(0)
+  sphereAir     Int @default(0)
+  sphereVoid    Int @default(0)
+
 // Stats Générales
   statLife       Int @default(100)
   statSpeed      Int @default(10)
@@ -49,19 +61,19 @@ model Dinoz {
   statDodge      Int @default(0)
   statArmor      Int @default(0)
 
-  // Propriétaire
+// Propriétaire
   userId    Int
   user      User    @relation(fields: [userId], references: [id])
   
-  // 1. Compétences Apprises
+// 1. Compétences Apprises
   learnedSkills   RefSkill[] @relation("LearnedSkills")
-  // 2. Compétences Débloquées (Disponibles)
+// 2. Compétences Débloquées (Disponibles)
   unlockedSkills  RefSkill[] @relation("UnlockedSkills")
 
-  // Historique des ups (JSON)
+// Historique des ups (JSON)
   ups       Json? 
 
-  // Dinoz Récincarné ? -- 1 pour oui -- 0 pour non
+// Dinoz Récincarné ? -- 1 pour oui -- 0 pour non
   isReincarnate   Int @default(0)
 }
 
@@ -92,4 +104,22 @@ model RefSkill {
   // On met des crochets [] des deux côtés pour dire "Plusieurs parents possibles"
   parents      RefSkill[] @relation("SkillTree")
   children     RefSkill[] @relation("SkillTree")
+}
+
+// Plans de Compétences (Architecte)
+model SkillPlan {
+  id        Int      @id @default(autoincrement())
+  name      String
+  race      String   // Ex: "Wanwan", "Sirain" ou "Générique"
+  
+  // Contenu du plan : Liste des IDs des compétences sélectionnées
+  // Ex: [1, 4, 12, 105]
+  skillIds  Json     
+
+  isPublic  Boolean  @default(false) // false = Privé, true = Visible par le clan
+  createdAt DateTime @default(now())
+
+  // Auteur du plan
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
 }

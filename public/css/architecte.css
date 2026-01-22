@@ -1,0 +1,212 @@
+/* --- public/css/architecte.css --- */
+
+/* 1. BARRE DE CONTRÔLE (EN HAUT) */
+.architect-top-bar {
+    background: rgba(12, 36, 61, 0.95);
+    border-bottom: 3px solid #f1c40f;
+    padding: 15px 30px;
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    /* Reste toujours en haut */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.control-group label {
+    color: #4fc3f7;
+    font-weight: bold;
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+.input-architect {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #4fc3f7;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    background: rgba(0,0,0,0.2);
+    padding: 0 15px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    cursor: pointer;
+}
+.checkbox-wrapper:hover { border-color: #f1c40f; }
+.checkbox-wrapper input { cursor: pointer; }
+
+/* Bouton Sauvegarder */
+.btn-save {
+    background: linear-gradient(180deg, #f39c12, #d35400);
+    border: 1px solid #e67e22;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 4px 0 #a04000;
+    transition: all 0.2s;
+    height: 40px;
+    margin-left: auto; /* Pousse le bouton à droite */
+}
+.btn-save:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 6px 0 #a04000; }
+.btn-save:active { transform: translateY(2px); box-shadow: none; }
+
+
+/* 2. LAYOUT PRINCIPAL (Flex Row : Arbres + Stats) */
+.architect-main-layout {
+    display: flex;
+    height: calc(100vh - 200px); /* Ajuste selon header + topbar */
+    overflow: hidden;
+}
+
+/* ZONE GAUCHE : ARBRES (4/5) */
+.tree-container-scroll {
+    flex: 4; /* 80% de largeur */
+    overflow-y: auto;
+    padding: 20px;
+    background: #0c1a2b; /* Fond sombre global */
+}
+
+/* ZONE DROITE : STATS (1/5) */
+.stats-sidebar {
+    flex: 1; /* 20% de largeur */
+    background: #08121e;
+    border-left: 2px solid #4fc3f7;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+    z-index: 50;
+}
+
+/* 3. VISUEL DES ARBRES (BRIQUES COLLÉES) */
+.trees-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+}
+
+.element-block {
+    width: 100%;
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    padding: 0; 
+}
+
+.element-header {
+    padding: 10px 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.tree-wrapper {
+    padding: 20px;
+}
+
+/* Surcharge des briques pour l'Architecte */
+.skill-brick {
+    opacity: 1 !important; 
+    filter: grayscale(0); 
+    transition: all 0.2s;
+    background-image: none !important;
+}
+
+.skill-brick:not(.selected) {
+    filter: grayscale(0.8) brightness(0.7); /* Grisé et sombre */
+    opacity: 0.8 !important;
+}
+
+.skill-brick.selected {
+    filter: grayscale(0) brightness(1.1); /* Pleine couleur */
+    border: 2px solid #f1c40f !important; /* Bordure OR */
+    box-shadow: 0 0 10px rgba(241, 196, 15, 0.4);
+    z-index: 10;
+}
+
+/* 4. COMPOSANTS SIDEBAR (STATS) */
+.level-target-box {
+    background: rgba(241, 196, 15, 0.1);
+    border: 2px solid #f1c40f;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(241, 196, 15, 0.2);
+}
+.lvl-title { color: #f1c40f; font-weight: bold; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 5px; }
+.lvl-value { font-size: 3rem; font-weight: bold; color: white; line-height: 1; text-shadow: 0 0 10px #f39c12; }
+
+.ups-details-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(137, 207, 240, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+}
+.ups-title { color: #89cff0; text-align: center; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
+
+.ups-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+.ups-row img { width: 24px; height: 24px; filter: drop-shadow(0 0 2px black); }
+.ups-row span { font-weight: bold; font-size: 1.1rem; color: white; }
+.ups-row.zero { opacity: 0.3; } 
+.ups-row:not(.zero) { background: rgba(255,255,255,0.1); border-left: 3px solid #f1c40f; } /* Mise en valeur active */
+
+/* Classes de fond spécifiques */
+.bg-feu { background-color: rgba(211, 47, 47, 0.15); border-left: 5px solid #d32f2f; }
+.bg-bois { background-color: rgba(56, 142, 60, 0.15); border-left: 5px solid #388e3c; }
+.bg-eau { background-color: rgba(25, 118, 210, 0.15); border-left: 5px solid #1976d2; }
+.bg-foudre { background-color: rgba(251, 192, 45, 0.15); border-left: 5px solid #fbc02d; }
+.bg-air { background-color: rgba(144, 164, 174, 0.15); border-left: 5px solid #90a4ae; }
+
+
+/* --- TOOLTIP (Copié de arbres.css) --- */
+#skill-tooltip {
+    position: absolute;
+    display: none;
+    background: rgba(12, 36, 61, 0.95);
+    border: 2px solid #4fc3f7;
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+    z-index: 1000;
+    width: 280px;
+    box-shadow: 0 0 20px rgba(79, 195, 247, 0.4);
+    backdrop-filter: blur(5px);
+    pointer-events: none; /* Pour que la souris passe au travers */
+}
+.tooltip-title { display: block; font-size: 1.1em; font-weight: bold; color: #4fc3f7; margin-bottom: 8px; border-bottom: 1px solid #555; padding-bottom: 5px; }
+.tooltip-meta { display: block; font-size: 0.85em; color: #aaa; margin-bottom: 8px; font-family: monospace; }
+.tooltip-desc { font-size: 0.9em; line-height: 1.4; color: #ddd; }

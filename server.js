@@ -625,3 +625,142 @@ app.post('/api/preference', async (req, res) => {
     
     res.status(400).json({ error: 'Champ invalide' });
 });
+
+// --- CONFIGURATION DES MAPPINGS ---
+// Pour traduire l'anglais (du front) vers le Français (de la BDD RefSkill)
+const ELEM_MAP_DB = {
+    'fire': 'Feu', 'wood': 'Bois', 'water': 'Eau', 
+    'lightning': 'Foudre', 'air': 'Air', 'void': 'Vide'
+};
+
+// Pour savoir quelle colonne incrémenter dans la table Dinoz
+const SPHERE_COL_MAP = {
+    'fire': 'sphereFire', 'wood': 'sphereWood', 'water': 'sphereWater', 
+    'lightning': 'sphereBolt', 'air': 'sphereAir', 'void': 'sphereVoid'
+};
+
+// --- ROUTE : AJOUTER UNE SPHÈRE ---
+app.post('/dinoz/add-sphere', async (req, res) => {
+    if (!req.session.userId) return res.status(401).json({ error: "Non connecté" });
+
+    const { dinoId, element } = req.body; // element = 'fire', 'wood', etc.
+
+    try {
+        // 1. On récupère le Dinoz
+        const dino = await prisma.dinoz.findUnique({ 
+            where: { id: parseInt(dinoId) },
+            include: { learnedSkills: true }
+        });
+
+        if (!dino || dino.userId !== req.session.userId) return res.status(403).json({ error: "Interdit" });
+
+        // 2. Vérification du compteur actuel
+        const sphereField = SPHERE_COL_MAP[element];
+        const currentCount = dino[sphereField]; // ex: 0, 1 ou 2
+
+        if (currentCount >= 3) {
+            return res.status(400).json({ error: "Maximum de 3 sphères atteint pour cet élément." });
+        }
+
+        // 3. On cherche la compétence correspondante en BDD
+        // On veut : Bonne Nature (3), Bon Élément, Trié par ID croissant
+        const dbElement = ELEM_MAP_DB[element];
+        
+        const sphereSkills = await prisma.refSkill.findMany({
+            where: { 
+                element: dbElement,
+                skillNature: 3
+            },
+            orderBy: { id: 'asc' } // On suppose que ID petit = Niveau 1, ID grand = Niveau 3
+        });
+
+        // On prend la compétence à l'index correspondant au compteur actuel
+        // ex: Si j'ai 0 sphère, je prends l'index 0 (la 1ère compétence)
+        const skillToLearn = sphereSkills[currentCount];
+
+        if (!skillToLearn) {
+            return res.status(404).json({ error: `Pas de compétence sphérique de niveau ${currentCount + 1} trouvée pour ${dbElement}.` });
+        }
+
+        // 4. On met à jour le Dinoz
+        await prisma.dinoz.update({
+            where: { id: parseInt(dinoId) },
+            data: {
+                [sphereField]: currentCount + 1, // On augmente le compteur
+                learnedSkills: {
+                    connect: { id: skillToLearn.id } // On ajoute la compétence aux apprises
+                }
+            }
+        });
+
+        res.json({ success: true, skillName: skillToLearn.name });
+
+    } catch (error) {
+        console.error("Erreur ajout sphère:", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+// --- PAGE : ARCHITECTE (CRÉATEUR DE PLANS) ---
+app.get('/architecte', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/');
+    
+    // 1. Récupérer l'utilisateur (C'est ce qui manquait !)
+    const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
+
+    // Calcul ancienneté
+    const now = new Date();
+    const created = new Date(user.createdAt);
+    const daysMember = Math.ceil(Math.abs(now - created) / (1000 * 60 * 60 * 24));
+
+    // 2. Récupérer toutes les compétences
+    const allSkills = await prisma.refSkill.findMany({
+        include: {
+            parents: { select: { id: true } },
+            children: { select: { id: true } }
+        },
+        orderBy: { id: 'asc' }
+    });
+
+    // 3. Liste des races complète
+    const raceList = [
+        'castivore', 'gorilloz', 'hippoclamp', 'moueffe', 'nuagoz', 
+        'pigmou', 'planaille', 'pteroz', 'rocky', 'sirain', 
+        'wanwan', 'winks', 'feross', 'kabuki', 'mahamuti', 
+        'quetzu', 'santaz', 'smog', 'soufflet', 'toufufu', 'triceragnon'
+    ].sort();
+
+    // 4. Affichage
+    res.render('architecte', { 
+        user, 
+        pseudo: user.pseudo,
+        role: user.role,
+        skills: allSkills,
+        daysMember,
+        raceList
+    });
+});
+
+// --- API : SAUVEGARDER UN PLAN ---
+app.post('/architecte/save', async (req, res) => {
+    if (!req.session.userId) return res.status(401).json({ error: 'Non connecté' });
+
+    const { name, race, isPublic, selectedSkillIds } = req.body;
+
+    try {
+        await prisma.skillPlan.create({
+            data: {
+                name: name.trim() || 'Plan sans nom',
+                race: race,
+                isPublic: isPublic === true || isPublic === 'true', // Conversion sûre
+                skillIds: selectedSkillIds, // Tableau d'IDs [1, 5, ...]
+                authorId: req.session.userId
+            }
+        });
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Erreur sauvegarde plan:", error);
+        res.status(500).json({ error: "Erreur lors de la sauvegarde." });
+    }
+});
