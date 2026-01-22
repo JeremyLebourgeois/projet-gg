@@ -252,14 +252,18 @@ app.get('/dinoz/:id', async (req, res) => {
 
         const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
 
-        // Calcul de l'ancienneté
+        // Calcul ancienneté
         const now = new Date();
-        const diffTime = Math.abs(now - user.createdAt);
-        const daysMember = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const created = new Date(user.createdAt);
+        const daysMember = Math.ceil(Math.abs(now - created) / (1000 * 60 * 60 * 24));
 
         // --- VERIFICATION PLAN DE CARRIÈRE ---
         // On regarde si dans la liste des compétences apprises, l'une s'appelle "Plan de Carrière"
         const hasPDC = dino.learnedSkills.some(skill => skill.name === "Plan de Carrière");
+
+        const allSkills = await prisma.refSkill.findMany({
+        include: { parents: { select: { id: true } } }
+        });
 
         res.render('dinoz-details', { 
             dino: dino, 
@@ -267,6 +271,7 @@ app.get('/dinoz/:id', async (req, res) => {
             pseudo: user.pseudo,
             role: user.role,
             daysMember: daysMember,
+            allSkills,
             hasPDC: hasPDC // <--- On envoie l'info à la page (true ou false)
         });
 
@@ -304,94 +309,67 @@ app.post('/dinozs/delete', async (req, res) => {
     }
 });
 
-// --- API : Sauvegarder un choix de niveau (Grille + Calcul Niveau) ---
+// --- API : Sauvegarder un choix de niveau (Grille + Calcul Niveau + Calcul Stats) ---
+// --- API : Sauvegarder un choix de niveau (Grille + Calcul Niveau + Calcul Stats) ---
 app.post('/dinoz/update-grid', async (req, res) => {
     if (!req.session.userId) return res.status(401).json({ error: "Non connecté" });
 
     const { dinoId, rowIndex, colIndex, value } = req.body;
 
     try {
-        // 1. Récupérer le dinoz
-        const dino = await prisma.dinoz.findUnique({
-            where: { id: parseInt(dinoId) }
-        });
+        const dino = await prisma.dinoz.findUnique({ where: { id: parseInt(dinoId) } });
+        if (!dino || dino.userId !== req.session.userId) return res.status(403).json({ error: "Interdit" });
 
-        if (!dino || dino.userId !== req.session.userId) {
-            return res.status(403).json({ error: "Interdit" });
-        }
-
-        // 2. Mise à jour de l'objet JSON (Grille)
         let gridData = dino.ups || {}; 
-
-        if (!gridData[rowIndex]) {
-            gridData[rowIndex] = {}; 
-        }
+        if (!gridData[rowIndex]) gridData[rowIndex] = {}; 
+        
+        const colKey = `col${colIndex}`; 
         
         if (value === "") {
-            delete gridData[rowIndex][`col${colIndex}`];
-            // Si la ligne est vide, on pourrait nettoyer l'objet ligne, mais ce n'est pas critique
+            delete gridData[rowIndex][colKey];
         } else {
-            gridData[rowIndex][`col${colIndex}`] = value;
+            gridData[rowIndex][colKey] = value;
         }
 
-        // --- 3. NOUVEAU : CALCUL DU NIVEAU CÔTÉ SERVEUR ---
-        let newLevel = 1; // Niveau de base
-        let pdcRowIndex = -1;
+        // --- A. CALCUL DU NIVEAU (CORRIGÉ) ---
+        // Le niveau est simplement : 1 (base) + Nombre de décisions prises (col3 remplies)
+        let decisionsCount = 0;
 
-        // A. On cherche où est "PDC" dans les données
         for (const [rIdx, cols] of Object.entries(gridData)) {
-            if (cols.col1 === 'pdc' || cols.col2 === 'pdc') {
-                const idx = parseInt(rIdx);
-                // On garde l'index le plus petit (le premier PDC trouvé)
-                if (pdcRowIndex === -1 || idx < pdcRowIndex) {
-                    pdcRowIndex = idx;
-                }
+            // Si la colonne 3 (décision) existe et n'est pas vide/null
+            if (cols.col3 && cols.col3 !== "") {
+                decisionsCount++;
             }
         }
 
-        // B. On compte les niveaux séquentiellement (comme sur le frontend)
-        // On boucle de la ligne 1 jusqu'à 80 (ou plus si nécessaire)
-        for (let i = 1; i < 80; i++) {
-            const rowKey = i.toString(); // Les clés JSON sont des strings "1", "2"...
-            const rowData = gridData[rowKey];
+        let newLevel = 1 + decisionsCount;
 
-            // Si la ligne n'existe pas encore dans les données, on arrête le comptage
-            if (!rowData) break;
+        // --- B. CALCUL DES STATS ---
+        let stats = { statFire: 0, statWood: 0, statWater: 0, statBolt: 0, statAir: 0 };
+        const ELEM_TO_DB = { 'Feu': 'statFire', 'Bois': 'statWood', 'Eau': 'statWater', 'Foudre': 'statBolt', 'Air': 'statAir' };
 
-            const val1 = rowData.col1;
-            const val2 = rowData.col2;
-
-            // Règle PDC : Si on est APRÈS la ligne où PDC a été pris, il faut les 2 colonnes
-            const needCol2 = (pdcRowIndex !== -1 && i > pdcRowIndex);
-            
-            let isRowComplete = false;
-
-            if (needCol2) {
-                // Avec PDC actif : il faut col1 ET col2
-                if (val1 && val2) isRowComplete = true;
-            } else {
-                // Sans PDC (ou avant PDC) : il suffit de col1
-                if (val1) isRowComplete = true;
-            }
-
-            if (isRowComplete) {
-                newLevel++;
-            } else {
-                // Si une ligne n'est pas finie, on arrête de compter (le niveau est bloqué ici)
-                break;
+        for (const [rIdx, cols] of Object.entries(gridData)) {
+            if (cols.col3) {
+                try {
+                    const dec = JSON.parse(cols.col3);
+                    if (dec.element && ELEM_TO_DB[dec.element]) {
+                        stats[ELEM_TO_DB[dec.element]]++;
+                    }
+                } catch (e) {}
             }
         }
 
-        // 4. Sauvegarde complète (Grille + Niveau)
+        // Mise à jour DB
         await prisma.dinoz.update({
             where: { id: parseInt(dinoId) },
             data: { 
                 ups: gridData,
-                level: newLevel // <--- C'est ça qui mettra à jour l'affichage partout !
+                level: newLevel,
+                ...stats 
             }
         });
 
-        res.json({ success: true, level: newLevel });
+        res.json({ success: true, stats: stats, level: newLevel });
 
     } catch (error) {
         console.error("Erreur save grid:", error);
@@ -443,8 +421,11 @@ app.get('/arbres', async (req, res) => {
     if (!req.session.userId) return res.redirect('/');
     
     const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
-    // Calcul des jours d'ancienneté
-    const daysMember = Math.floor((new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
+   
+    // Calcul ancienneté
+    const now = new Date();
+    const created = new Date(user.createdAt);
+    const daysMember = Math.ceil(Math.abs(now - created) / (1000 * 60 * 60 * 24));
 
     const allSkills = await prisma.refSkill.findMany({
         include: {

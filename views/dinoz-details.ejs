@@ -18,6 +18,7 @@
 
                 <div class="nav-menu">
                     <a href="/dashboard" class="nav-btn" title="Accueil"><i class="fas fa-home"></i></a>
+                    <a href="/dinozs" class="nav-btn" title="Mes Dinozs"><i class="fas fa-paw"></i></a>
                     <a href="/clan" class="nav-btn" title="Mon Clan"><i class="fas fa-chess-rook"></i></a>
                     <a href="/arbres" class="nav-btn" title="Plans"><i class="fas fa-scroll"></i></a>
                     <a href="#" class="nav-btn disabled" title="Travaux"><i class="fas fa-hammer"></i></a>
@@ -29,6 +30,10 @@
     <main class="dashboard-grid">
         
         <div class="col-left">
+            <a href="/dinozs" class="btn-back-dino">
+                <i class="fas fa-chevron-left"></i> Retour aux Dinozs
+            </a>
+
             <div class="identity-card">
                 <div class="dino-avatar">
                 <% if (dino.imageUrl) { %>
@@ -39,61 +44,41 @@
                 </div>
                 <div class="dino-header-info">
                     <h2><%= dino.name %></h2>
-                    <p><%= dino.race %> Niveau <%= dino.level %></p>
+                    <p id="dino-level-display"><%= dino.race %> Niveau <%= dino.level %></p>
                 </div>
             </div>
 
-            
             <div class="stats-panel">
                 <div class="stats-header" onclick="toggleStats()">
                      Statistiques <i class="fas fa-chevron-down" id="stats-icon" style="font-size: 0.8em; margin-left: 5px;"></i> 
                 </div>
-                
                 <div class="stats-content hidden" id="dino-stats-content">
-                    
                     <div class="stats-elements-row">
-                        <div class="element-box">
-                            <img src="/img/elements/fire.webp" class="element-img" alt="Feu">
-                            <span class="element-val"><%= dino.statFire %></span>
-                        </div>
-                        <div class="element-box">
-                            <img src="/img/elements/wood.webp" class="element-img" alt="Bois">
-                            <span class="element-val"><%= dino.statWood %></span>
-                        </div>
-                        <div class="element-box">
-                            <img src="/img/elements/water.webp" class="element-img" alt="Eau">
-                            <span class="element-val"><%= dino.statWater %></span>
-                        </div>
-                        <div class="element-box">
-                            <img src="/img/elements/lightning.webp" class="element-img" alt="Foudre">
-                            <span class="element-val"><%= dino.statBolt %></span>
-                        </div>
-                        <div class="element-box">
-                            <img src="/img/elements/air.webp" class="element-img" alt="Air">
-                            <span class="element-val"><%= dino.statAir %></span>
-                        </div>
+                        <div class="element-box"><img src="/img/elements/fire.webp" class="element-img"><span class="element-val" id="val-fire"><%= dino.statFire %></span></div>
+                        <div class="element-box"><img src="/img/elements/wood.webp" class="element-img"><span class="element-val" id="val-wood"><%= dino.statWood %></span></div>
+                        <div class="element-box"><img src="/img/elements/water.webp" class="element-img"><span class="element-val" id="val-water"><%= dino.statWater %></span></div>
+                        <div class="element-box"><img src="/img/elements/lightning.webp" class="element-img"><span class="element-val" id="val-bolt"><%= dino.statBolt %></span></div>
+                        <div class="element-box"><img src="/img/elements/air.webp" class="element-img"><span class="element-val" id="val-air"><%= dino.statAir %></span></div>
                     </div>
-
                     <hr style="border-color: rgba(255,255,255,0.3);">
-                    
                     <div class="stats-general-grid">
                         <div class="stat-line"><i class="fas fa-heart"></i> <%= dino.statLife %> PV</div>
                         <div class="stat-line"><i class="fas fa-hourglass-start"></i> <%= dino.statInitiative %> Init.</div>
-                        <div class="stat-line"><i class="fas fa-shield-alt"></i> <%= dino.statArmor %>% Armure</div> 
+                        <div class="stat-line"><i class="fas fa-shield-alt"></i> <%= dino.statArmor %> Armure</div> 
                         <div class="stat-line"><i class="fas fa-running"></i> <%= dino.statSpeed %> Vit.</div>
                         <div class="stat-line"><i class="fas fa-hand-fist"></i> <%= dino.statCounter %>% Contre</div> 
                     </div>
-
                 </div>
             </div>
 
             <div class="bottom-actions">
-                <i class="fas fa-heart action-icon like"></i>
-                <button class="icon-btn delete-btn"><i class="fas fa-trash-alt"></i></button>
+                <button class="btn-sacrifice" onclick="openDeleteModal()">
+                    <i class="fas fa-skull"></i> Sacrifier
+                </button>
             </div>
         </div>
 
-        <div class="col-center">
+        <div class="col-center" style="width: 550px;">
             <% if (dino.isReincarnate === 0) { %>
                 <div class="mode-buttons">
                     <button class="btn-ice" id="btn-open-reincarnate">Réincarner</button>
@@ -108,48 +93,44 @@
                             <th class="col-level">NIV</th>
                             <th class="col-choice-header">CHOIX 1</th>
                             <th class="col-choice-header col-choice-2 hidden">CHOIX 2</th>
+                            <th class="col-decision-header">DÉCISION</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% for(let i = 1; i < 80; i++) { %>
+                        <% for(let i = 1; i < 50; i++) { %>
                             <tr data-row-index="<%= i %>">
                                 <td class="col-level"><%= i + 1 %></td>
                                 
                                 <td class="cell-choice col-1" onclick="toggleMenu(this)">
-                                    <div class="cell-content">
-                                        <span class="placeholder">-</span>
-                                    </div>
-                                    <div class="cell-menu">
-                                        <img src="/img/elements/fire.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'fire')" title="Feu">
-                                        <img src="/img/elements/wood.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'wood')" title="Bois">
-                                        <img src="/img/elements/water.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'water')" title="Eau">
-                                        <img src="/img/elements/lightning.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'lightning')" title="Foudre">
-                                        <img src="/img/elements/air.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'air')" title="Air">
-                                        
-                                        <div class="menu-sep"></div>
-                                        
-                                        <div class="menu-icon text-badge bg-up" onclick="event.stopPropagation(); selectElement(this, 'up')" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;height:22px;">???</div>
-                                        <div class="menu-icon text-badge bg-pdc btn-pdc-item" onclick="event.stopPropagation(); selectElement(this, 'pdc')" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;height:22px;">PDC</div>
-                                    </div>
+                                    <div class="cell-content"><span class="placeholder">-</span></div>
+                                        <div class="cell-menu">
+                                            <img src="/img/elements/fire.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'fire')" title="Feu">
+                                            <img src="/img/elements/wood.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'wood')" title="Bois">
+                                            <img src="/img/elements/water.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'water')" title="Eau">
+                                            <img src="/img/elements/lightning.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'lightning')" title="Foudre">
+                                            <img src="/img/elements/air.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'air')" title="Air">
+                                            <div class="menu-sep"></div>
+                                            <div class="menu-icon text-badge bg-up" onclick="event.stopPropagation(); selectElement(this, 'unknown')" title="Inconnu / ???" style="cursor:pointer; font-size:0.8rem;">???</div>
+                                        </div>
                                 </td>
 
                                 <td class="cell-choice col-2 hidden" onclick="toggleMenu(this)">
-                                    <div class="cell-content">
-                                        <span class="placeholder">-</span>
-                                    </div>
-                                    <div class="cell-menu">
-                                        <img src="/img/elements/fire.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'fire')" title="Feu">
-                                        <img src="/img/elements/wood.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'wood')" title="Bois">
-                                        <img src="/img/elements/water.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'water')" title="Eau">
-                                        <img src="/img/elements/lightning.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'lightning')" title="Foudre">
-                                        <img src="/img/elements/air.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'air')" title="Air">
-                                        
-                                        <div class="menu-sep"></div>
-                                        
-                                        <div class="menu-icon text-badge bg-up" onclick="event.stopPropagation(); selectElement(this, 'up')" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;height:22px;">???</div>
-                                        <div class="menu-icon text-badge bg-pdc btn-pdc-item" onclick="event.stopPropagation(); selectElement(this, 'pdc')" style="display:flex;align-items:center;justify-content:center;font-size:0.6rem;height:22px;">PDC</div>
-                                    </div>
+                                    <div class="cell-content"><span class="placeholder">-</span></div>
+                                        <div class="cell-menu">
+                                            <img src="/img/elements/fire.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'fire')" title="Feu">
+                                            <img src="/img/elements/wood.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'wood')" title="Bois">
+                                            <img src="/img/elements/water.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'water')" title="Eau">
+                                            <img src="/img/elements/lightning.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'lightning')" title="Foudre">
+                                            <img src="/img/elements/air.webp" class="menu-icon" onclick="event.stopPropagation(); selectElement(this, 'air')" title="Air">
+                                            <div class="menu-sep"></div>
+                                            <div class="menu-icon text-badge bg-up" onclick="event.stopPropagation(); selectElement(this, 'unknown')" title="Inconnu / ???" style="cursor:pointer; font-size:0.8rem;">???</div>
+                                        </div>
                                 </td>
+
+                                <td class="cell-choice cell-decision col-3" onclick="toggleMenu(this)">
+                                    <div class="cell-content"><span class="placeholder">-</span></div>
+                                </td>
+
                             </tr>
                         <% } %>
                     </tbody>
@@ -158,50 +139,56 @@
         </div>
 
         <div class="col-right">
-            <button class="btn-ice">MES PLANS</button>
             
-            <div class="plans-list">
-                <div class="plan-row">
-                    <div class="plan-icon fire"><img src="/img/elements/fire.webp" alt="Feu"></div>
-                    <div class="plan-bar"></div>
-                </div>
-                <div class="plan-row">
-                    <div class="plan-icon wood"><img src="/img/elements/wood.webp" alt="Bois"></div>
-                    <div class="plan-bar"></div>
-                </div>
-                <div class="plan-row">
-                    <div class="plan-icon water"><img src="/img/elements/water.webp" alt="Eau"></div>
-                    <div class="plan-bar"></div>
-                </div>
-                <div class="plan-row">
-                    <div class="plan-icon bolt"><img src="/img/elements/lightning.webp" alt="Foudre"></div>
-                    <div class="plan-bar"></div>
-                </div>
-                <div class="plan-row">
-                    <div class="plan-icon air"><img src="/img/elements/air.webp" alt="Air"></div>
-                    <div class="plan-bar"></div>
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="openTab(event, 'tab-skills')">Compétences</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-plans')">Mon Plan</button>
+                <button class="tab-btn" onclick="openTab(event, 'tab-missions')">Missions</button>
+            </div>
+
+            <div id="tab-skills" class="tab-content active">
+                <div class="skill-list-container">
+                    </div>
+            </div>
+
+            <div id="tab-plans" class="tab-content">
+                <div style="text-align:center; margin-top:50px; color:#89cff0;">
+                    <i class="fas fa-hard-hat" style="font-size:3em; margin-bottom:15px;"></i>
+                    <p>Plans Stratégiques</p>
+                    <p style="font-size:0.8em; opacity:0.7;">Bientôt disponible</p>
                 </div>
             </div>
+
+            <div id="tab-missions" class="tab-content">
+                <div style="text-align:center; margin-top:50px; color:#89cff0;">
+                    <i class="fas fa-map-marked-alt" style="font-size:3em; margin-bottom:15px;"></i>
+                    <p>Journal de Quêtes</p>
+                    <p style="font-size:0.8em; opacity:0.7;">Bientôt disponible</p>
+                </div>
+            </div>
+
         </div>
 
     </main>
+
     <div id="delete-modal" class="modal-overlay hidden">
-        <div class="modal-box" style="border: 3px solid #C0392B;"> <h2 style="color: #C0392B;">Adieu Compagnon ?</h2>
-            <p>Es-tu sûr de vouloir te séparer de <strong><%= dino.name %></strong> ?</p>
-            <p style="font-size: 0.9rem; color: #666;">Cette action est irréversible. Il retournera au néant glacé.</p>
+        <div class="modal-box" style="border: 3px solid #C0392B;"> 
+            <h2 style="color: #C0392B;">Sacrifier le Dinoz ?</h2>
+            <p>Es-tu sûr de vouloir sacrifier <strong><%= dino.name %></strong> aux Dieux du Givre ?</p>
+            <p style="font-size: 0.9rem; color: #aaa;">Il sera transformé en ... rien du tout parce qu'il est trop nuuuuuul. <br><br> Cette action est irréversible !</p>
             
             <form action="/dinozs/delete" method="POST" style="margin-top: 20px;">
                 <input type="hidden" name="dinozId" value="<%= dino.id %>">
                 <div class="modal-actions">
-                    <button type="button" class="btn-cancel" id="cancel-delete">Annuler</button>
-                    <button type="submit" class="btn-submit" style="background: #C0392B;">Confirmer la suppression</button>
+                    <button type="button" class="btn-cancel" onclick="closeDeleteModal()">Annuler</button>
+                    <button type="submit" class="btn-submit" style="background: #C0392B;">Confirmer le Sacrifice</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="reincarnate-modal" class="modal hidden">
-        <div class="modal-content ice-theme">
+    <div id="reincarnate-modal" class="modal-overlay hidden">
+        <div class="ice-theme">
             <h2>Réincarnation</h2>
             <p>Le Dinoz va retomber <strong>Niveau 1</strong> et perdre sa progression de grille.</p>
             <p>En échange, répartissez <strong>5 points</strong> de bonus élémentaire :</p>
@@ -214,9 +201,10 @@
                 
                 <% elements.forEach((elem, index) => { %>
                     <div class="distrib-row" data-element="<%= elem %>">
-                        <img src="/img/elements/<%= elem %>.webp" class="mini-icon">
-                        <span class="elem-name"><%= labels[index] %></span>
-                        
+                        <div style="display:flex; align-items:center;">
+                            <img src="/img/elements/<%= elem %>.webp" class="mini-icon">
+                            <span class="elem-name"><%= labels[index] %></span>
+                        </div>
                         <div class="counter-box">
                             <button class="btn-mini" onclick="updatePoints('<%= elem %>', -1)">-</button>
                             <span class="count-val" id="count-<%= elem %>">0</span>
@@ -228,307 +216,496 @@
 
             <div class="modal-actions">
                 <button class="btn-cancel" id="cancel-reincarnate">Annuler</button>
-                <button class="btn-confirm" id="confirm-reincarnate" disabled>Valider la Réincarnation</button>
+                <button class="btn-confirm" id="confirm-reincarnate" disabled style="padding:10px; border-radius:5px; border:none;">Valider</button>
             </div>
         </div>
     </div>
 
-    <script>
-    // --- ETAT GLOBAL ---
-    let currentSelection = { row: null, col: null, cell: null };
-    let hasPDC = false;
+    <div id="skill-selector-modal" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:2000; display:flex; justify-content:center; align-items:center;">
+        <div style="background:#0c1a2b; border:2px solid #89cff0; padding:20px; width:400px; border-radius:10px; max-height:80vh; overflow-y:auto;">
+            <h3 id="modal-skill-title" style="text-align:center; color:#89cff0; border-bottom:1px solid #333; padding-bottom:10px;">Choisir une compétence</h3>
+            <div id="modal-skill-list" class="skill-list-container" style="margin-top:15px;"></div>
+            <button class="btn-ice" style="margin-top:20px; width:100%;" onclick="closeSkillModal()">Annuler</button>
+        </div>
+    </div>
+
+<script>
+    const ALL_SKILLS = <%- JSON.stringify(allSkills) %>;
     
+    // MAPPING : On ne garde que 'unknown' (???) en plus des éléments
+    const ELEM_MAP = { 
+        'fire': 'Feu', 'wood': 'Bois', 'water': 'Eau', 'lightning': 'Foudre', 'air': 'Air',
+        'unknown': 'Inconnu' 
+    };
+    const CSS_MAP = { 
+        'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'lightning', 'Air': 'air', 
+        'Neutre': 'neutre', 'Vide': 'vide',
+        'Inconnu': 'up' // Style gris pour ???
+    };
+
+    let localGrid = <%- dino.ups ? JSON.stringify(dino.ups) : '{}' %>;
+    
+    // ID PDC (Adapte l'ID si nécessaire)
+    const PDC_SKILL = ALL_SKILLS.find(s => s.name === "Plan de Carrière" || s.name === "Plan de Carriere");
+    const PDC_ID = PDC_SKILL ? PDC_SKILL.id : 41304; 
+
     document.addEventListener('DOMContentLoaded', () => {
-        // --- CHARGEMENT : On injecte les données de 'ups' ici ---
-        // Le <%- %> permet d'écrire le JSON brut directement dans le code JS
-        const savedData = <%- dino.ups ? JSON.stringify(dino.ups) : '{}' %>;
-        
-        // 1. On restaure la grille visuellement
-        restoreGrid(savedData);
-        
-        // 2. On lance le calcul du niveau et des verrous
-        updateTableState(); 
+        restoreGridVisuals();
+        updateFullLogic();
     });
 
-    // --- FONCTION RESTAURATION ---
-    function restoreGrid(data) {
-        // On parcourt chaque ligne sauvegardée
-        for (const [rowIndex, cols] of Object.entries(data)) {
-            // On cherche la ligne HTML correspondante (Attention aux index qui commencent à 1)
-            const row = document.querySelector(`tr[data-row-index="${rowIndex}"]`);
-            if (!row) continue;
+    // --- VISUEL ---
 
-            // On applique visuellement les choix
-            if (cols.col1) applyVisuals(row.querySelector('.col-1'), cols.col1);
-            if (cols.col2) applyVisuals(row.querySelector('.col-2'), cols.col2);
-        }
-    }
-
-    // Petit utilitaire pour éviter de répéter le code visuel
-    function applyVisuals(cell, type) {
-        if (!cell || !type) return;
-        const contentDiv = cell.querySelector('.cell-content');
-        
-        // On stocke la valeur
+    function setCellVisual(cell, type) {
+        const content = cell.querySelector('.cell-content');
         cell.dataset.value = type;
+        cell.className = cell.className.replace(/bg-\w+/g, "").trim();
         
-        // Nettoyage classes
-        cell.className = cell.className.replace(/bg-\w+/g, "").trim(); 
-        
-        // Application Style + Contenu
-        if (type === 'pdc') {
-            cell.classList.add('bg-pdc');
-            contentDiv.innerHTML = `<span class="text-badge">PDC</span>`;
-        } else if (type === 'up') {
-            cell.classList.add('bg-up');
-            contentDiv.innerHTML = `<span class="text-badge">???</span>`;
+        // Gestion Uniquement pour ???
+        if (type === 'unknown') {
+            cell.classList.add('bg-up'); // Gris
+            content.innerHTML = '<span class="text-badge">???</span>';
         } else {
+            // Cas classique
             cell.classList.add('bg-' + type);
-            contentDiv.innerHTML = `<img src="/img/elements/${type}.webp" style="width:24px;">`;
+            content.innerHTML = `<img src="/img/elements/${type}.webp" style="width:24px;">`;
         }
     }
 
-    // --- GESTION DU MENU (CLIC) ---
-    window.toggleMenu = function(cell) {
-        if (cell.classList.contains('cell-locked')) return;
+    function setDecisionVisual(cell, data) {
+        const content = cell.querySelector('.cell-content');
+        cell.dataset.decision = JSON.stringify(data);
+        cell.className = cell.className.replace(/bg-\w+/g, "").trim();
 
-        const allMenus = document.querySelectorAll('.cell-menu');
-        const currentMenu = cell.querySelector('.cell-menu');
-        const wasOpen = currentMenu.classList.contains('visible');
-
-        allMenus.forEach(m => m.classList.remove('visible'));
-
-        if (!wasOpen) currentMenu.classList.add('visible');
-    };
-
-    document.addEventListener('click', function(event) {
-        if (!event.target.closest('.cell-choice')) {
-            document.querySelectorAll('.cell-menu').forEach(m => m.classList.remove('visible'));
-        }
-    });
-
-    // --- SÉLECTIONNER UN ÉLÉMENT + SAUVEGARDE ---
-    window.selectElement = function(el, type) {
-        const cell = el.closest('.cell-choice');
-        const row = cell.closest('tr');
-        
-        // Indices pour la sauvegarde
-        const rowIndex = row.dataset.rowIndex;
-        const colIndex = cell.classList.contains('col-1') ? 1 : 2;
-
-        // 1. Application Visuelle
-        applyVisuals(cell, type);
-
-        // 2. Fermer le menu
-        cell.querySelector('.cell-menu').classList.remove('visible');
-
-        // 3. Recalculer la logique (PDC, niveaux...)
-        updateTableState();
-
-        // 4. SAUVEGARDE SILENCIEUSE VERS LE SERVEUR
-        saveGridData(rowIndex, colIndex, type);
-    };
-
-    async function saveGridData(rowIndex, colIndex, value) {
-        try {
-            // On récupère l'ID du dino via EJS
-            const dinoId = "<%= dino.id %>"; 
-            
-            await fetch('/dinoz/update-grid', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ dinoId, rowIndex, colIndex, value })
-            });
-        } catch (err) {
-            console.error("Erreur sauvegarde", err);
+        if (data.action === 'unlock') {
+            const cssElem = CSS_MAP[data.element] || 'neutre';
+            cell.classList.add('bg-' + cssElem); 
+            content.innerHTML = `<span class="text-badge" style="font-size:1.4em;">+</span>`;
+        } else if (data.action === 'learn') {
+            const skill = ALL_SKILLS.find(s => s.id === data.skillId);
+            if(skill) {
+                const cssElem = CSS_MAP[skill.element] || 'neutre';
+                cell.classList.add('bg-' + cssElem);
+                content.innerHTML = `<span style="font-size:0.75rem; font-weight:bold; line-height:1.1; padding:0 2px;">${skill.name}</span>`;
+            }
+        } else if (data.action === 'skip') {
+            // Cas ??? en décision
+            cell.classList.add('bg-up');
+            content.innerHTML = `<span class="text-badge">${data.label}</span>`;
         }
     }
 
-    // --- LOGIQUE SÉQUENTIELLE + PDC (INCHANGÉE) ---
-    function updateTableState() {
+    function resetCell(cell) {
+        const content = cell.querySelector('.cell-content');
+        delete cell.dataset.decision;
+        delete cell.dataset.value;
+        cell.className = cell.className.replace(/bg-\w+/g, "").trim();
+        content.innerHTML = '<span class="placeholder">-</span>';
+    }
+
+    // --- LOGIQUE ---
+
+    function updateFullLogic() {
         const rows = document.querySelectorAll('#progression-table tbody tr');
-        let currentDinoLevel = 1; 
-        let isRowUnlocked = true; 
-        let pdcRowIndex = -1; 
+        let state = { learnedIds: new Set(), pendingUnlocks: {}, availableSkills: {}, hasPDC: false };
+
+        const level1Skills = ALL_SKILLS.filter(s => (!s.parents || s.parents.length === 0) && s.skillNature !== 2 && s.skillNature !== 3);
+        ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'].forEach(elem => {
+            state.availableSkills[elem] = level1Skills.filter(s => s.element === elem).map(s => s.id);
+            state.pendingUnlocks[elem] = new Set();
+        });
         
-        // Recherche de PDC
-        rows.forEach((row, index) => {
-            const val1 = row.querySelector('.col-1').dataset.value;
-            const val2 = row.querySelector('.col-2').dataset.value;
-            if (pdcRowIndex === -1 && (val1 === 'pdc' || val2 === 'pdc')) {
-                pdcRowIndex = index;
+        // Check PDC Global
+        let doesPDCExistGlobally = false;
+        rows.forEach(row => {
+            const cell3 = row.querySelector('.col-3');
+            if(cell3.dataset.decision && cell3.dataset.decision.includes(String(PDC_ID))) {
+                doesPDCExistGlobally = true;
             }
         });
 
-        // Application des états
         rows.forEach((row, index) => {
             const cell1 = row.querySelector('.col-1');
             const cell2 = row.querySelector('.col-2');
-            const th2 = document.querySelector('.col-choice-2'); 
+            const cell3 = row.querySelector('.col-3');
+            const rowIndex = row.dataset.rowIndex;
 
-            const isCol2Active = (pdcRowIndex !== -1 && index > pdcRowIndex);
-
-            if (isCol2Active) {
-                cell2.classList.remove('hidden');
-                th2.classList.remove('hidden'); 
-            } else {
-                cell2.classList.add('hidden');
-                if (pdcRowIndex === -1) th2.classList.add('hidden');
-                // Si masqué, on ne vide PAS les données ici pour éviter de perdre la save serveur en cas de bug d'affichage
-                // On cache juste visuellement
-            }
-            
-            if (isRowUnlocked) {
-                unlockCell(cell1);
-                if (isCol2Active) unlockCell(cell2);
-            } else {
-                lockCell(cell1);
-                lockCell(cell2);
-            }
-
-            const val1 = cell1.dataset.value;
-            const val2 = cell2.dataset.value;
-            let rowComplete = false;
-
-            if (isCol2Active) {
-                if (val1 && val2) rowComplete = true;
-            } else {
-                if (val1) rowComplete = true;
-            }
-
-            if (rowComplete) {
-                currentDinoLevel++;
-                isRowUnlocked = true;
-            } else {
-                isRowUnlocked = false; 
-            }
-
-            // Gestion boutons PDC
-            const pdcBtns = row.querySelectorAll('.btn-pdc-item');
-            pdcBtns.forEach(btn => {
-                const parentVal = btn.closest('.cell-choice').dataset.value;
-                if (pdcRowIndex === -1 || parentVal === 'pdc') {
-                    btn.style.display = 'flex'; 
+            // 1. Visibilité Colonne 2
+            if (doesPDCExistGlobally) {
+                document.querySelector('.col-choice-2').classList.remove('hidden');
+                if (state.hasPDC) {
+                    cell2.classList.remove('hidden');
+                    cell2.style.visibility = 'visible';
                 } else {
-                    btn.style.display = 'none';
+                    cell2.classList.remove('hidden');
+                    cell2.style.visibility = 'hidden'; 
+                    cell2.dataset.value = ""; 
                 }
-            });
+            } else {
+                document.querySelector('.col-choice-2').classList.add('hidden');
+                cell2.classList.add('hidden');
+            }
+
+            // 2. Vérif Décision (Mise à jour pour accepter 'skip' pour ???)
+            if (cell3.dataset.decision) {
+                let isValid = false;
+                try {
+                    const dec = JSON.parse(cell3.dataset.decision);
+                    
+                    if (dec.action === 'skip') {
+                        isValid = true; // "???" est toujours valide
+                    } else {
+                        const val1DB = ELEM_MAP[cell1.dataset.value]; 
+                        const val2DB = state.hasPDC ? ELEM_MAP[cell2.dataset.value] : null; 
+                        const decElem = dec.element;
+
+                        if (decElem && (decElem === val1DB || (state.hasPDC && decElem === val2DB))) {
+                            if (dec.action === 'unlock') isValid = true;
+                            else if (dec.action === 'learn') {
+                                if (state.availableSkills[decElem] && state.availableSkills[decElem].includes(dec.skillId)) isValid = true;
+                            }
+                        }
+                    }
+                } catch(e) {}
+
+                if (!isValid) {
+                    resetCell(cell3);
+                    if(localGrid[rowIndex]) delete localGrid[rowIndex].col3;
+                    saveGridData(rowIndex, 3, ""); 
+                }
+            }
+
+            // 3. Auto-remplissage (Bloqué si 'unknown')
+            const val1 = cell1.dataset.value;
+            // Si c'est 'unknown', on n'auto-remplit pas, on laisse l'user cliquer sur décision
+            const isRealElement = val1 && val1 !== 'unknown';
+            
+            if (isRealElement && !state.hasPDC && !cell3.dataset.decision) {
+                setCellVisual(cell3, val1);
+            } 
+
+            // 4. Application Décision
+            if (cell3.dataset.decision) {
+                const dec = JSON.parse(cell3.dataset.decision);
+                // Si 'skip' (???), on ne fait rien, on passe juste au niveau suivant
+                if (dec.action === 'learn') {
+                    state.learnedIds.add(dec.skillId);
+                    if (dec.skillId === PDC_ID) state.hasPDC = true;
+                    const dbElem = dec.element;
+                    if (state.availableSkills[dbElem]) state.availableSkills[dbElem] = state.availableSkills[dbElem].filter(id => id !== dec.skillId);
+                    const skillData = ALL_SKILLS.find(s => s.id === dec.skillId);
+                    if (skillData) {
+                        const children = ALL_SKILLS.filter(s => s.parents && s.parents.some(p => p.id === skillData.id) && s.skillNature !== 2 && s.skillNature !== 3);
+                        children.forEach(child => {
+                            if (!state.pendingUnlocks[dbElem]) state.pendingUnlocks[dbElem] = new Set();
+                            state.pendingUnlocks[dbElem].add(child.id);
+                        });
+                    }
+                } else if (dec.action === 'unlock') {
+                    const elem = dec.element;
+                    if (state.pendingUnlocks[elem]) {
+                        state.pendingUnlocks[elem].forEach(childId => {
+                            if (!state.availableSkills[elem]) state.availableSkills[elem] = [];
+                            state.availableSkills[elem].push(childId);
+                        });
+                        state.pendingUnlocks[elem].clear();
+                    }
+                }
+            }
+        });
+        updateRightColumn(state.learnedIds);
+    }
+
+    // --- MODALE ---
+
+    function handleDecisionClick(cell) {
+        const row = cell.closest('tr');
+        const rowIndex = parseInt(row.dataset.rowIndex);
+        const type1 = row.querySelector('.col-1').dataset.value;
+        const type2 = row.querySelector('.col-2').dataset.value;
+        
+        // CORRECTION : On utilise un Set pour éviter les doublons automatiquement
+        // Exemple : Si Foudre + Foudre -> Le Set ne garde qu'un seul "Foudre"
+        let targetElements = new Set();
+
+        // Ajout Choix 1
+        if (type1 && ELEM_MAP[type1] && type1 !== 'unknown') {
+            targetElements.add(ELEM_MAP[type1]);
+        }
+        
+        // Ajout Choix 2 (si actif)
+        const cell2 = row.querySelector('.col-2');
+        const isCol2Active = !cell2.classList.contains('hidden') && cell2.style.visibility !== 'hidden';
+        
+        if (isCol2Active && type2 && ELEM_MAP[type2] && type2 !== 'unknown') {
+            targetElements.add(ELEM_MAP[type2]);
+        }
+
+        // Si aucun élément valide (ex: que du ??? ou vide), on arrête là (ou on ouvre juste pour le ???)
+        // Mais comme on ajoute ??? manuellement à la fin, on peut continuer si le tableau est vide ? 
+        // Non, ta logique veut qu'on choisisse un élément. 
+        // Si l'utilisateur a mis "???" partout, il n'a que l'option "???" dispo.
+        
+        // On convertit le Set en Tableau pour la fonction suivante
+        const uniqueElementsList = Array.from(targetElements);
+
+        const options = getAvailableOptionsAtRow(rowIndex, uniqueElementsList);
+        
+        // Toujours ajouter l'option ??? à la fin
+        options.push({ type: 'skip', label: '???', name: 'Inconnu' });
+
+        openSkillModal(cell, options);
+    }
+    
+    // (Cette fonction recalcule l'état local juste pour la modale)
+    function getAvailableOptionsAtRow(targetRowIndex, elementsFilter) {
+        let state = { learnedIds: new Set(), pendingUnlocks: {}, availableSkills: {} };
+        const level1Skills = ALL_SKILLS.filter(s => 
+            (!s.parents || s.parents.length === 0) && s.skillNature !== 2 && s.skillNature !== 3
+        );
+        ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'].forEach(elem => {
+            state.availableSkills[elem] = level1Skills.filter(s => s.element === elem).map(s => s.id);
+            state.pendingUnlocks[elem] = new Set();
         });
 
-        const levelText = document.querySelector('.dino-header-info p');
-        if(levelText) {
-            const raceName = levelText.innerText.split(' Niveau')[0];
-            levelText.innerText = `${raceName} Niveau ${currentDinoLevel}`;
+        for (let i = 0; i < targetRowIndex; i++) {
+            if (!localGrid[i] || !localGrid[i].col3) continue;
+            try {
+                const dec = JSON.parse(localGrid[i].col3);
+                if (dec.action === 'learn') {
+                    state.learnedIds.add(dec.skillId);
+                    const dbElem = dec.element;
+                    if (state.availableSkills[dbElem]) state.availableSkills[dbElem] = state.availableSkills[dbElem].filter(id => id !== dec.skillId);
+                    const skillData = ALL_SKILLS.find(s => s.id === dec.skillId);
+                    if (skillData) {
+                        const children = ALL_SKILLS.filter(s => 
+                            s.parents && s.parents.some(p => p.id === skillData.id) && s.skillNature !== 2 && s.skillNature !== 3
+                        );
+                        children.forEach(child => {
+                            if (!state.pendingUnlocks[dbElem]) state.pendingUnlocks[dbElem] = new Set();
+                            state.pendingUnlocks[dbElem].add(child.id);
+                        });
+                    }
+                } else if (dec.action === 'unlock') {
+                    const elem = dec.element;
+                    if (state.pendingUnlocks[elem]) {
+                        state.pendingUnlocks[elem].forEach(childId => {
+                            if (!state.availableSkills[elem]) state.availableSkills[elem] = [];
+                            state.availableSkills[elem].push(childId);
+                        });
+                        state.pendingUnlocks[elem].clear();
+                    }
+                }
+            } catch(e) {}
+        }
+
+        let options = [];
+        elementsFilter.forEach(elem => {
+            if (state.pendingUnlocks[elem] && state.pendingUnlocks[elem].size > 0) {
+                options.push({ type: 'unlock', element: elem, count: state.pendingUnlocks[elem].size });
+            }
+            if (state.availableSkills[elem]) {
+                state.availableSkills[elem].forEach(skillId => {
+                    const s = ALL_SKILLS.find(sk => sk.id === skillId);
+                    // FILTRE : Pas d'invocations (I)
+                    if (s && s.type !== 'I') options.push({ type: 'learn', skill: s, element: elem });
+                });
+            }
+        });
+        return options;
+    }
+
+    function openSkillModal(targetCell, options) {
+        const modal = document.getElementById('skill-selector-modal');
+        const list = document.getElementById('modal-skill-list');
+        list.innerHTML = '';
+        
+        options.forEach(opt => {
+            const item = document.createElement('div');
+            
+            if (opt.type === 'skip') {
+                // Style pour ???
+                item.className = `skill-item list-neutre`; // Gris
+                item.style.cursor = 'pointer';
+                item.innerHTML = `
+                    <div style="font-weight:bold; font-size:1.2em; width:30px; text-align:center;">${opt.label}</div>
+                    <span>${opt.name}</span>
+                `;
+                item.onclick = () => confirmChoice(targetCell, { action: 'skip', label: opt.label });
+
+            } else {
+                // Style classique
+                const cssElem = CSS_MAP[opt.element] || 'neutre';
+                item.className = `skill-item list-${cssElem}`;
+                item.style.cursor = 'pointer';
+
+                if (opt.type === 'unlock') {
+                    item.innerHTML = `
+                        <div style="font-weight:bold; font-size:1.5em; width:30px; text-align:center;">+</div>
+                        <div style="display:flex; flex-direction:column;">
+                            <span style="font-weight:bold;">Débloquer ${opt.element}</span>
+                            <span style="font-size:0.8em; opacity:0.8;">${opt.count} en attente</span>
+                        </div>
+                    `;
+                    item.onclick = () => confirmChoice(targetCell, { action: 'unlock', element: opt.element });
+                } else {
+                    item.innerHTML = `
+                        <img src="/img/elements/${cssElem}.webp" class="skill-icon-small">
+                        <span>${opt.skill.name}</span>
+                        <span style="margin-left:auto; font-size:0.8em; opacity:0.6;">${opt.skill.type || ''}</span>
+                    `;
+                    item.onclick = () => confirmChoice(targetCell, { action: 'learn', skillId: opt.skill.id, element: opt.element });
+                }
+            }
+            list.appendChild(item);
+        });
+
+        modal.classList.remove('hidden');
+    }
+
+    function confirmChoice(cell, data) {
+        document.getElementById('skill-selector-modal').classList.add('hidden');
+        setDecisionVisual(cell, data);
+        const row = cell.closest('tr');
+        if (!localGrid[row.dataset.rowIndex]) localGrid[row.dataset.rowIndex] = {};
+        localGrid[row.dataset.rowIndex].col3 = JSON.stringify(data);
+        saveGridData(row.dataset.rowIndex, 3, JSON.stringify(data));
+        updateFullLogic();
+    }
+
+    function closeSkillModal() {
+        document.getElementById('skill-selector-modal').classList.add('hidden');
+    }
+
+    function updateRightColumn(learnedIdsSet) {
+        const container = document.querySelector('#tab-skills .skill-list-container');
+        container.innerHTML = '';
+        if (learnedIdsSet.size === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:20px; color:#aaa;">Aucune compétence.</div>';
+            return;
+        }
+
+        const ORDER = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air', 'Vide', 'Neutre'];
+        
+        let skillsList = [];
+        learnedIdsSet.forEach(id => {
+            const skill = ALL_SKILLS.find(s => s.id === id);
+            if(skill) skillsList.push(skill);
+        });
+
+        // TRI : Élément PUIS ID (Niveau)
+        skillsList.sort((a, b) => {
+            const idxA = ORDER.indexOf(a.element);
+            const idxB = ORDER.indexOf(b.element);
+            if(idxA !== idxB) return idxA - idxB;
+            return a.id - b.id;
+        });
+
+        skillsList.forEach(skill => {
+            const cssElem = CSS_MAP[skill.element] || 'neutre';
+            const div = document.createElement('div');
+            div.className = `skill-item list-${cssElem}`;
+            div.innerHTML = `
+                <img src="/img/elements/${cssElem}.webp" class="skill-icon-small">
+                <span>${skill.name}</span>
+                <span style="margin-left:auto; font-size:0.7em;">${skill.type || ''}</span>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    // FONCTIONS HELPER (INDISPENSABLES)
+    function restoreGridVisuals() {
+        document.querySelectorAll('.cell-choice').forEach(cell => {
+             cell.className = cell.className.replace(/bg-\w+/g, "").trim();
+             cell.querySelector('.cell-content').innerHTML = '<span class="placeholder">-</span>';
+             delete cell.dataset.value;
+             delete cell.dataset.decision;
+        });
+
+        for (const [rowIndex, cols] of Object.entries(localGrid)) {
+            const row = document.querySelector(`tr[data-row-index="${rowIndex}"]`);
+            if (!row) continue;
+            if (cols.col1) setCellVisual(row.querySelector('.col-1'), cols.col1);
+            if (cols.col2) setCellVisual(row.querySelector('.col-2'), cols.col2);
+            if (cols.col3) {
+                try {
+                    const data = JSON.parse(cols.col3);
+                    setDecisionVisual(row.querySelector('.col-3'), data);
+                } catch(e) {}
+            }
         }
     }
 
-    function lockCell(cell) { cell.classList.add('cell-locked'); }
-    function unlockCell(cell) { cell.classList.remove('cell-locked'); }
+    async function saveGridData(rowIndex, colIndex, value) {
+        try {
+            const res = await fetch('/dinoz/update-grid', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ dinoId: "<%= dino.id %>", rowIndex, colIndex, value })
+            });
+            const json = await res.json();
+            if (json.success && json.stats) {
+                document.getElementById('val-fire').innerText = json.stats.statFire;
+                document.getElementById('val-wood').innerText = json.stats.statWood;
+                document.getElementById('val-water').innerText = json.stats.statWater;
+                document.getElementById('val-bolt').innerText = json.stats.statBolt;
+                document.getElementById('val-air').innerText = json.stats.statAir;
+                
+                const lvlTxt = document.getElementById('dino-level-display');
+                if(lvlTxt && json.level) {
+                     lvlTxt.innerText = lvlTxt.innerText.replace(/Niveau \d+/, `Niveau ${json.level}`);
+                }
+            }
+        } catch (err) { console.error(err); }
+    }
 
-    // (Code suppression inchangé)
-    const deleteBtn = document.querySelector('.delete-btn');
-    const deleteModal = document.getElementById('delete-modal');
-    if(deleteBtn) deleteBtn.addEventListener('click', () => deleteModal.classList.remove('hidden'));
-    const cancelBtn = document.getElementById('cancel-delete');
-    if(cancelBtn) cancelBtn.addEventListener('click', () => deleteModal.classList.add('hidden'));
+    // Gestion Menu Clic
+    window.toggleMenu = function(cell) {
+        if (cell.classList.contains('col-3')) {
+            handleDecisionClick(cell);
+        } else {
+            if (cell.style.visibility === 'hidden') return;
+            document.querySelectorAll('.cell-menu').forEach(m => m.classList.remove('visible'));
+            cell.querySelector('.cell-menu').classList.add('visible');
+        }
+    };
 
-    // --- GESTION DU PANNEAU STATS ---
+    window.selectElement = function(el, type) {
+        const cell = el.closest('.cell-choice');
+        const row = cell.closest('tr');
+        const colIndex = cell.classList.contains('col-2') ? 2 : 1;
+
+        setCellVisual(cell, type);
+        cell.querySelector('.cell-menu').classList.remove('visible');
+        
+        if (!localGrid[row.dataset.rowIndex]) localGrid[row.dataset.rowIndex] = {};
+        localGrid[row.dataset.rowIndex][`col${colIndex}`] = type;
+        
+        saveGridData(row.dataset.rowIndex, colIndex, type);
+        updateFullLogic(); 
+    };
+
+    // Fonctions manquantes (Onglets, Stats, Delete...)
+    function openTab(evt, tabName) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        if(evt) evt.currentTarget.classList.add('active');
+    }
     window.toggleStats = function() {
         const content = document.getElementById('dino-stats-content');
         const icon = document.getElementById('stats-icon');
-        
-        // On bascule la classe 'hidden'
-        const isHidden = content.classList.toggle('hidden');
-        
-        // Petit bonus visuel : on change l'icône (Flèche bas / Flèche haut)
-        if (isHidden) {
-            icon.className = 'fas fa-chevron-down';
-        } else {
+        if(content.classList.contains('hidden')) {
+            content.classList.remove('hidden');
             icon.className = 'fas fa-chevron-up';
-        }
-    };
-
-    // --- LOGIQUE RÉINCARNATION ---
-    let bonusStats = { fire: 0, wood: 0, water: 0, lightning: 0, air: 0 };
-    let pointsLeft = 5;
-
-    // 1. Ouvrir / Fermer la modale
-    const btnReincar = document.getElementById('btn-open-reincarnate');
-    const modalReincar = document.getElementById('reincarnate-modal');
-    const btnCancelReincar = document.getElementById('cancel-reincarnate');
-
-    if (btnReincar) {
-        btnReincar.addEventListener('click', () => {
-            modalReincar.classList.remove('hidden');
-            resetDistributor(); // Remise à zéro quand on ouvre
-        });
-    }
-    
-    if (btnCancelReincar) {
-        btnCancelReincar.addEventListener('click', () => modalReincar.classList.add('hidden'));
-    }
-
-    // 2. Gestion des Compteurs (+/-)
-    window.updatePoints = function(element, change) {
-        // Si on veut ajouter mais qu'on n'a plus de points -> Stop
-        if (change === 1 && pointsLeft <= 0) return;
-        // Si on veut retirer mais qu'on est déjà à 0 -> Stop
-        if (change === -1 && bonusStats[element] <= 0) return;
-
-        // Mise à jour des valeurs
-        bonusStats[element] += change;
-        pointsLeft -= change;
-
-        // Mise à jour de l'affichage HTML
-        document.getElementById(`count-${element}`).innerText = bonusStats[element];
-        document.getElementById('points-left').innerText = pointsLeft;
-
-        // Gestion du bouton Valider (Actif seulement si 0 points restants)
-        const btnConfirm = document.getElementById('confirm-reincarnate');
-        if (pointsLeft === 0) {
-            btnConfirm.disabled = false;
-            btnConfirm.style.opacity = "1";
         } else {
-            btnConfirm.disabled = true;
-            btnConfirm.style.opacity = "0.5";
+            content.classList.add('hidden');
+            icon.className = 'fas fa-chevron-down';
         }
     };
-
-    function resetDistributor() {
-        bonusStats = { fire: 0, wood: 0, water: 0, lightning: 0, air: 0 };
-        pointsLeft = 5;
-        // Reset visuel
-        ['fire', 'wood', 'water', 'lightning', 'air'].forEach(el => {
-            document.getElementById(`count-${el}`).innerText = "0";
-        });
-        document.getElementById('points-left').innerText = "5";
-        document.getElementById('confirm-reincarnate').disabled = true;
-    }
-
-    // 3. Validation finale (Envoi au serveur)
-    document.getElementById('confirm-reincarnate').addEventListener('click', async () => {
-        try {
-            const dinoId = "<%= dino.id %>";
-            
-            const response = await fetch('/dinoz/reincarnate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    dinoId: dinoId,
-                    bonuses: bonusStats
-                })
-            });
-
-            if (response.ok) {
-                window.location.reload(); // On recharge pour voir le résultat
-            } else {
-                alert("Erreur lors de la réincarnation !");
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    });
-
+    window.openDeleteModal = function() { document.getElementById('delete-modal').classList.remove('hidden'); }
+    window.closeDeleteModal = function() { document.getElementById('delete-modal').classList.add('hidden'); }
 </script>
 </body>
 </html>

@@ -166,7 +166,7 @@ function renderSpheresTable() {
     const elements = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air', 'Vide'];
     
     elements.forEach(elem => {
-        const bgClass = `bg-${elem.toLowerCase()}`;
+        const bgClass = `brick-${elem.toLowerCase()}`;
         
         // 3. Filtrage : On cherche les compétences de Nature 3 (Sphères) pour cet élément
         const spheres = ALL_SKILLS.filter(s => 

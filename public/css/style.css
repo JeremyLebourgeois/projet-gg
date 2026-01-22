@@ -648,7 +648,7 @@ button:hover {
 }
 
 .identity-card {
-    background: #FADCB6;
+    background: rgba(137, 207, 240);
     width: 100%;
     padding: 15px;
     border-radius: 5px;
@@ -685,18 +685,18 @@ button:hover {
 }
 
 .dino-header-info h2 { margin: 10px 0 5px; color: #444; font-size: 1.4rem; }
-.dino-header-info p { margin: 0; color: #D35400; font-weight: bold; }
+.dino-header-info p { margin: 0; color: #444; font-weight: bold; }
 
 /* --- STATS PANEL (Adapté) --- */
 .stats-panel {
-    background: #5F8693;
+    background: rgba(137, 207, 240);
     width: 100%;
     border-radius: 15px;
     overflow: hidden;
     color: white;
     /* On enlève min-height pour que ça puisse se replier totalement */
     /* min-height: 200px;  <-- Supprimé */ 
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
@@ -769,8 +769,8 @@ button:hover {
     align-items: center; /* Vital pour l'alignement vertical */
     gap: 30px; 
     width: 100%;
-    margin-top: 20px;
-    height: 50px; /* On force une hauteur pour stabiliser l'alignement */
+    margin-top: 5px;
+    height: auto; 
 }
 
 /* Le Cœur */
@@ -1104,4 +1104,148 @@ button:hover {
     background: #5F8693;
     border-radius: 20px;
     opacity: 0.8;
+}
+
+/* --- NOUVEAU : BOUTON RETOUR (Gauche) --- */
+.btn-back-dino {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(180deg, #546e7a, #37474f);
+    border: 1px solid #78909c;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 0 #263238;
+    transition: all 0.2s;
+}
+.btn-back-dino:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.2);
+}
+.btn-back-dino:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+/* --- NOUVEAU : TABLEAU 4 COLONNES --- */
+/* On réduit un peu les colonnes choix pour faire rentrer la 4ème */
+.col-choice-header, .cell-choice {
+    width: 130px; /* Réduit pour laisser place à la décision */
+    max-width: 130px;
+}
+.col-decision-header, .cell-decision {
+    width: 130px;
+    max-width: 130px;
+    border-left: 2px solid #89cff0; /* Séparation visuelle */
+}
+.cell-decision {
+    cursor: pointer;
+    font-weight: bold;
+    position: relative;
+}
+.cell-decision:hover { background-color: rgba(255,255,255,0.1); }
+
+
+/* --- NOUVEAU : SYSTÈME D'ONGLETS (Droite) --- */
+.tabs-header {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.tab-btn {
+    flex: 1;
+    background: rgba(12, 36, 61, 0.6);
+    border: 1px solid #4fc3f7;
+    color: #81d4fa;
+    padding: 8px 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border-radius: 5px 5px 0 0;
+    transition: all 0.2s;
+}
+.tab-btn:hover { background: rgba(79, 195, 247, 0.2); }
+.tab-btn.active {
+    background: #4fc3f7;
+    color: #000;
+    border-bottom: none;
+    box-shadow: 0 0 10px rgba(79, 195, 247, 0.4);
+}
+
+.tab-content {
+    display: none; /* Caché par défaut */
+    width: 100%;
+    background: rgba(12, 36, 61, 0.4);
+    border: 1px solid #4fc3f7;
+    border-radius: 0 0 5px 5px;
+    padding: 10px;
+    min-height: 400px; /* Hauteur min pour la colonne droite */
+}
+.tab-content.active { display: block; }
+
+/* --- LISTE DES COMPÉTENCES (Style RPG) --- */
+.skill-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+.skill-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.3);
+    font-size: 0.9rem;
+    color: white;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.3);
+}
+.skill-icon-small {
+    width: 20px;
+    height: 20px;
+    filter: drop-shadow(1px 1px 1px black);
+}
+/* Couleurs de fond spécifiques pour la liste (plus opaques) */
+.list-feu { background: linear-gradient(90deg, #d32f2f, #b71c1c); border-color: #ef5350; }
+.list-bois { background: linear-gradient(90deg, #388e3c, #1b5e20); border-color: #66bb6a; }
+.list-eau { background: linear-gradient(90deg, #1976d2, #0d47a1); border-color: #42a5f5; }
+.list-foudre { background: linear-gradient(90deg, #fbc02d, #f57f17); border-color: #ffee58; color: black; }
+.list-air { background: linear-gradient(90deg, #78909c, #455a64); border-color: #b0bec5; }
+.list-vide { background: linear-gradient(90deg, #8e24aa, #4a148c); border-color: #ab47bc; }
+.list-neutre { background: #555; }
+
+/* BOUTON SACRIFIER (Style Retour mais Rouge) */
+.btn-sacrifice {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(180deg, #c0392b, #922b21);
+    border: 1px solid #e74c3c;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 0 #641e16;
+    transition: all 0.2s;
+    cursor: pointer;
+    font-size: 0.9rem;
+    width: 100%; /* Prend toute la largeur du conteneur parent */
+}
+.btn-sacrifice:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.2);
+    box-shadow: 0 6px 0 #641e16;
+}
+.btn-sacrifice:active {
+    transform: translateY(2px);
+    box-shadow: none;
 }

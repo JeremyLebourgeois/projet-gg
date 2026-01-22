@@ -71,9 +71,9 @@ model RefSkill {
   name        String  @unique
    
   // Infos générales
-  type        String? // "A", "E", "P", "C", "S"
+  type        String? // "A", "E", "P", "C", "S", "U"
   element     String? // "Feu", "Bois"...
-  // 1 = Normal, 2 = Arbre 2 (Invoc/50+), 3 = Sphère
+  // 1 = Normal, 2 = Arbre 2, 3 = Sphère
   skillNature Int     @default(1)
   description String?
   raceId      String? // Ex: "Wanwan", "Kabuki", ou null
