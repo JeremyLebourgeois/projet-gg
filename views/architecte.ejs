@@ -20,7 +20,7 @@
                 <div class="nav-menu">
                     <a href="/dashboard" class="nav-btn" title="Accueil"><i class="fas fa-home"></i></a>
                     <a href="/dinozs" class="nav-btn" title="Mes Dinozs"><i class="fas fa-paw"></i></a>
-                    <a href="/clan" class="nav-btn" title="Mon Clan"><i class="fas fa-chess-rook"></i></a>
+                    <a href="/clan" class="nav-btn disabled" title="Mon Clan"><i class="fas fa-chess-rook"></i></a>
                     <a href="/arbres" class="nav-btn active" title="Plans"><i class="fas fa-scroll"></i></a>
                     <a href="#" class="nav-btn disabled" title="Travaux"><i class="fas fa-hammer"></i></a>
                 </div>
@@ -111,24 +111,51 @@
 
     <script>
         const ALL_SKILLS = <%- JSON.stringify(skills) %>;
+        // RÉCUPÉRATION DU PLAN (Si mode édition)
+        const PLAN_DATA = <%- plan ? JSON.stringify(plan) : 'null' %>;
+
         let selectedSkills = new Set();
         let skillTiers = new Map();
         
-        // --- GESTION TOOLTIP ---
         const tooltip = document.getElementById('skill-tooltip');
 
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. SI ÉDITION : On restaure les données
+            if (PLAN_DATA) {
+                // Remplir les champs
+                document.getElementById('plan-name').value = PLAN_DATA.name;
+                document.getElementById('plan-race').value = PLAN_DATA.race;
+                document.getElementById('plan-public').checked = PLAN_DATA.isPublic;
+                
+                // Remplir les compétences
+                if (PLAN_DATA.skillIds && Array.isArray(PLAN_DATA.skillIds)) {
+                    PLAN_DATA.skillIds.forEach(id => selectedSkills.add(id));
+                }
+                
+                // Changer le texte du bouton pour faire propre
+                document.querySelector('.btn-save').innerHTML = '<i class="fas fa-save"></i> Mettre à jour';
+            }
+
+            // 2. Calculs initiaux
+            calculateAllTiers(); 
+            
+            // 3. Rendu des arbres
+            ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'].forEach(elem => renderTreeForElement(elem));
+            
+            // 4. Mise à jour des stats (Sidebar)
+            updateStatsDisplay();
+        });
+
+        // --- GESTION TOOLTIP (Inchangé) ---
         document.addEventListener('mousemove', (e) => {
             if (tooltip && tooltip.style.display === 'block') {
                 const offsetX = 15; 
                 const offsetY = 15;
-                
-                // On évite que ça sorte de l'écran à droite ou en bas
                 let left = e.pageX + offsetX;
                 let top = e.pageY + offsetY;
-                
                 if (left + 280 > window.innerWidth) left = e.pageX - 295; 
                 if (top + 150 > window.innerHeight) top = e.pageY - 160; 
-
                 tooltip.style.left = left + 'px';
                 tooltip.style.top = top + 'px';
             }
@@ -136,7 +163,6 @@
 
         function showTooltip(skill) {
             let statsHtml = '';
-            
             if (['A', 'E', 'I'].includes(skill.type)) {
                 const proba = skill.probability > 0 ? `${skill.probability}%` : '-';
                 const prio = skill.priority > 0 ? skill.priority : '-';
@@ -147,12 +173,9 @@
             } else {
                 statsHtml = `<span class="tooltip-meta">Type: ${skill.type}</span>`;
             }
-
-            // Affichage Race ID en doré (Copie de Arbres.js)
             if (skill.raceId) {
                 statsHtml += `<span class="tooltip-meta" style="color: #f1c40f; font-weight: bold; margin-top: 5px;">Spécial : ${skill.raceId}</span>`;
             }
-
             tooltip.innerHTML = `
                 <span class="tooltip-title">${skill.name}</span>
                 ${statsHtml}
@@ -160,18 +183,9 @@
             `;
             tooltip.style.display = 'block';
         }
+        function hideTooltip() { tooltip.style.display = 'none'; }
 
-        function hideTooltip() {
-            tooltip.style.display = 'none';
-        }
-
-
-        // --- INIT ---
-        document.addEventListener('DOMContentLoaded', () => {
-            calculateAllTiers(); 
-            ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'].forEach(elem => renderTreeForElement(elem));
-        });
-
+        // --- CALCULS (Inchangé) ---
         function calculateAllTiers() {
             let changed = true;
             let pass = 0;
@@ -203,6 +217,7 @@
             }
         }
 
+        // --- RENDU ARBRES ---
         function renderTreeForElement(elementName) {
             const container = document.getElementById(`tree-container-${elementName}`);
             container.innerHTML = ''; 
@@ -244,13 +259,18 @@
             brick.id = `skill-${skill.id}`;
             brick.innerText = skill.name;
             
+            // MODIFICATION IMPORTANTE : Si la compétence est déjà dans selectedSkills, on l'allume
+            if (selectedSkills.has(skill.id)) {
+                brick.classList.add('selected');
+            }
+
             // Interaction Clic
             brick.onclick = (e) => {
                 e.stopPropagation();
                 toggleSkillSelection(skill);
             };
 
-            // Interaction Tooltip (Souris)
+            // Interaction Tooltip
             brick.addEventListener('mouseenter', () => showTooltip(skill));
             brick.addEventListener('mouseleave', () => hideTooltip());
 
@@ -270,6 +290,7 @@
             return branchContainer;
         }
 
+        // --- LOGIQUE DE SÉLECTION (Inchangé) ---
         function toggleSkillSelection(skill) {
             const brick = document.getElementById(`skill-${skill.id}`);
             if (selectedSkills.has(skill.id)) {
@@ -309,13 +330,10 @@
             });
         }
 
-        // --- CALCUL STATS (CORRIGÉ) ---
+        // --- CALCUL STATS (Inchangé) ---
         function updateStatsDisplay() {
             const elements = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
-            
-            // CORRECTION MAP : 'Foudre' -> 'lightning' pour correspondre à l'ID HTML
             const idMap = { 'Feu':'fire', 'Bois':'wood', 'Eau':'water', 'Foudre':'lightning', 'Air':'air' };
-            
             let totalLevel = 1;
 
             elements.forEach(elem => {
@@ -337,22 +355,24 @@
                 const elementTotal = skillCount + unlocks;
                 totalLevel += elementTotal;
 
-                // Mise à jour DOM
                 const domId = `count-${idMap[elem]}`;
                 const rowId = `row-${idMap[elem]}`;
-                
                 const elSpan = document.getElementById(domId);
                 const elRow = document.getElementById(rowId);
                 
                 if (elSpan) elSpan.innerText = elementTotal;
-                
                 if (elementTotal > 0) elRow.classList.remove('zero');
                 else elRow.classList.add('zero');
             });
 
+            // On ajoute aussi le niveau au paquet envoyé au serveur (via level input hidden si form, ou calculé côté serveur)
+            // Pour l'affichage seulement ici :
             document.getElementById('level-display').innerText = totalLevel;
+            // On peut stocker le niveau global dans une variable pour l'envoi
+            window.calculatedLevel = totalLevel;
         }
 
+        // --- SAUVEGARDE ---
         async function savePlan() {
             const name = document.getElementById('plan-name').value;
             const race = document.getElementById('plan-race').value;
@@ -361,21 +381,29 @@
             if (selectedSkills.size === 0) return alert("Sélectionnez au moins une compétence !");
             if (!name) return alert("Donnez un nom à votre plan !");
 
+            // On récupère l'ID si on est en mode édition
+            const planId = PLAN_DATA ? PLAN_DATA.id : null;
+            
+            // On force une mise à jour du niveau pour être sûr
+            updateStatsDisplay(); 
+
             try {
                 const res = await fetch('/architecte/save', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
+                        id: planId, // Sera null si création, ID si édition
                         name,
                         race,
                         isPublic,
+                        level: window.calculatedLevel || 1, // On envoie le niveau calculé
                         selectedSkillIds: Array.from(selectedSkills)
                     })
                 });
                 const json = await res.json();
                 if (json.success) {
                     alert("Plan sauvegardé avec succès !");
-                    window.location.href = '/arbres'; 
+                    window.location.href = '/plans'; // Redirection vers mes plans
                 } else {
                     alert("Erreur : " + json.error);
                 }

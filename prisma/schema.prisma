@@ -75,6 +75,9 @@ model Dinoz {
 
 // Dinoz Récincarné ? -- 1 pour oui -- 0 pour non
   isReincarnate   Int @default(0)
+
+  planId    Int?         // Peut être null (pas de plan)
+  plan      SkillPlan?   @relation(fields: [planId], references: [id])
 }
 
 // Table de Référence des Compétences (L'arbre)
@@ -110,7 +113,8 @@ model RefSkill {
 model SkillPlan {
   id        Int      @id @default(autoincrement())
   name      String
-  race      String   // Ex: "Wanwan", "Sirain" ou "Générique"
+  race      String   
+  level     Int      @default(1) 
   
   // Contenu du plan : Liste des IDs des compétences sélectionnées
   // Ex: [1, 4, 12, 105]
@@ -121,5 +125,8 @@ model SkillPlan {
 
   // Auteur du plan
   authorId  Int
+  originalAuthor String?
   author    User     @relation(fields: [authorId], references: [id])
+
+  dinozs    Dinoz[]
 }

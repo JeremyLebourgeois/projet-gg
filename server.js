@@ -405,7 +405,8 @@ app.get('/dinoz/:id', async (req, res) => {
             where: { id: dinozId },
             include: {
                 learnedSkills: true, // Important pour vérifier PDC
-                unlockedSkills: true
+                unlockedSkills: true,
+                plan: true
             }
         });
 
@@ -414,6 +415,11 @@ app.get('/dinoz/:id', async (req, res) => {
         }
 
         const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
+
+        const myPlans = await prisma.skillPlan.findMany({
+        where: { authorId: user.id },
+        orderBy: { name: 'asc' }
+        });
 
         // Calcul ancienneté
         const now = new Date();
@@ -435,7 +441,8 @@ app.get('/dinoz/:id', async (req, res) => {
             role: user.role,
             daysMember: daysMember,
             allSkills,
-            hasPDC: hasPDC // <--- On envoie l'info à la page (true ou false)
+            hasPDC: hasPDC,
+            myPlans 
         });
 
     } catch (error) {
@@ -578,6 +585,30 @@ app.post('/dinoz/reincarnate', async (req, res) => {
     }
 });
 
+// --- API : ASSIGNER UN PLAN À UN DINOZ ---
+app.post('/dinoz/assign-plan', async (req, res) => {
+    if (!req.session.userId) return res.status(401).json({ error: "Non connecté" });
+    const { dinoId, planId } = req.body; // planId peut être null (pour retirer)
+
+    try {
+        // Vérif propriété
+        const dino = await prisma.dinoz.findUnique({ where: { id: parseInt(dinoId) } });
+        if (!dino || dino.userId !== req.session.userId) return res.status(403).json({ error: "Interdit" });
+
+        // Mise à jour
+        await prisma.dinoz.update({
+            where: { id: parseInt(dinoId) },
+            data: {
+                planId: planId ? parseInt(planId) : null // Si planId est envoyé, on met l'ID, sinon null
+            }
+        });
+
+        res.json({ success: true });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
 
 // --- PAGE : VISUALISEUR D'ARBRES ---
 app.get('/arbres', async (req, res) => {
@@ -701,11 +732,10 @@ app.post('/dinoz/add-sphere', async (req, res) => {
     }
 });
 
-// --- PAGE : ARCHITECTE (CRÉATEUR DE PLANS) ---
+// --- PAGE : ARCHITECTE (CRÉATION OU ÉDITION) ---
 app.get('/architecte', async (req, res) => {
     if (!req.session.userId) return res.redirect('/');
     
-    // 1. Récupérer l'utilisateur (C'est ce qui manquait !)
     const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
 
     // Calcul ancienneté
@@ -713,7 +743,7 @@ app.get('/architecte', async (req, res) => {
     const created = new Date(user.createdAt);
     const daysMember = Math.ceil(Math.abs(now - created) / (1000 * 60 * 60 * 24));
 
-    // 2. Récupérer toutes les compétences
+    // 1. Compétences
     const allSkills = await prisma.refSkill.findMany({
         include: {
             parents: { select: { id: true } },
@@ -722,7 +752,7 @@ app.get('/architecte', async (req, res) => {
         orderBy: { id: 'asc' }
     });
 
-    // 3. Liste des races complète
+    // 2. Races
     const raceList = [
         'castivore', 'gorilloz', 'hippoclamp', 'moueffe', 'nuagoz', 
         'pigmou', 'planaille', 'pteroz', 'rocky', 'sirain', 
@@ -730,37 +760,196 @@ app.get('/architecte', async (req, res) => {
         'quetzu', 'santaz', 'smog', 'soufflet', 'toufufu', 'triceragnon'
     ].sort();
 
-    // 4. Affichage
+    // 3. GESTION DE L'ÉDITION (Nouveau bloc)
+    let planToEdit = null;
+    if (req.query.id) {
+        // On cherche le plan demandé
+        const existingPlan = await prisma.skillPlan.findUnique({ 
+            where: { id: parseInt(req.query.id) } 
+        });
+        
+        // Sécurité : On ne peut éditer que SES propres plans
+        if (existingPlan && existingPlan.authorId === user.id) {
+            planToEdit = existingPlan;
+        }
+    }
+
     res.render('architecte', { 
         user, 
         pseudo: user.pseudo,
         role: user.role,
         skills: allSkills,
         daysMember,
-        raceList
+        raceList,
+        plan: planToEdit // On envoie le plan (ou null si c'est une création)
     });
 });
 
-// --- API : SAUVEGARDER UN PLAN ---
+// --- API : SAUVEGARDER UN PLAN (Architecte) ---
 app.post('/architecte/save', async (req, res) => {
     if (!req.session.userId) return res.status(401).json({ error: 'Non connecté' });
 
-    const { name, race, isPublic, selectedSkillIds } = req.body;
+    const { id, name, race, isPublic, selectedSkillIds, level } = req.body;
 
     try {
-        await prisma.skillPlan.create({
-            data: {
-                name: name.trim() || 'Plan sans nom',
-                race: race,
-                isPublic: isPublic === true || isPublic === 'true', // Conversion sûre
-                skillIds: selectedSkillIds, // Tableau d'IDs [1, 5, ...]
-                authorId: req.session.userId
+        if (id) {
+            // --- MODIFICATION ---
+            const existing = await prisma.skillPlan.findUnique({ where: { id: parseInt(id) } });
+            if (!existing || existing.authorId !== req.session.userId) {
+                return res.status(403).json({ error: "Ce plan ne vous appartient pas." });
             }
-        });
+
+            await prisma.skillPlan.update({
+                where: { id: parseInt(id) },
+                data: {
+                    name: name.trim(),
+                    race: race,
+                    isPublic: isPublic === true || isPublic === 'true',
+                    skillIds: selectedSkillIds,
+                    level: parseInt(level) || 1,
+                    
+                    // C'EST ICI LA MAGIE :
+                    // Si je modifie le plan, je deviens le seul créateur (on vide l'originalAuthor)
+                    originalAuthor: null 
+                }
+            });
+        } else {
+            // --- CRÉATION ---
+            await prisma.skillPlan.create({
+                data: {
+                    name: name.trim() || 'Plan sans nom',
+                    race: race,
+                    isPublic: isPublic === true || isPublic === 'true',
+                    skillIds: selectedSkillIds,
+                    level: parseInt(level) || 1,
+                    authorId: req.session.userId,
+                    originalAuthor: null // Pas d'auteur original, c'est moi
+                }
+            });
+        }
 
         res.json({ success: true });
     } catch (error) {
         console.error("Erreur sauvegarde plan:", error);
         res.status(500).json({ error: "Erreur lors de la sauvegarde." });
+    }
+});
+
+// --- PAGE : MES PLANS ---
+app.get('/plans', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/');
+    const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
+
+    const myPlans = await prisma.skillPlan.findMany({
+        where: { authorId: user.id },
+        orderBy: { createdAt: 'desc' },
+        include: { author: { select: { pseudo: true } } } // Pour afficher l'auteur
+    });
+
+    // Calcul ancienneté (Header)
+    const daysMember = Math.ceil(Math.abs(new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
+
+    res.render('plans', { user, pseudo: user.pseudo, role: user.role, daysMember, plans: myPlans });
+});
+
+// --- PAGE : PLANS DU CLAN ---
+app.get('/clan/plans', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/');
+    const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
+
+    const clanPlans = await prisma.skillPlan.findMany({
+        where: { isPublic: true }, // Tous les plans publics
+        orderBy: { createdAt: 'desc' },
+        include: { author: { select: { pseudo: true } } }
+    });
+
+    const daysMember = Math.ceil(Math.abs(new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
+
+    res.render('clan-plans', { user, pseudo: user.pseudo, role: user.role, daysMember, plans: clanPlans });
+});
+
+// --- PAGE : DÉTAILS D'UN PLAN (VISUALISEUR) ---
+app.get('/plan/:id', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/');
+    const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
+    
+    const planId = parseInt(req.params.id);
+    const plan = await prisma.skillPlan.findUnique({ 
+        where: { id: planId },
+        include: { author: { select: { pseudo: true, id: true } } }
+    });
+
+    if (!plan) return res.redirect('/plans');
+
+    // On a besoin des compétences pour afficher l'arbre (comme architecte)
+    const allSkills = await prisma.refSkill.findMany({
+        include: { parents: { select: { id: true } }, children: { select: { id: true } } },
+        orderBy: { id: 'asc' }
+    });
+
+    const daysMember = Math.ceil(Math.abs(new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
+
+    res.render('plan-details', { 
+        user, pseudo: user.pseudo, role: user.role, daysMember, 
+        plan, skills: allSkills 
+    });
+});
+
+// --- API : SUPPRIMER UN PLAN ---
+app.post('/plan/delete', async (req, res) => {
+    if (!req.session.userId) return res.status(403).json({ error: "Non connecté" });
+    const { planId } = req.body;
+
+    try {
+        const plan = await prisma.skillPlan.findUnique({ where: { id: parseInt(planId) } });
+        // Seul l'auteur ou un LEADER peut supprimer
+        const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
+
+        if (plan.authorId !== user.id && user.role !== 'LEADER') {
+            return res.status(403).json({ error: "Interdit" });
+        }
+
+        await prisma.skillPlan.delete({ where: { id: parseInt(planId) } });
+        res.json({ success: true });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+// --- API : CLONER (AJOUTER À MES PLANS) ---
+app.post('/plan/clone', async (req, res) => {
+    if (!req.session.userId) return res.status(403).json({ error: "Non connecté" });
+    const { planId } = req.body;
+
+    try {
+        // On inclut l'auteur pour récupérer son pseudo
+        const original = await prisma.skillPlan.findUnique({ 
+            where: { id: parseInt(planId) },
+            include: { author: true } 
+        });
+        
+        if (!original) return res.status(404).json({ error: "Plan introuvable" });
+
+        // Si le plan copié avait déjà un auteur original, on le garde. Sinon on prend l'auteur actuel.
+        const creditName = original.originalAuthor || original.author.pseudo;
+
+        // On crée une copie
+        await prisma.skillPlan.create({
+            data: {
+                name: original.name, // On garde le même nom (sans "Copie", plus propre)
+                race: original.race,
+                skillIds: original.skillIds,
+                level: original.level,
+                isPublic: false, // Privé par défaut dans ma bibliothèque
+                
+                authorId: req.session.userId, // C'est techniquement dans MA liste
+                originalAuthor: creditName    // Mais on se souvient que c'est de lui !
+            }
+        });
+        res.json({ success: true });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Erreur serveur" });
     }
 });
