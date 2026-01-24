@@ -350,48 +350,69 @@ app.get('/dinozs', async (req, res) => {
 });
 
 
-// --- Route: Créer un nouveau Dinoz ---
+// --- Route: Créer un nouveau Dinoz (Version Hybride : Formulaire Standard + Intelligence DB) ---
 app.post('/dinozs/create', async (req, res) => {
+    // 1. Vérif session
     if (!req.session.userId) return res.redirect('/login');
 
     const { name, race, imageUrl, skinType } = req.body;
 
-    // Gestion Image
+    // 2. Gestion Image (Logique d'origine)
     let finalImage = null;
     if (skinType !== 'default' && imageUrl && imageUrl.trim() !== "") {
         finalImage = imageUrl;
     }
 
-    // --- NOUVEAU : CALCUL DES STATS DE DÉPART ---
-    // 1. On nettoie le nom de la race (minuscule) pour chercher dans notre fichier
-    const raceKey = race.toLowerCase(); 
-    
-    // 2. On récupère les stats, ou des zéros par défaut si la race est inconnue
-    const baseStats = RACES_DATA[raceKey] || { 
-        statFire: 0, statWood: 0, statWater: 0, statBolt: 0, statAir: 0 
-    };
-
     try {
+        // 3. RECUPERATION DONNEES OFFICIELLES (Stats + Compétence)
+        const raceNameFormatted = race.charAt(0).toUpperCase() + race.slice(1).toLowerCase();
+        
+        // On demande à la table RefRace les infos
+        const raceInfo = await prisma.refRace.findUnique({
+            where: { name: raceNameFormatted },
+            include: { innateSkill: true }
+        });
+
+        // Préparation des stats (si raceInfo existe, sinon 0)
+        const stats = raceInfo ? {
+            statFire: raceInfo.baseFire,
+            statWood: raceInfo.baseWood,
+            statWater: raceInfo.baseWater,
+            statBolt: raceInfo.baseBolt,
+            statAir: raceInfo.baseAir
+        } : {};
+
+        // Préparation de la compétence
+        let skillsToConnect = [];
+        if (raceInfo && raceInfo.innateSkill) {
+            skillsToConnect.push({ id: raceInfo.innateSkill.id });
+        }
+
+        // 4. CRÉATION EN BASE
         await prisma.dinoz.create({
             data: {
                 name: name,
-                race: race, // On garde la casse d'origine (ex: "Sirain") pour l'affichage
+                race: race,
                 level: 1,
                 imageUrl: finalImage,
                 userId: req.session.userId,
 
-                // --- ON INJECTE LES STATS ICI ---
-                statFire: baseStats.statFire,
-                statWood: baseStats.statWood,
-                statWater: baseStats.statWater,
-                statBolt: baseStats.statBolt, // Rappel : Bolt = Foudre
-                statAir: baseStats.statAir
+                // On injecte les stats récupérées
+                ...stats,
+
+                // On connecte la compétence récupérée
+                learnedSkills: {
+                    connect: skillsToConnect
+                }
             }
         });
+
+        // 5. REDIRECTION CLASSIQUE (Rechargement de la page)
         res.redirect('/dinozs'); 
+
     } catch (error) {
         console.error("Erreur création dinoz:", error);
-        res.redirect('/dinozs'); 
+        res.redirect('/dinozs'); // On redirige même en cas d'erreur pour ne pas bloquer
     }
 });
 

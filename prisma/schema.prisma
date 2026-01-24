@@ -107,6 +107,9 @@ model RefSkill {
   // On met des crochets [] des deux côtés pour dire "Plusieurs parents possibles"
   parents      RefSkill[] @relation("SkillTree")
   children     RefSkill[] @relation("SkillTree")
+
+  // Liste des races qui ont cette compétence de façon innée
+  racesWithInnate RefRace[]
 }
 
 // Plans de Compétences (Architecte)
@@ -130,3 +133,30 @@ model SkillPlan {
 
   dinozs    Dinoz[]
 }
+
+// --- MODÈLE : RACES ---
+model RefRace {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique // "moueffe", "winks"...
+  
+  isDemon   Boolean  @default(false)
+  price     Int      @default(16000)
+
+  // Stats élémentaires de base (Grille de départ)
+  baseFire  Int      @default(0)
+  baseWood  Int      @default(0)
+  baseWater Int      @default(0)
+  baseBolt  Int      @default(0)
+  baseAir   Int      @default(0)
+
+  // Probabilités de Up (upChance) en %
+  upFire    Int      @default(0)
+  upWood    Int      @default(0)
+  upWater   Int      @default(0)
+  upBolt    Int      @default(0)
+  upAir     Int      @default(0)
+
+  // Compétence Innée
+  innateSkillId Int? 
+  innateSkill   RefSkill? @relation(fields: [innateSkillId], references: [id])
+} 
