@@ -259,26 +259,34 @@ app.post('/admin/delete-user', checkLeader, async (req, res) => {
     }
 });
 
-// --- ROUTE : LANCER LE SCRIPT SYNC-SKILLS ---
+// --- ROUTE : LANCER LA SYNCHRO TOTALE (SKILLS + RACES) ---
 app.post('/admin/sync-skills', checkLeader, (req, res) => {
-    console.log("🔄 Lancement du script sync-skills...");
+    console.log("🔄 Démarrage de la synchronisation globale...");
 
-    // Exécute la commande 'node sync-skills.js' dans le dossier racine
-    exec('node scripts/sync-skills.js', (error, stdout, stderr) => {
-        if (error) {
-            console.error(`❌ Erreur d'exécution : ${error.message}`);
-            // Idéalement on enverrait une erreur à l'écran, mais pour l'instant on redirect
-            return res.redirect('/admin'); 
-        }
-        if (stderr) {
-            console.error(`⚠️ Stderr : ${stderr}`);
-        }
+    // ETAPE 1 : On lance les COMPÉTENCES
+    exec('node scripts/sync-skills.js', (errSkill, outSkill, stderrSkill) => {
         
-        // Affiche le résultat du script dans la console du serveur
-        console.log(`✅ Résultat :\n${stdout}`);
-        
-        // Retourne à la page admin une fois fini
-        res.redirect('/admin');
+        // Gestion erreur étape 1
+        if (errSkill) {
+            console.error(`❌ Erreur Skills : ${errSkill.message}`);
+            return res.redirect('/admin'); // On s'arrête là
+        }
+        console.log(`✅ Skills sync :\n${outSkill}`);
+
+        // ETAPE 2 : Seulement si l'étape 1 est finie, on lance les RACES
+        exec('node scripts/sync-races.js', (errRace, outRace, stderrRace) => {
+            
+            // Gestion erreur étape 2
+            if (errRace) {
+                console.error(`❌ Erreur Races : ${errRace.message}`);
+                return res.redirect('/admin');
+            }
+            console.log(`✅ Races sync :\n${outRace}`);
+
+            // ETAPE 3 : Tout est fini, on répond au navigateur UNE SEULE FOIS
+            console.log("🎉 Synchro complète terminée !");
+            res.redirect('/admin');
+        });
     });
 });
 
