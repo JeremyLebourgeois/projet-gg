@@ -1,0 +1,4 @@
+body { 
+    overflow: auto !important; /* Force le scroll de la page */
+    height: auto !important;   /* Laisse la page prendre sa hauteur naturelle */
+}

@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Dinozs - Guerriers du Givre</title>
+    <link rel="icon" type="image/png" href="/img/logo.png">
+    
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/pages/my-dinozs.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="hub-body">
@@ -19,7 +23,7 @@
 
                 <div class="nav-menu">
                     <a href="/dashboard" class="nav-btn" title="Accueil"><i class="fas fa-home"></i></a>
-                    <a href="/dinozs" class="nav-btn" title="Mes Dinozs"><i class="fas fa-paw"></i></a>
+                    <a href="/dinozs" class="nav-btn active" title="Mes Dinozs"><i class="fas fa-paw"></i></a>
                     <a href="/clan" class="nav-btn disabled" title="Mon Clan"><i class="fas fa-chess-rook"></i></a>
                     <a href="/arbres" class="nav-btn" title="Plans"><i class="fas fa-scroll"></i></a>
                     <a href="#" class="nav-btn disabled" title="Travaux"><i class="fas fa-hammer"></i></a>
@@ -37,15 +41,13 @@
             </div>
 
             <button class="btn-tool btn-race">Races</button>
-
             <div class="spacer"></div>
-
             <button class="btn-tool btn-new">Nouveau Dinoz</button>
         </div>
 
         <div class="dino-grid" id="user-dino-grid">
             <% dinozs.forEach(dino => { %>
-                <a href="/dinoz/<%= dino.id %>" class="dino-card" style="text-decoration: none; color: inherit; display: block;">
+                <a href="/dinoz/<%= dino.id %>" class="dino-card">
                     <div class="card-img-container">
                         <img src="<%= dino.imageUrl ? dino.imageUrl : '/img/races/' + dino.race.toLowerCase() + '.png' %>" alt="<%= dino.race %>">
                     </div>
@@ -60,13 +62,12 @@
                 <div class="empty-state">Aucun Dinoz trouvé.</div>
             <% } %>
 
-            <div class="empty-state search-empty" style="display: none; grid-column: 1 / -1; text-align: center; color: white; padding: 20px; font-style: italic;">
+            <div class="empty-state search-empty" style="display: none;">
                 Aucun résultat pour cette recherche.
             </div>
         </div>
 
-        <div class="dino-grid hidden" id="race-selector-grid">
-            </div>
+        <div class="dino-grid hidden" id="race-selector-grid"></div>
 
         <div id="new-dino-modal" class="modal-overlay hidden">
             <div class="modal-box">
@@ -107,7 +108,6 @@
 
                     <div class="form-group">
                         <label>Apparence</label>
-
                         <div class="radio-group">
                             <label>
                                 <input type="radio" name="skinType" value="default" checked onchange="toggleUrlInput(false)">
@@ -118,7 +118,6 @@
                                 URL Personnalisée
                             </label>
                         </div>
-
                         <input type="url" name="imageUrl" id="url-input" placeholder="https://..." class="hidden" style="margin-top: 10px;">
                     </div>
 
@@ -132,177 +131,6 @@
 
     </main>
 
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- DOM Elements ---
-            const searchInput = document.querySelector('.search-input');
-            const dinoCards = document.querySelectorAll('#user-dino-grid .dino-card');
-            const searchEmpty = document.querySelector('.search-empty');
-            const btnRace = document.querySelector('.btn-race');
-            
-            const userGrid = document.getElementById('user-dino-grid');
-            const raceGrid = document.getElementById('race-selector-grid');
-
-            // --- 1. CONFIGURATION DES RACES ---
-            const racesList = [
-                "Castivore", "Gorilloz", "Hippoclamp", "Moueffe", "Nuagoz", "Pigmou", "Planaille",
-                "Pteroz", "Rocky", "Sirain", "Wanwan", "Winks", "Feross", "Kabuki", "Mahamuti",
-                "Quetzu", "Santaz", "Smog", "Soufflet", "Toufufu", "Triceragnon"
-            ];
-
-            // Génération dynamique de la grille des races
-            racesList.forEach(race => {
-                const raceCard = document.createElement('div');
-                raceCard.className = 'dino-card race-card'; // On reprend le style des cartes + style race
-                
-                // On met juste l'image, sans texte comme demandé
-                // ATTENTION: J'ai remis '/img/races/' car c'est souvent là qu'elles sont rangées
-                raceCard.innerHTML = `
-                    <div class="card-img-container" style="height: 100%;">
-                        <img src="/img/races/${race.toLowerCase()}.png" alt="${race}" title="${race}" style="max-height: 100%;">
-                    </div>
-                `;
-
-                // Événement : Quand on clique sur une race
-                raceCard.addEventListener('click', () => {
-                    filterByRace(race);
-                });
-
-                raceGrid.appendChild(raceCard);
-            });
-
-            // --- 2. LOGIQUE DU BOUTON "RACES" ---
-            btnRace.addEventListener('click', () => {
-                // Si la grille des races est cachée, on la montre
-                if (raceGrid.classList.contains('hidden')) {
-                    userGrid.classList.add('hidden');       // Cache les dinozs
-                    raceGrid.classList.remove('hidden');    // Montre les races
-                    btnRace.innerHTML = 'Retour <i class="fas fa-undo"></i>'; // Change le texte du bouton
-                } else {
-                    // Sinon on revient à l'affichage normal (tous les dinozs)
-                    resetView();
-                }
-            });
-
-            function resetView() {
-                userGrid.classList.remove('hidden');
-                raceGrid.classList.add('hidden');
-                btnRace.innerHTML = 'Races'; // Remet le texte d'origine
-                
-                // On réaffiche tous les dinozs (enlève les filtres)
-                dinoCards.forEach(card => card.style.display = '');
-                searchEmpty.style.display = 'none';
-                searchInput.value = ''; // Vide la barre de recherche
-            }
-
-            // --- 3. FONCTION DE FILTRAGE PAR RACE ---
-            function filterByRace(selectedRace) {
-                // 1. On cache la grille des races et on remontre la grille user
-                userGrid.classList.remove('hidden');
-                raceGrid.classList.add('hidden');
-                btnRace.innerHTML = 'Races'; // Le bouton redevient normal
-
-                // 2. On filtre les cartes
-                let visibleCount = 0;
-                dinoCards.forEach(card => {
-                    // On récupère la race écrite dans le <p> de la carte (ex: "Pigmou Niv.5")
-                    // On cherche si le texte contient le nom de la race sélectionnée
-                    const cardText = card.querySelector('.card-info p').textContent;
-                    
-                    if (cardText.includes(selectedRace)) {
-                        card.style.display = '';
-                        visibleCount++;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-
-                // 3. Gestion du vide
-                if (visibleCount === 0) {
-                    searchEmpty.style.display = 'block';
-                    searchEmpty.textContent = `Aucun ${selectedRace} trouvé parmis tes p'tits guerriers givrés.`;
-                } else {
-                    searchEmpty.style.display = 'none';
-                }
-            }
-
-            // --- 4. LOGIQUE DE RECHERCHE (Ton ancien code, adapté) ---
-            function filterSearch() {
-                const filterValue = searchInput.value.toLowerCase().trim();
-                let visibleCount = 0;
-
-                // Si on tape dans la recherche, on s'assure qu'on est sur la vue "User Grid"
-                if (userGrid.classList.contains('hidden')) {
-                    userGrid.classList.remove('hidden');
-                    raceGrid.classList.add('hidden');
-                    btnRace.innerHTML = 'Races';
-                }
-
-                dinoCards.forEach(card => {
-                    const dinoName = card.querySelector('h3').textContent.toLowerCase();
-                    if (dinoName.includes(filterValue)) {
-                        card.style.display = '';
-                        visibleCount++;
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-
-                if (visibleCount === 0) {
-                    searchEmpty.style.display = 'block';
-                    searchEmpty.textContent = "Aucun résultat pour cette recherche.";
-                } else {
-                    searchEmpty.style.display = 'none';
-                }
-            }
-
-            searchInput.addEventListener('input', filterSearch);
-
-            // --- 5. GESTION DE LA MODALE ---
-            const modal = document.getElementById('new-dino-modal');
-            const btnNew = document.querySelector('.btn-new');
-            const btnClose = document.getElementById('close-modal');
-            const urlInput = document.getElementById('url-input');
-
-            // Ouvrir
-            btnNew.addEventListener('click', () => {
-                modal.classList.remove('hidden');
-            });
-
-            // Fermer
-            btnClose.addEventListener('click', () => {
-                modal.classList.add('hidden');
-            });
-
-            // Fermer si on clique en dehors de la boîte (sur le fond gris)
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.add('hidden');
-                }
-            });
-
-            // Basculer l'input URL (Fonction globale pour l'attribut onchange du HTML)
-            window.toggleUrlInput = function(show) {
-                if (show) {
-                    urlInput.classList.remove('hidden');
-                    urlInput.required = true;
-                } else {
-                    urlInput.classList.add('hidden');
-                    urlInput.required = false;
-                    urlInput.value = ''; // On vide si on cache
-                }
-            };
-
-        });
-
-        window.addEventListener('pageshow', function(event) {
-            // Si la page est chargée depuis le cache (bouton précédent)
-            // OU si le navigateur garde la page en mémoire
-            if (event.persisted || performance.getEntriesByType("navigation")[0].type === 'back_forward') {
-                window.location.reload();
-            }
-        });
-    </script>
+    <script src="/js/pages/my-dinozs.js"></script>
 </body>
 </html>

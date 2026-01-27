@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QG - Guerriers du Givre</title>
+    <link rel="icon" type="image/png" href="/img/logo.png">
+    
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/pages/dashboard.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="hub-body">
@@ -19,15 +23,15 @@
                     </p>
                 </div>
 
-                <div style="display: flex; gap: 10px;">
+                <div class="header-actions">
                     <% if (role === 'LEADER') { %>
-                        <a href="/admin" class="btn-logout" style="background: linear-gradient(180deg, #e67e22, #d35400); border-color: #e67e22;">
+                        <a href="/admin" class="btn-logout btn-admin">
                             <i class="fas fa-cogs"></i> Admin
                         </a>
                     <% } %>
                     <a href="/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
                 </div>
-                </div>
+            </div>
         </div>
     </header>
 

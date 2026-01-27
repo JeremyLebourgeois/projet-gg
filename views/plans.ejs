@@ -3,17 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Mes Plans - Guerriers du Givre</title>
+    <link rel="icon" type="image/png" href="/img/logo.png">
+    
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/pages/plans.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .plans-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 30px; }
-        .plan-card { background: rgba(12, 36, 61, 0.8); border: 1px solid #4fc3f7; border-radius: 10px; padding: 20px; transition: all 0.2s; cursor: pointer; text-decoration: none; display: flex; flex-direction: column; position: relative; }
-        .plan-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(79, 195, 247, 0.3); background: rgba(12, 36, 61, 0.95); }
-        .plan-title { font-size: 1.2rem; font-weight: bold; color: white; margin-bottom: 10px; }
-        .plan-race { color: #f1c40f; font-weight: bold; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
-        .plan-meta { color: #aaa; font-size: 0.85rem; margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; }
-        .lvl-badge { background: #f39c12; color: black; padding: 2px 8px; border-radius: 5px; font-weight: bold; font-size: 0.8rem; }
-    </style>
 </head>
 <body class="hub-body">
 
@@ -35,10 +30,10 @@
         </div>
     </header>
 
-    <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center;">
-        <h2 style="color: #f7f7f7; margin: 0;"><i class="fas fa-drafting-compass"></i> Mes Plans</h2>
+    <div class="plans-page-header">
+        <h2><i class="fas fa-drafting-compass"></i> Mes Plans</h2>
         
-        <div style="display: flex; gap: 10px;">
+        <div class="plans-actions">
             <a href="/clan/plans" class="btn-ice">Plans du clan</a>
             <a href="/architecte" class="btn-ice">Créer un nouveau plan</a>
         </div>
@@ -46,7 +41,7 @@
 
     <div class="plans-grid">
         <% if (plans.length === 0) { %>
-            <div style="color: #f7f7f7; grid-column: 1/-1; text-align: center; padding: 50px;">
+            <div class="empty-plans-message">
                 Vous n'avez créé aucun plan pour l'instant !
             </div>
         <% } %>

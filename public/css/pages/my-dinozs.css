@@ -1,0 +1,137 @@
+/* Conteneur principal */
+.dino-container {
+    padding: 20px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Barre d'outils */
+.toolbar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    border-radius: 10px;
+    align-items: center;
+    border: 1px solid rgba(79, 195, 247, 0.2);
+}
+
+.search-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #4fc3f7;
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: white;
+    font-family: inherit;
+    width: 250px;
+}
+
+.btn-tool {
+    background: linear-gradient(180deg, #0d47a1, #002171);
+    color: white;
+    border: 1px solid #4fc3f7;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.btn-tool:hover {
+    background: linear-gradient(180deg, #1565c0, #0d47a1);
+    box-shadow: 0 0 10px rgba(79, 195, 247, 0.3);
+}
+
+.btn-new {
+    background: linear-gradient(180deg, #00695c, #004d40);
+    border-color: #4db6ac;
+}
+.btn-new:hover {
+    background: linear-gradient(180deg, #00897b, #00695c);
+}
+
+.spacer { flex: 1; }
+
+/* GRILLE */
+.dino-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 15px;
+}
+
+/* CARTE */
+.dino-card {
+    background: rgba(206, 219, 244, 0.9);
+    border-radius: 8px;
+    padding: 5px;
+    text-align: center;
+    transition: transform 0.2s;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    border: 2px solid #d7ccc8;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+.dino-card:hover {
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+.card-img-container {
+    width: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+.dino-card img {
+    max-width: 90%;
+    max-height: 90%;
+    filter: drop-shadow(0 4px 2px rgba(0,0,0,0.4));
+}
+
+.card-info h3 {
+    margin: 2px 0;
+    color: #3e2723;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+.card-info p {
+    margin: 0;
+    color: #5d4037;
+    font-size: 0.75em;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .dino-grid { grid-template-columns: repeat(5, 1fr); }
+}
+@media (max-width: 900px) {
+    .dino-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Carte de sélection de Race */
+.race-card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.race-card:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #4fc3f7;
+    border-color: #4fc3f7;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: white;
+    padding: 20px;
+    font-style: italic;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+}

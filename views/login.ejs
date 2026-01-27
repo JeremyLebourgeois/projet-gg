@@ -4,37 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guerriers du Givre - Connexion</title>
-    <link rel="stylesheet" href="/css/style.css"> 
+    <link rel="icon" type="image/png" href="/img/logo.png">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-
-    <header id="main-header">
-        </header>
 
     <main id="login-container">
         <div id="login-box">
             
             <% if (error) { %>
-                <p style="color: red; font-weight: bold;"><%= error %></p>
+                <p style="color: #ef5350; font-weight: bold; margin-bottom: 15px;"><%= error %></p>
             <% } %>
 
             <form action="/login" method="POST">
                 <h2>Connexion</h2>
                 
-                <label for="pseudo">Nom d'utilisateur</label>
-                <input type="text" id="pseudo" name="pseudo" required>
+                <div class="form-group">
+                    <label for="pseudo">Nom d'utilisateur</label>
+                    <input type="text" id="pseudo" name="pseudo" required>
+                </div>
 
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="password" required>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
 
                 <button type="submit" id="connect-button">Se connecter</button>
-                
-                <%# <p class="small-link">
-                    <a href="/register">Pas encore de compte ? S'inscrire ici.</a>
-                </p> %>
-                
             </form>
         </div>
     </main>
+
 </body>
 </html>

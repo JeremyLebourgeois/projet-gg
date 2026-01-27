@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title><%= plan.name %> - Détails</title>
+    <link rel="icon" type="image/png" href="/img/logo.png">
+    
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/arbres.css"> 
-    <link rel="stylesheet" href="/css/architecte.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="/css/pages/arbres.css"> 
+    <link rel="stylesheet" href="/css/pages/architecte.css">
+    <link rel="stylesheet" href="/css/pages/plan-details.css">
 </head>
 <body class="hub-body" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
 
@@ -28,39 +32,37 @@
         </div>
     </header>
 
-    <section class="architect-top-bar" style="background: rgba(0,0,0,0.8); border-bottom: 2px solid #aaa;">
-        <a href="/plans" class="btn-back-dino" style="margin: 0; align-self: center; background: #555; padding: 10px 15px; border-radius: 5px; color: white; text-decoration: none;">
+    <section class="architect-top-bar details-mode">
+        <a href="/plans" class="btn-back-gray">
             <i class="fas fa-arrow-left"></i> Retour
         </a>
 
-        <div style="flex: 2; margin-left: 20px;">
-            <h2 style="color:white; margin:0;"><%= plan.name %></h2>
-            <div style="color:#aaa; font-size:0.9em;">
+        <div class="plan-info-container">
+            <h2><%= plan.name %></h2>
+            <div class="plan-meta">
                 Par <%= plan.originalAuthor || plan.author.pseudo %> | Race : <span style="color:#f1c40f"><%= plan.race %></span> | <%= plan.isPublic ? 'Public' : 'Privé' %>
             </div>
         </div>
 
-        <div style="display: flex; gap: 10px;">
-            
+        <div class="plan-actions">
             <% if (plan.author.id === user.id) { %>
-                <button onclick="editPlan(<%= plan.id %>)" class="btn-ice" style="background: #2980b9;">
+                <button onclick="editPlan(<%= plan.id %>)" class="btn-ice btn-edit">
                     <i class="fas fa-edit"></i> Modifier
                 </button>
-                <button onclick="deletePlan(<%= plan.id %>)" class="btn-ice" style="background: #c0392b; border-color: #e74c3c;">
+                <button onclick="deletePlan(<%= plan.id %>)" class="btn-ice btn-delete">
                     <i class="fas fa-trash"></i> Supprimer
                 </button>
             <% } else { %>
-                <button onclick="clonePlan(<%= plan.id %>)" class="btn-ice" style="background: #27ae60; border-color: #2ecc71;">
+                <button onclick="clonePlan(<%= plan.id %>)" class="btn-ice btn-clone">
                     <i class="fas fa-copy"></i> Ajouter à mes plans
                 </button>
                 
                 <% if (role === 'LEADER') { %>
-                    <button onclick="deletePlan(<%= plan.id %>)" class="btn-ice" style="background: #c0392b; border-color: #e74c3c;">
+                    <button onclick="deletePlan(<%= plan.id %>)" class="btn-ice btn-delete">
                         <i class="fas fa-trash"></i> Supprimer (Admin)
                     </button>
                 <% } %>
             <% } %>
-
         </div>
     </section>
 
@@ -98,227 +100,12 @@
     <div id="skill-tooltip"></div>
 
     <script>
-        const ALL_SKILLS = <%- JSON.stringify(skills) %>;
-        // On récupère les IDs du plan depuis le serveur et on en fait un Set pour recherche rapide
-        const PLAN_SKILLS = new Set(<%- JSON.stringify(plan.skillIds) %>);
-        
-        let skillTiers = new Map();
-        const tooltip = document.getElementById('skill-tooltip');
-
-        document.addEventListener('DOMContentLoaded', () => {
-            calculateAllTiers(); 
-            ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'].forEach(elem => renderReadOnlyTree(elem));
-            updateStatsDisplay(); // Remplir la sidebar dès le chargement
-        });
-
-        // --- 1. CALCUL DES NIVEAUX (TIERS) ---
-        function calculateAllTiers() {
-            let changed = true;
-            let pass = 0;
-            while(changed && pass < 10) {
-                changed = false;
-                ALL_SKILLS.forEach(skill => {
-                    if (skillTiers.has(skill.id)) return;
-                    if (!skill.parents || skill.parents.length === 0) {
-                        skillTiers.set(skill.id, 1);
-                        changed = true;
-                    } else {
-                        let maxParentTier = 0;
-                        let allParentsKnown = true;
-                        for(let p of skill.parents) {
-                            if (skillTiers.has(p.id)) {
-                                maxParentTier = Math.max(maxParentTier, skillTiers.get(p.id));
-                            } else {
-                                const parentExists = ALL_SKILLS.find(s => s.id === p.id);
-                                if(parentExists) allParentsKnown = false;
-                            }
-                        }
-                        if (allParentsKnown) {
-                            skillTiers.set(skill.id, maxParentTier + 1);
-                            changed = true;
-                        }
-                    }
-                });
-                pass++;
-            }
-        }
-
-        // --- 2. CALCUL DES STATS (Adapté pour PLAN_SKILLS) ---
-        function updateStatsDisplay() {
-            const elements = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
-            // Mapping ID HTML (Attention : Foudre -> lightning)
-            const idMap = { 'Feu':'fire', 'Bois':'wood', 'Eau':'water', 'Foudre':'lightning', 'Air':'air' };
-            
-            let totalLevel = 1;
-
-            elements.forEach(elem => {
-                let skillCount = 0;
-                let maxTier = 0;
-                
-                // ICI : On boucle sur PLAN_SKILLS au lieu de selectedSkills
-                PLAN_SKILLS.forEach(id => {
-                    const skill = ALL_SKILLS.find(s => s.id === id);
-                    if (skill && skill.element === elem) {
-                        skillCount++;
-                        const tier = skillTiers.get(id) || 1;
-                        if (tier > maxTier) maxTier = tier;
-                    }
-                });
-
-                // Calcul des déblocages (Ups techniques)
-                let unlocks = 0;
-                if (maxTier > 0) unlocks = maxTier - 1;
-
-                const elementTotal = skillCount + unlocks;
-                totalLevel += elementTotal;
-
-                // Mise à jour DOM Sidebar
-                const domId = `count-${idMap[elem]}`;
-                const rowId = `row-${idMap[elem]}`;
-                
-                const elSpan = document.getElementById(domId);
-                const elRow = document.getElementById(rowId);
-                
-                if (elSpan) elSpan.innerText = elementTotal;
-                
-                if (elRow) {
-                    if (elementTotal > 0) elRow.classList.remove('zero');
-                    else elRow.classList.add('zero');
-                }
-            });
-
-            // Affichage niveau total
-            document.getElementById('level-display').innerText = totalLevel;
-        }
-
-        // --- 3. MOTEUR RENDU (LECTURE SEULE) ---
-        function renderReadOnlyTree(elementName) {
-            const container = document.getElementById(`tree-container-${elementName}`);
-            container.innerHTML = ''; 
-            const scaler = document.createElement('div');
-            scaler.className = 'tree-scaler'; 
-
-            const relevantSkills = ALL_SKILLS.filter(s => {
-                const isExactElem = s.element === elementName;
-                const isTree1 = s.skillNature === 1;   
-                const isNotDouble = s.element !== 'Double'; 
-                const isNotInvocation = s.type !== 'I'; 
-                return isExactElem && isTree1 && isNotDouble && isNotInvocation;
-            });
-
-            if (relevantSkills.length === 0) {
-                container.innerHTML = '<div style="color:#aaa; font-style:italic;">Vide</div>'; return;
-            }
-
-            const roots = relevantSkills.filter(s => !s.parents.some(p => relevantSkills.find(rs => rs.id === p.id)));
-            roots.sort((a,b) => a.id - b.id);
-            roots.forEach(root => scaler.appendChild(buildReadOnlyBranch(root, relevantSkills, elementName)));
-            container.appendChild(scaler);
-        }
-
-        function buildReadOnlyBranch(skill, contextSkills, elementName) {
-            const branchContainer = document.createElement('div');
-            branchContainer.className = 'skill-branch';
-
-            const brick = document.createElement('div');
-            brick.className = `skill-brick brick-${elementName.toLowerCase()}`;
-            brick.innerText = skill.name;
-
-            // SI LA COMPÉTENCE EST DANS LE PLAN -> CLASS SELECTED
-            if (PLAN_SKILLS.has(skill.id)) {
-                brick.classList.add('selected');
-            }
-
-            // TOOLTIP SEULEMENT (PAS DE CLIC)
-            brick.addEventListener('mouseenter', () => showTooltip(skill));
-            brick.addEventListener('mouseleave', () => hideTooltip());
-
-            branchContainer.appendChild(brick);
-
-            const children = contextSkills.filter(s => s.parents.some(p => p.id === skill.id));
-            if (children.length > 0) {
-                const col = document.createElement('div');
-                col.className = 'children-column';
-                children.sort((a,b) => a.id - b.id);
-                children.forEach(child => col.appendChild(buildReadOnlyBranch(child, contextSkills, elementName)));
-                branchContainer.appendChild(col);
-            }
-            return branchContainer;
-        }
-
-        // --- 4. GESTION TOOLTIP ---
-        document.addEventListener('mousemove', (e) => {
-            if (tooltip && tooltip.style.display === 'block') {
-                const offsetX = 15; 
-                const offsetY = 15;
-                let left = e.pageX + offsetX;
-                let top = e.pageY + offsetY;
-                if (left + 280 > window.innerWidth) left = e.pageX - 295; 
-                if (top + 150 > window.innerHeight) top = e.pageY - 160; 
-                tooltip.style.left = left + 'px';
-                tooltip.style.top = top + 'px';
-            }
-        });
-
-        function showTooltip(skill) {
-            let statsHtml = '';
-            if (['A', 'E', 'I'].includes(skill.type)) {
-                const proba = skill.probability > 0 ? `${skill.probability}%` : '-';
-                const prio = skill.priority > 0 ? skill.priority : '-';
-                statsHtml = `
-                    <span class="tooltip-meta">Type: ${skill.type} | E: ${skill.energy || 0}</span>
-                    <span class="tooltip-meta">Prio: ${prio} | Proba: ${proba}</span>
-                `;
-            } else {
-                statsHtml = `<span class="tooltip-meta">Type: ${skill.type}</span>`;
-            }
-            if (skill.raceId) {
-                statsHtml += `<span class="tooltip-meta" style="color: #f1c40f; font-weight: bold; margin-top: 5px;">Spécial : ${skill.raceId}</span>`;
-            }
-
-            tooltip.innerHTML = `
-                <span class="tooltip-title">${skill.name}</span>
-                ${statsHtml}
-                <div class="tooltip-desc">${skill.description || ''}</div>
-            `;
-            tooltip.style.display = 'block';
-        }
-
-        function hideTooltip() { tooltip.style.display = 'none'; }
-
-        // --- 5. FONCTIONS ACTIONS (Supprimer / Cloner / Modifier) ---
-        async function deletePlan(id) {
-            if (!confirm("Supprimer ce plan définitivement ?")) return;
-            try {
-                const res = await fetch('/plan/delete', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ planId: id })
-                });
-                if(res.ok) window.location.href = '/plans';
-                else alert("Erreur suppression");
-            } catch(e) { console.error(e); }
-        }
-
-        async function clonePlan(id) {
-            if (!confirm("Copier ce plan dans votre collection ?")) return;
-            try {
-                const res = await fetch('/plan/clone', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ planId: id })
-                });
-                if(res.ok) {
-                    alert("Plan copié !");
-                    window.location.href = '/plans';
-                }
-                else alert("Erreur clonage");
-            } catch(e) { console.error(e); }
-        }
-
-        function editPlan(id) {
-            window.location.href = `/architecte?id=${id}`;
-        }
+        const PLAN_CONTEXT = {
+            allSkills: <%- JSON.stringify(skills) %>,
+            planSkillIds: <%- JSON.stringify(plan.skillIds) %>
+        };
     </script>
+
+    <script src="/js/pages/plan-details.js"></script>
 </body>
 </html>

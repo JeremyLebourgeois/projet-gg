@@ -1,0 +1,47 @@
+/* Barre supérieure spécifique (plus sombre que l'architecte) */
+.architect-top-bar.details-mode {
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 2px solid #aaa;
+}
+
+/* Infos du plan (Titre, Auteur...) */
+.plan-info-container {
+    flex: 2;
+    margin-left: 20px;
+}
+.plan-info-container h2 {
+    color: white;
+    margin: 0;
+}
+.plan-meta {
+    color: #aaa;
+    font-size: 0.9em;
+}
+
+/* Groupe de boutons à droite */
+.plan-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Styles spécifiques des boutons (Surcharge de btn-ice) */
+.btn-back-gray {
+    background: #555;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    align-self: center;
+    transition: all 0.2s;
+}
+.btn-back-gray:hover { background: #666; transform: translateY(-2px); }
+
+.btn-edit { background: #2980b9; border-color: #2980b9; }
+.btn-edit:hover { background: #3498db; }
+
+.btn-delete { background: #c0392b; border-color: #e74c3c; }
+.btn-delete:hover { background: #e74c3c; }
+
+.btn-clone { background: #27ae60; border-color: #2ecc71; }
+.btn-clone:hover { background: #2ecc71; }

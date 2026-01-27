@@ -45,6 +45,13 @@ model Dinoz {
   statBolt  Int     @default(0)
   statAir   Int     @default(0)
 
+// stats reincarnation
+  bonusFire     Int @default(0)
+  bonusWood     Int @default(0)
+  bonusWater    Int @default(0)
+  bonusBolt     Int @default(0)
+  bonusAir      Int @default(0)
+
 // Compteurs de Sphères (0 à 3)
   sphereFire    Int @default(0)
   sphereWood    Int @default(0)
@@ -67,8 +74,6 @@ model Dinoz {
   
 // 1. Compétences Apprises
   learnedSkills   RefSkill[] @relation("LearnedSkills")
-// 2. Compétences Débloquées (Disponibles)
-  unlockedSkills  RefSkill[] @relation("UnlockedSkills")
 
 // Historique des ups (JSON)
   ups       Json? 
@@ -100,7 +105,6 @@ model RefSkill {
  
   // Relations inverses vers les Dinozs
   dinozsLearned   Dinoz[] @relation("LearnedSkills")
-  dinozsUnlocked  Dinoz[] @relation("UnlockedSkills")
  
   // --- RELATION PARENT/ENFANT (Arbre de compétences) ---
   // On supprime "parentSkillId" !
@@ -112,24 +116,20 @@ model RefSkill {
   racesWithInnate RefRace[]
 }
 
-// Plans de Compétences (Architecte)
 model SkillPlan {
   id        Int      @id @default(autoincrement())
   name      String
   race      String   
   level     Int      @default(1) 
-  
-  // Contenu du plan : Liste des IDs des compétences sélectionnées
-  // Ex: [1, 4, 12, 105]
   skillIds  Json     
-
-  isPublic  Boolean  @default(false) // false = Privé, true = Visible par le clan
+  isPublic  Boolean  @default(false) 
   createdAt DateTime @default(now())
 
-  // Auteur du plan
-  authorId  Int
+  // Auteur du plan (UNE SEULE FOIS)
+  authorId       Int
+  author         User     @relation(fields: [authorId], references: [id])
+  
   originalAuthor String?
-  author    User     @relation(fields: [authorId], references: [id])
 
   dinozs    Dinoz[]
 }
