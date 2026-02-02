@@ -1,15 +1,13 @@
 {
   "name": "projet-gg",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "index.js",
-  
   "scripts": {
     "start": "node server.js",
     "build": "npx prisma generate",
     "dev": "nodemon server.js"
   },
-
   "keywords": [],
   "author": "",
   "license": "ISC",
