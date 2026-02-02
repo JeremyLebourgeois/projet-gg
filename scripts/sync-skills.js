@@ -66,10 +66,29 @@ function parseEnergy(energyCode) {
 
 function formatPrettyName(name) {
     if (!name) return "";
+
+    // 1. Sépare minuscule suivie de majuscule (Ex: "CanonA" -> "Canon A")
     let pretty = name.replace(/([a-z])([A-Z])/g, '$1 $2');
+
+    // 2. [AJOUT MAJEUR] Sépare une Majuscule collée à un nouveau mot (Ex: "AEau" -> "A Eau")
+    // On cherche une Majuscule ($1) suivie d'une Majuscule+Minuscule ($2)
+    pretty = pretty.replace(/([A-Z])([A-Z][a-z])/g, '$1 $2');
+
+    // 3. Gestion des apostrophes (D' )
     pretty = pretty.replace(/\sD\s/g, " D'");
-    pretty = pretty.replace(/D\sArtemis/g, "D'Artemis");
-    return pretty;
+    // pretty = pretty.replace(/D\sArtemis/g, "D'Artemis"); // Cas particulier
+
+    // 4. [BONUS] Transforme le " A " isolé en " à " (Plus joli en français)
+    pretty = pretty.replace(/\sA\s/g, " à ");
+
+    // 5. Gestion des prépositions )
+    pretty = pretty.replace(/\sLa\s/g, " la");
+    pretty = pretty.replace(/\sLe\s/g, " le");
+    pretty = pretty.replace(/\sDe\s/g, " de");
+    pretty = pretty.replace(/\sEn\s/g, " en");
+    pretty = pretty.replace(/\sDes\s/g, " des");
+
+    return pretty.trim();
 }
 
 async function syncSkills() {
