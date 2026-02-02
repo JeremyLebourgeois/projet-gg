@@ -75,18 +75,18 @@ function formatPrettyName(name) {
     pretty = pretty.replace(/([A-Z])([A-Z][a-z])/g, '$1 $2');
 
     // 3. Gestion des apostrophes (D' )
-    pretty = pretty.replace(/\sD\s/g, " D'");
+    pretty = pretty.replace(/\sD\s/g, " d'");
     // pretty = pretty.replace(/D\sArtemis/g, "D'Artemis"); // Cas particulier
 
     // 4. [BONUS] Transforme le " A " isolé en " à " (Plus joli en français)
     pretty = pretty.replace(/\sA\s/g, " à ");
 
     // 5. Gestion des prépositions )
-    pretty = pretty.replace(/\sLa\s/g, " la");
-    pretty = pretty.replace(/\sLe\s/g, " le");
-    pretty = pretty.replace(/\sDe\s/g, " de");
-    pretty = pretty.replace(/\sEn\s/g, " en");
-    pretty = pretty.replace(/\sDes\s/g, " des");
+    pretty = pretty.replace(/\sLa\s/g, " la ");
+    pretty = pretty.replace(/\sLe\s/g, " le ");
+    pretty = pretty.replace(/\sDe\s/g, " de ");
+    pretty = pretty.replace(/\sEn\s/g, " en ");
+    pretty = pretty.replace(/\sDes\s/g, " des ");
 
     return pretty.trim();
 }
