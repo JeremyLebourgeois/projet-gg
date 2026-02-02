@@ -11,8 +11,8 @@ const PDC_SKILL = ALL_SKILLS.find(s => s.name === "Plan de Carrière" || s.name 
 const PDC_ID = PDC_SKILL ? PDC_SKILL.id : 41304; 
 
 const ELEM_MAP = { 
-    'fire': 'Feu', 'wood': 'Bois', 'water': 'Eau', 'lightning': 'Foudre', 'air': 'Air',
-    'unknown': 'Inconnu' 
+    'fire': 'Feu', 'wood': 'Bois', 'water': 'Eau', 'lightning': 'Foudre', 'bolt': 'Foudre', 'air': 'Air',
+    'void': 'Vide','unknown': 'Inconnu'
 };
 const CSS_MAP = { 
     'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'lightning', 'Air': 'air', 
@@ -579,8 +579,8 @@ window.closeCustomAlert = function() {
 let pendingSphereElement = null;
 window.useSphere = function(element) {
     pendingSphereElement = element;
-    const message = `Voulez-vous vraiment consommer une sphère <strong style="color:#4fc3f7">${element.toUpperCase()}</strong> ?<br><span style="font-size:0.8em; color:#aaa;">Cette action est définitive.</span>`;
-    document.getElementById('confirm-message').innerHTML = message;
+    const nomElement = ELEM_MAP[element] || element;
+    const message = `Voulez-vous vraiment consommer une sphère <strong style="color:#4fc3f7">${nomElement}</strong> ?<br><span style="font-size:0.8em; color:#aaa;">Cette action est définitive.</span>`;    document.getElementById('confirm-message').innerHTML = message;
     document.getElementById('confirm-action-modal').classList.remove('hidden');
 };
 window.closeConfirmModal = function() {
