@@ -96,6 +96,13 @@ app.post('/change-password', async (req, res) => {
 });
 
 // ==========================================
+// ROUTE FANTÔME (ANTI-SLEEP RENDER)
+// ==========================================
+app.get('/ping', (req, res) => {
+    res.status(200).send('pong');
+});
+
+// ==========================================
 // 3. TABLEAU DE BORD & UTILISATEUR
 // ==========================================
 
