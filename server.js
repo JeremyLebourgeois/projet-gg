@@ -624,6 +624,37 @@ app.post('/admin/sync-skills', checkLeader, (req, res) => {
 });
 
 // ==========================================
+// Modification Dinoz
+// ==========================================
+app.post('/dinozs/edit', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/login');
+    const { dinozId, name, skinType, imageUrl } = req.body;
+    
+    try {
+        const dino = await prisma.dinoz.findUnique({ where: { id: parseInt(dinozId) } });
+        // Vérification de sécurité : le Dinoz doit appartenir à l'utilisateur
+        if (!dino || dino.userId !== req.session.userId) return res.redirect('/dinozs');
+
+        // Si "Skin de Glace" est sélectionné, on force l'URL à null
+        const finalImageUrl = (skinType === 'custom' && imageUrl.trim() !== '') ? imageUrl : null;
+
+        await prisma.dinoz.update({
+            where: { id: parseInt(dinozId) },
+            data: { 
+                name: name, 
+                imageUrl: finalImageUrl 
+            }
+        });
+        
+        res.redirect(`/dinoz/${dinozId}`);
+    } catch (error) {
+        console.error(error);
+        res.redirect('/dinozs');
+    }
+});
+
+
+// ==========================================
 // 7. DÉMARRAGE SERVEUR
 // ==========================================
 app.listen(PORT, () => {

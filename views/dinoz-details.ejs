@@ -34,9 +34,14 @@
     <main class="dashboard-grid">
         
         <div class="col-left">
-            <a href="/dinozs" class="btn-back-dino">
-                <i class="fas fa-chevron-left"></i> Retour aux Dinozs
-            </a>
+            <div class="top-action-bar">
+                <a href="/dinozs" class="btn-back-dino">
+                    <i class="fas fa-chevron-left"></i> Retour aux Dinozs
+                </a>
+                <button class="btn-ice btn-edit-dino" onclick="openEditModal()" title="Modifier">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+            </div>
 
             <div class="identity-card">
                 <div class="dino-avatar">
@@ -366,6 +371,39 @@
         </div>
     </div>
     <div id="skill-tooltip"></div>
+    <div id="edit-dino-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h2 class="edit-modal-title">Modifier le Dinoz</h2>
+            <form action="/dinozs/edit" method="POST">
+                <input type="hidden" name="dinozId" value="<%= dino.id %>">
+                
+                <div class="form-group">
+                    <label>Nom du Dinoz</label>
+                    <input type="text" name="name" value="<%= dino.name %>" required maxlength="20">
+                </div>
+
+                <div class="form-group">
+                    <label>Apparence</label>
+                    <div class="radio-group skin-radio-group">
+                        <label>
+                            <input type="radio" name="skinType" value="default" <%= !dino.imageUrl ? 'checked' : '' %> onchange="toggleEditUrlInput(false)">
+                            Skin de Glace
+                        </label>
+                        <label>
+                            <input type="radio" name="skinType" value="custom" <%= dino.imageUrl ? 'checked' : '' %> onchange="toggleEditUrlInput(true)">
+                            URL Personnalisée
+                        </label>
+                    </div>
+                    <input type="url" name="imageUrl" id="edit-url-input" value="<%= dino.imageUrl || '' %>" placeholder="https://..." class="<%= dino.imageUrl ? '' : 'hidden' %>">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeEditModal()">Annuler</button>
+                    <button type="submit" class="btn-submit btn-save-edit">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
         const DINO_DATA = {

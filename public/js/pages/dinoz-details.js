@@ -728,3 +728,23 @@ function showTooltip(skill) {
 }
 
 function hideTooltip() { if (tooltip) tooltip.style.display = 'none'; }
+
+// --- MODIFICATION DU DINOZ ---
+window.openEditModal = function() { 
+    document.getElementById('edit-dino-modal').classList.remove('hidden'); 
+}
+
+window.closeEditModal = function() { 
+    document.getElementById('edit-dino-modal').classList.add('hidden'); 
+}
+
+window.toggleEditUrlInput = function(show) {
+    const input = document.getElementById('edit-url-input');
+    if(show) {
+        input.classList.remove('hidden');
+        input.required = true;
+    } else {
+        input.classList.add('hidden');
+        input.required = false;
+    }
+}
