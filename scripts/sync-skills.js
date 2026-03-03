@@ -287,7 +287,18 @@ async function syncSkills() {
                         if (!isNaN(parsed)) statValue = parsed;
                     }
 
-                    if (statValue !== undefined) modifiers[statName] = statValue;
+                    if (statValue !== undefined) {
+                        // Distinguer Armure en élément (Bénéficie des Ratios) vs Malus de Défense (Flat)
+                        if (statName.endsWith('_DEFENSE') && typeof statValue === 'number') {
+                            if (statValue > 0) {
+                                modifiers[statName + '_RATIO'] = statValue;
+                            } else {
+                                modifiers[statName] = statValue;
+                            }
+                        } else {
+                            modifiers[statName] = statValue;
+                        }
+                    }
                 }
             };
 

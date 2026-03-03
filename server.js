@@ -169,6 +169,7 @@ app.get('/dinoz/:id', async (req, res) => {
         const hasReincarnationSkill = dino.learnedSkills.some(s => s.id === 41406);
 
         let defMods = { fire: 0, wood: 0, water: 0, bolt: 0, air: 0 };
+        let defRatios = { fire: 0, wood: 0, water: 0, bolt: 0, air: 0 };
         if (dino.learnedSkills) {
             dino.learnedSkills.forEach(skill => {
                 if (skill.modifiers) {
@@ -177,17 +178,23 @@ app.get('/dinoz/:id', async (req, res) => {
                     if (skill.modifiers.WATER_DEFENSE) defMods.water += skill.modifiers.WATER_DEFENSE;
                     if (skill.modifiers.LIGHTNING_DEFENSE) defMods.bolt += skill.modifiers.LIGHTNING_DEFENSE;
                     if (skill.modifiers.AIR_DEFENSE) defMods.air += skill.modifiers.AIR_DEFENSE;
+
+                    if (skill.modifiers.FIRE_DEFENSE_RATIO) defRatios.fire += skill.modifiers.FIRE_DEFENSE_RATIO;
+                    if (skill.modifiers.WOOD_DEFENSE_RATIO) defRatios.wood += skill.modifiers.WOOD_DEFENSE_RATIO;
+                    if (skill.modifiers.WATER_DEFENSE_RATIO) defRatios.water += skill.modifiers.WATER_DEFENSE_RATIO;
+                    if (skill.modifiers.LIGHTNING_DEFENSE_RATIO) defRatios.bolt += skill.modifiers.LIGHTNING_DEFENSE_RATIO;
+                    if (skill.modifiers.AIR_DEFENSE_RATIO) defRatios.air += skill.modifiers.AIR_DEFENSE_RATIO;
                 }
             });
         }
 
         // Calcul des défenses
         const defenses = {
-            fire: parseFloat(((dino.statFire * 1) + (dino.statWood * 0.5) + (dino.statWater * 0.5) + (dino.statBolt * 1.5) + (dino.statAir * 1.5) + defMods.fire).toFixed(1)),
-            wood: parseFloat(((dino.statFire * 1.5) + (dino.statWood * 1) + (dino.statWater * 0.5) + (dino.statBolt * 0.5) + (dino.statAir * 1.5) + defMods.wood).toFixed(1)),
-            water: parseFloat(((dino.statFire * 1.5) + (dino.statWood * 1.5) + (dino.statWater * 1) + (dino.statBolt * 0.5) + (dino.statAir * 0.5) + defMods.water).toFixed(1)),
-            lightning: parseFloat(((dino.statFire * 0.5) + (dino.statWood * 1.5) + (dino.statWater * 1.5) + (dino.statBolt * 1) + (dino.statAir * 0.5) + defMods.bolt).toFixed(1)),
-            air: parseFloat(((dino.statFire * 0.5) + (dino.statWood * 0.5) + (dino.statWater * 1.5) + (dino.statBolt * 1.5) + (dino.statAir * 1) + defMods.air).toFixed(1))
+            fire: parseFloat((((dino.statFire + defRatios.fire) * 1) + ((dino.statWood + defRatios.wood) * 0.5) + ((dino.statWater + defRatios.water) * 0.5) + ((dino.statBolt + defRatios.bolt) * 1.5) + ((dino.statAir + defRatios.air) * 1.5) + defMods.fire).toFixed(1)),
+            wood: parseFloat((((dino.statFire + defRatios.fire) * 1.5) + ((dino.statWood + defRatios.wood) * 1) + ((dino.statWater + defRatios.water) * 0.5) + ((dino.statBolt + defRatios.bolt) * 0.5) + ((dino.statAir + defRatios.air) * 1.5) + defMods.wood).toFixed(1)),
+            water: parseFloat((((dino.statFire + defRatios.fire) * 1.5) + ((dino.statWood + defRatios.wood) * 1.5) + ((dino.statWater + defRatios.water) * 1) + ((dino.statBolt + defRatios.bolt) * 0.5) + ((dino.statAir + defRatios.air) * 0.5) + defMods.water).toFixed(1)),
+            lightning: parseFloat((((dino.statFire + defRatios.fire) * 0.5) + ((dino.statWood + defRatios.wood) * 1.5) + ((dino.statWater + defRatios.water) * 1.5) + ((dino.statBolt + defRatios.bolt) * 1) + ((dino.statAir + defRatios.air) * 0.5) + defMods.bolt).toFixed(1)),
+            air: parseFloat((((dino.statFire + defRatios.fire) * 0.5) + ((dino.statWood + defRatios.wood) * 0.5) + ((dino.statWater + defRatios.water) * 1.5) + ((dino.statBolt + defRatios.bolt) * 1.5) + ((dino.statAir + defRatios.air) * 1) + defMods.air).toFixed(1))
         };
 
         res.render('dinoz-details', {
@@ -327,7 +334,8 @@ app.post('/dinoz/update-grid', async (req, res) => {
             statBolt: base.bolt + bonus.bolt + gridPoints.bolt,
             statAir: base.air + bonus.air + gridPoints.air,
             statCounter: 0, statDodge: 0, statMultiHit: 0, statSpeed: 10,
-            defFire: 0, defWood: 0, defWater: 0, defBolt: 0, defAir: 0
+            defFire: 0, defWood: 0, defWater: 0, defBolt: 0, defAir: 0,
+            defRatioFire: 0, defRatioWood: 0, defRatioWater: 0, defRatioBolt: 0, defRatioAir: 0
         };
 
         let mults = {
@@ -366,6 +374,12 @@ app.post('/dinoz/update-grid', async (req, res) => {
                     else if (key === 'WATER_DEFENSE') flatStats.defWater += amount;
                     else if (key === 'LIGHTNING_DEFENSE') flatStats.defBolt += amount;
                     else if (key === 'AIR_DEFENSE') flatStats.defAir += amount;
+
+                    else if (key === 'FIRE_DEFENSE_RATIO') flatStats.defRatioFire += amount;
+                    else if (key === 'WOOD_DEFENSE_RATIO') flatStats.defRatioWood += amount;
+                    else if (key === 'WATER_DEFENSE_RATIO') flatStats.defRatioWater += amount;
+                    else if (key === 'LIGHTNING_DEFENSE_RATIO') flatStats.defRatioBolt += amount;
+                    else if (key === 'AIR_DEFENSE_RATIO') flatStats.defRatioAir += amount;
                 }
             }
         });
@@ -387,13 +401,24 @@ app.post('/dinoz/update-grid', async (req, res) => {
         delete finalStats.defWater;
         delete finalStats.defBolt;
         delete finalStats.defAir;
+        delete finalStats.defRatioFire;
+        delete finalStats.defRatioWood;
+        delete finalStats.defRatioWater;
+        delete finalStats.defRatioBolt;
+        delete finalStats.defRatioAir;
+
+        const defRatioF = flatStats.defRatioFire || 0;
+        const defRatioW = flatStats.defRatioWood || 0;
+        const defRatioWa = flatStats.defRatioWater || 0;
+        const defRatioB = flatStats.defRatioBolt || 0;
+        const defRatioA = flatStats.defRatioAir || 0;
 
         const defenses = {
-            fire: parseFloat(((finalStats.statFire * 1) + (finalStats.statWood * 0.5) + (finalStats.statWater * 0.5) + (finalStats.statBolt * 1.5) + (finalStats.statAir * 1.5) + flatStats.defFire).toFixed(1)),
-            wood: parseFloat(((finalStats.statFire * 1.5) + (finalStats.statWood * 1) + (finalStats.statWater * 0.5) + (finalStats.statBolt * 0.5) + (finalStats.statAir * 1.5) + flatStats.defWood).toFixed(1)),
-            water: parseFloat(((finalStats.statFire * 1.5) + (finalStats.statWood * 1.5) + (finalStats.statWater * 1) + (finalStats.statBolt * 0.5) + (finalStats.statAir * 0.5) + flatStats.defWater).toFixed(1)),
-            lightning: parseFloat(((finalStats.statFire * 0.5) + (finalStats.statWood * 1.5) + (finalStats.statWater * 1.5) + (finalStats.statBolt * 1) + (finalStats.statAir * 0.5) + flatStats.defBolt).toFixed(1)),
-            air: parseFloat(((finalStats.statFire * 0.5) + (finalStats.statWood * 0.5) + (finalStats.statWater * 1.5) + (finalStats.statBolt * 1.5) + (finalStats.statAir * 1) + flatStats.defAir).toFixed(1))
+            fire: parseFloat((((finalStats.statFire + defRatioF) * 1) + ((finalStats.statWood + defRatioW) * 0.5) + ((finalStats.statWater + defRatioWa) * 0.5) + ((finalStats.statBolt + defRatioB) * 1.5) + ((finalStats.statAir + defRatioA) * 1.5) + flatStats.defFire).toFixed(1)),
+            wood: parseFloat((((finalStats.statFire + defRatioF) * 1.5) + ((finalStats.statWood + defRatioW) * 1) + ((finalStats.statWater + defRatioWa) * 0.5) + ((finalStats.statBolt + defRatioB) * 0.5) + ((finalStats.statAir + defRatioA) * 1.5) + flatStats.defWood).toFixed(1)),
+            water: parseFloat((((finalStats.statFire + defRatioF) * 1.5) + ((finalStats.statWood + defRatioW) * 1.5) + ((finalStats.statWater + defRatioWa) * 1) + ((finalStats.statBolt + defRatioB) * 0.5) + ((finalStats.statAir + defRatioA) * 0.5) + flatStats.defWater).toFixed(1)),
+            lightning: parseFloat((((finalStats.statFire + defRatioF) * 0.5) + ((finalStats.statWood + defRatioW) * 1.5) + ((finalStats.statWater + defRatioWa) * 1.5) + ((finalStats.statBolt + defRatioB) * 1) + ((finalStats.statAir + defRatioA) * 0.5) + flatStats.defBolt).toFixed(1)),
+            air: parseFloat((((finalStats.statFire + defRatioF) * 0.5) + ((finalStats.statWood + defRatioW) * 0.5) + ((finalStats.statWater + defRatioWa) * 1.5) + ((finalStats.statBolt + defRatioB) * 1.5) + ((finalStats.statAir + defRatioA) * 1) + flatStats.defAir).toFixed(1))
         };
 
         await prisma.dinoz.update({

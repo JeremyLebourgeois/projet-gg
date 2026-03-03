@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 async function run() {
     const skills = await prisma.refSkill.findMany({
         where: {
-            name: { in: ['Carapace', 'Héritage Faroe', 'Furie', 'Célérité', 'Acrobate'] }
+            name: { contains: 'Furtivit' }
         },
         select: { name: true, modifiers: true }
     });
