@@ -168,9 +168,18 @@ app.get('/dinoz/:id', async (req, res) => {
         const hasPDC = dino.learnedSkills.some(s => s.name === "Plan de Carrière");
         const hasReincarnationSkill = dino.learnedSkills.some(s => s.id === 41406);
 
+        // Calcul des défenses
+        const defenses = {
+            fire:      (dino.statFire * 1)   + (dino.statWood * 0.5) + (dino.statWater * 0.5) + (dino.statBolt * 1.5) + (dino.statAir * 1.5),
+            wood:      (dino.statFire * 1.5) + (dino.statWood * 1)   + (dino.statWater * 0.5) + (dino.statBolt * 0.5) + (dino.statAir * 1.5),
+            water:     (dino.statFire * 1.5) + (dino.statWood * 1.5) + (dino.statWater * 1)   + (dino.statBolt * 0.5) + (dino.statAir * 0.5),
+            lightning: (dino.statFire * 0.5) + (dino.statWood * 1.5) + (dino.statWater * 1.5) + (dino.statBolt * 1)   + (dino.statAir * 0.5),
+            air:       (dino.statFire * 0.5) + (dino.statWood * 0.5) + (dino.statWater * 1.5) + (dino.statBolt * 1.5) + (dino.statAir * 1)
+        };
+
         res.render('dinoz-details', { 
             dino, user, pseudo: user.pseudo, role: user.role, daysMember,
-            allSkills, hasPDC, hasReincarnationSkill, myPlans 
+            allSkills, hasPDC, hasReincarnationSkill, myPlans, defenses 
         });
     } catch (error) {
         console.error(error);
@@ -299,6 +308,14 @@ app.post('/dinoz/update-grid', async (req, res) => {
             statAir: base.air + bonus.air + gridPoints.air
         };
 
+        const defenses = {
+            fire:      (finalStats.statFire * 1)   + (finalStats.statWood * 0.5) + (finalStats.statWater * 0.5) + (finalStats.statBolt * 1.5) + (finalStats.statAir * 1.5),
+            wood:      (finalStats.statFire * 1.5) + (finalStats.statWood * 1)   + (finalStats.statWater * 0.5) + (finalStats.statBolt * 0.5) + (finalStats.statAir * 1.5),
+            water:     (finalStats.statFire * 1.5) + (finalStats.statWood * 1.5) + (finalStats.statWater * 1)   + (finalStats.statBolt * 0.5) + (finalStats.statAir * 0.5),
+            lightning: (finalStats.statFire * 0.5) + (finalStats.statWood * 1.5) + (finalStats.statWater * 1.5) + (finalStats.statBolt * 1)   + (finalStats.statAir * 0.5),
+            air:       (finalStats.statFire * 0.5) + (finalStats.statWood * 0.5) + (finalStats.statWater * 1.5) + (finalStats.statBolt * 1.5) + (finalStats.statAir * 1)
+        };
+
         await prisma.dinoz.update({
             where: { id: parseInt(dinoId) },
             data: { 
@@ -307,7 +324,7 @@ app.post('/dinoz/update-grid', async (req, res) => {
             }
         });
 
-        res.json({ success: true, stats: finalStats, level: newLevel });
+        res.json({ success: true, stats: finalStats, level: newLevel, defenses: defenses });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Erreur serveur" });

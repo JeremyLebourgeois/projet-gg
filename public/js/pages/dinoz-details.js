@@ -8,14 +8,14 @@ const PLAN_IDS = new Set(DINO_DATA.planIds);
 
 // CONSTANTES
 const PDC_SKILL = ALL_SKILLS.find(s => s.name === "Plan de Carrière" || s.name === "Plan de Carriere");
-const PDC_ID = PDC_SKILL ? PDC_SKILL.id : 41304; 
+const PDC_ID = PDC_SKILL ? PDC_SKILL.id : 41304;
 
-const ELEM_MAP = { 
+const ELEM_MAP = {
     'fire': 'Feu', 'wood': 'Bois', 'water': 'Eau', 'lightning': 'Foudre', 'bolt': 'Foudre', 'air': 'Air',
-    'void': 'Vide','unknown': 'Inconnu'
+    'void': 'Vide', 'unknown': 'Inconnu'
 };
-const CSS_MAP = { 
-    'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'lightning', 'Air': 'air', 
+const CSS_MAP = {
+    'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'lightning', 'Air': 'air',
     'Neutre': 'neutre', 'Vide': 'void',
     'Inconnu': 'up'
 };
@@ -24,7 +24,7 @@ const CSS_MAP = {
 document.addEventListener('DOMContentLoaded', () => {
     restoreGridVisuals();
     updateFullLogic();
-    
+
     // Affichage des mini-arbres du plan si existant
     if (PLAN_IDS.size > 0) {
         renderMiniTrees();
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('tab') === 'plans') {
         const tabBtn = document.querySelector('button[onclick*="tab-plans"]');
-        if(tabBtn) tabBtn.click();
+        if (tabBtn) tabBtn.click();
     }
 });
 
@@ -43,7 +43,7 @@ function setCellVisual(cell, type) {
     const content = cell.querySelector('.cell-content');
     cell.dataset.value = type;
     cell.className = cell.className.replace(/bg-\w+/g, "").trim();
-    
+
     if (type === 'unknown') {
         cell.classList.add('bg-up');
         content.innerHTML = '<span class="text-badge">???</span>';
@@ -60,11 +60,11 @@ function setDecisionVisual(cell, data) {
 
     if (data.action === 'unlock') {
         const cssElem = CSS_MAP[data.element] || 'neutre';
-        cell.classList.add('bg-' + cssElem); 
+        cell.classList.add('bg-' + cssElem);
         content.innerHTML = `<span class="text-badge" style="font-size:1.4em;">+</span>`;
     } else if (data.action === 'learn') {
         const skill = ALL_SKILLS.find(s => s.id === data.skillId);
-        if(skill) {
+        if (skill) {
             const cssElem = CSS_MAP[skill.element] || 'neutre';
             cell.classList.add('bg-' + cssElem);
             content.innerHTML = `<span style="font-size:0.75rem; font-weight:bold; line-height:1.1; padding:0 2px;">${skill.name}</span>`;
@@ -86,14 +86,14 @@ function resetCell(cell) {
 // --- LOGIQUE PRINCIPALE ---
 function updateFullLogic() {
     const rows = document.querySelectorAll('#progression-table tbody tr');
-    let state = { 
-        learnedIds: new Set(SERVER_LEARNED_IDS), 
-        pendingUnlocks: {}, 
-        availableSkills: {}, 
-        hasPDC: false 
+    let state = {
+        learnedIds: new Set(SERVER_LEARNED_IDS),
+        pendingUnlocks: {},
+        availableSkills: {},
+        hasPDC: false
     };
-    
-    const level1Skills = ALL_SKILLS.filter(s => 
+
+    const level1Skills = ALL_SKILLS.filter(s =>
         (!s.parents || s.parents.length === 0) && s.skillNature !== 3
     );
 
@@ -106,7 +106,7 @@ function updateFullLogic() {
     let doesPDCExistGlobally = false;
     rows.forEach(row => {
         const cell3 = row.querySelector('.col-3');
-        if(cell3.dataset.decision && cell3.dataset.decision.includes(String(PDC_ID))) {
+        if (cell3.dataset.decision && cell3.dataset.decision.includes(String(PDC_ID))) {
             doesPDCExistGlobally = true;
         }
     });
@@ -125,8 +125,8 @@ function updateFullLogic() {
                 cell2.style.visibility = 'visible';
             } else {
                 cell2.classList.remove('hidden');
-                cell2.style.visibility = 'hidden'; 
-                cell2.dataset.value = ""; 
+                cell2.style.visibility = 'hidden';
+                cell2.dataset.value = "";
             }
         } else {
             document.querySelector('.col-choice-2').classList.add('hidden');
@@ -142,7 +142,7 @@ function updateFullLogic() {
                     isValid = true;
                 } else {
                     const val1DB = ELEM_MAP[cell1.dataset.value];
-                    const val2DB = state.hasPDC ? ELEM_MAP[cell2.dataset.value] : null; 
+                    const val2DB = state.hasPDC ? ELEM_MAP[cell2.dataset.value] : null;
                     const decElem = dec.element;
                     if (decElem && (decElem === val1DB || (state.hasPDC && decElem === val2DB))) {
                         if (dec.action === 'unlock') {
@@ -166,12 +166,12 @@ function updateFullLogic() {
                         }
                     }
                 }
-            } catch(e) {}
+            } catch (e) { }
 
             if (!isValid) {
                 resetCell(cell3);
-                if(localGrid[rowIndex]) delete localGrid[rowIndex].col3;
-                saveGridData(rowIndex, 3, ""); 
+                if (localGrid[rowIndex]) delete localGrid[rowIndex].col3;
+                saveGridData(rowIndex, 3, "");
             }
         }
 
@@ -180,7 +180,7 @@ function updateFullLogic() {
         const isRealElement = val1 && val1 !== 'unknown';
         if (isRealElement && !state.hasPDC && !cell3.dataset.decision) {
             setCellVisual(cell3, val1);
-        } 
+        }
 
         // 4. Application Décision
         if (cell3.dataset.decision) {
@@ -188,7 +188,7 @@ function updateFullLogic() {
             if (dec.action === 'learn') {
                 state.learnedIds.add(dec.skillId);
                 if (dec.skillId === PDC_ID) state.hasPDC = true;
-                
+
                 const dbElem = dec.element;
                 if (state.availableSkills[dbElem]) state.availableSkills[dbElem] = state.availableSkills[dbElem].filter(id => id !== dec.skillId);
                 const skillData = ALL_SKILLS.find(s => s.id === dec.skillId);
@@ -220,10 +220,10 @@ function handleDecisionClick(cell) {
     const rowIndex = parseInt(row.dataset.rowIndex);
     const type1 = row.querySelector('.col-1').dataset.value;
     const type2 = row.querySelector('.col-2').dataset.value;
-    
+
     let targetElements = new Set();
     if (type1 && ELEM_MAP[type1] && type1 !== 'unknown') targetElements.add(ELEM_MAP[type1]);
-    
+
     const cell2 = row.querySelector('.col-2');
     const isCol2Active = !cell2.classList.contains('hidden') && cell2.style.visibility !== 'hidden';
     if (isCol2Active && type2 && ELEM_MAP[type2] && type2 !== 'unknown') {
@@ -270,7 +270,7 @@ function getAvailableOptionsAtRow(targetRowIndex, elementsFilter) {
                     state.pendingUnlocks[elem].clear();
                 }
             }
-        } catch(e) {}
+        } catch (e) { }
     }
 
     let options = [];
@@ -305,10 +305,10 @@ function openSkillModal(targetCell, options) {
     const modal = document.getElementById('skill-selector-modal');
     const list = document.getElementById('modal-skill-list');
     list.innerHTML = '';
-    
+
     options.forEach(opt => {
         const item = document.createElement('div');
-        
+
         if (opt.type === 'skip') {
             item.className = `skill-item list-neutre`;
             item.style.cursor = 'pointer';
@@ -371,12 +371,12 @@ function updateRightColumn(learnedIdsSet) {
     let skillsList = [];
     learnedIdsSet.forEach(id => {
         const skill = ALL_SKILLS.find(s => s.id === id);
-        if(skill) skillsList.push(skill);
+        if (skill) skillsList.push(skill);
     });
     skillsList.sort((a, b) => {
         const idxA = ORDER.indexOf(a.element);
         const idxB = ORDER.indexOf(b.element);
-        if(idxA !== idxB) return idxA - idxB;
+        if (idxA !== idxB) return idxA - idxB;
         return a.id - b.id;
     });
     skillsList.forEach(skill => {
@@ -394,10 +394,10 @@ function updateRightColumn(learnedIdsSet) {
 
 function restoreGridVisuals() {
     document.querySelectorAll('.cell-choice').forEach(cell => {
-         cell.className = cell.className.replace(/bg-\w+/g, "").trim();
-         cell.querySelector('.cell-content').innerHTML = '<span class="placeholder">-</span>';
-         delete cell.dataset.value;
-         delete cell.dataset.decision;
+        cell.className = cell.className.replace(/bg-\w+/g, "").trim();
+        cell.querySelector('.cell-content').innerHTML = '<span class="placeholder">-</span>';
+        delete cell.dataset.value;
+        delete cell.dataset.decision;
     });
     for (const [rowIndex, cols] of Object.entries(localGrid)) {
         const row = document.querySelector(`tr[data-row-index="${rowIndex}"]`);
@@ -408,7 +408,7 @@ function restoreGridVisuals() {
             try {
                 const data = JSON.parse(cols.col3);
                 setDecisionVisual(row.querySelector('.col-3'), data);
-            } catch(e) {}
+            } catch (e) { }
         }
     }
 }
@@ -422,7 +422,7 @@ async function saveGridData(rowIndex, colIndex, value) {
             body: JSON.stringify({ dinoId: DINO_ID, rowIndex, colIndex, value })
         });
         const json = await res.json();
-        
+
         if (json.success) {
             try {
                 if (value) {
@@ -441,17 +441,24 @@ async function saveGridData(rowIndex, colIndex, value) {
                 document.getElementById('val-bolt').innerText = json.stats.statBolt;
                 document.getElementById('val-air').innerText = json.stats.statAir;
             }
-            
+            if (json.defenses) {
+                document.getElementById('def-fire').innerText = json.defenses.fire;
+                document.getElementById('def-wood').innerText = json.defenses.wood;
+                document.getElementById('def-water').innerText = json.defenses.water;
+                document.getElementById('def-bolt').innerText = json.defenses.lightning;
+                document.getElementById('def-air').innerText = json.defenses.air;
+            }
+
             const lvlTxt = document.getElementById('dino-level-display');
-            if(lvlTxt && json.level) {
-                 lvlTxt.innerText = lvlTxt.innerText.replace(/Niveau \d+/, `Niveau ${json.level}`);
+            if (lvlTxt && json.level) {
+                lvlTxt.innerText = lvlTxt.innerText.replace(/Niveau \d+/, `Niveau ${json.level}`);
             }
         }
     } catch (err) { console.error(err); }
 }
 
 // --- INTERACTIONS ---
-window.toggleMenu = function(cell) {
+window.toggleMenu = function (cell) {
     if (cell.classList.contains('col-3')) {
         handleDecisionClick(cell);
     } else {
@@ -461,7 +468,7 @@ window.toggleMenu = function(cell) {
     }
 };
 
-window.selectElement = function(el, type) {
+window.selectElement = function (el, type) {
     const cell = el.closest('.cell-choice');
     const row = cell.closest('tr');
     const colIndex = cell.classList.contains('col-2') ? 2 : 1;
@@ -470,20 +477,20 @@ window.selectElement = function(el, type) {
     if (!localGrid[row.dataset.rowIndex]) localGrid[row.dataset.rowIndex] = {};
     localGrid[row.dataset.rowIndex][`col${colIndex}`] = type;
     saveGridData(row.dataset.rowIndex, colIndex, type);
-    updateFullLogic(); 
+    updateFullLogic();
 };
 
 function openTab(evt, tabName) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById(tabName).classList.add('active');
-    if(evt) evt.currentTarget.classList.add('active');
+    if (evt) evt.currentTarget.classList.add('active');
 }
 
-window.toggleStats = function() {
+window.toggleStats = function () {
     const content = document.getElementById('dino-stats-content');
     const icon = document.getElementById('stats-icon');
-    if(content.classList.contains('hidden')) {
+    if (content.classList.contains('hidden')) {
         content.classList.remove('hidden');
         icon.className = 'fas fa-chevron-up';
     } else {
@@ -492,8 +499,8 @@ window.toggleStats = function() {
     }
 };
 
-window.openDeleteModal = function() { document.getElementById('delete-modal').classList.remove('hidden'); }
-window.closeDeleteModal = function() { document.getElementById('delete-modal').classList.add('hidden'); }
+window.openDeleteModal = function () { document.getElementById('delete-modal').classList.remove('hidden'); }
+window.closeDeleteModal = function () { document.getElementById('delete-modal').classList.add('hidden'); }
 
 // --- REINCARNATION ---
 let bonusStats = { fire: 0, wood: 0, water: 0, lightning: 0, air: 0 };
@@ -509,7 +516,7 @@ if (btnReincar) {
 }
 document.getElementById('cancel-reincarnate')?.addEventListener('click', () => modalReincar.classList.add('hidden'));
 
-window.updatePoints = function(element, change) {
+window.updatePoints = function (element, change) {
     if (change === 1 && pointsLeft <= 0) return;
     if (change === -1 && bonusStats[element] <= 0) return;
     bonusStats[element] += change;
@@ -538,7 +545,7 @@ function resetDistributor() {
     });
     document.getElementById('points-left').innerText = "5";
     const btnConfirm = document.getElementById('confirm-reincarnate');
-    if(btnConfirm) {
+    if (btnConfirm) {
         btnConfirm.disabled = true;
         btnConfirm.style.background = "#555";
     }
@@ -559,10 +566,10 @@ document.getElementById('confirm-reincarnate')?.addEventListener('click', async 
 // --- SPHERES ---
 const modalSpheres = document.getElementById('spheres-modal');
 const btnSpheres = document.getElementById('btn-open-spheres');
-if(btnSpheres) {
+if (btnSpheres) {
     btnSpheres.addEventListener('click', () => modalSpheres.classList.remove('hidden'));
 }
-window.closeSpheresModal = function() { modalSpheres.classList.add('hidden'); }
+window.closeSpheresModal = function () { modalSpheres.classList.add('hidden'); }
 
 let reloadOnAlert = false;
 function showCustomAlert(title, message, reload = false) {
@@ -571,24 +578,24 @@ function showCustomAlert(title, message, reload = false) {
     reloadOnAlert = reload;
     document.getElementById('custom-alert-modal').classList.remove('hidden');
 }
-window.closeCustomAlert = function() {
+window.closeCustomAlert = function () {
     document.getElementById('custom-alert-modal').classList.add('hidden');
     if (reloadOnAlert) window.location.reload();
 }
 
 let pendingSphereElement = null;
-window.useSphere = function(element) {
+window.useSphere = function (element) {
     pendingSphereElement = element;
     const nomElement = ELEM_MAP[element] || element;
-    const message = `Voulez-vous vraiment consommer une sphère <strong style="color:#4fc3f7">${nomElement}</strong> ?<br><span style="font-size:0.8em; color:#aaa;">Cette action est définitive.</span>`;    document.getElementById('confirm-message').innerHTML = message;
+    const message = `Voulez-vous vraiment consommer une sphère <strong style="color:#4fc3f7">${nomElement}</strong> ?<br><span style="font-size:0.8em; color:#aaa;">Cette action est définitive.</span>`; document.getElementById('confirm-message').innerHTML = message;
     document.getElementById('confirm-action-modal').classList.remove('hidden');
 };
-window.closeConfirmModal = function() {
+window.closeConfirmModal = function () {
     document.getElementById('confirm-action-modal').classList.add('hidden');
     pendingSphereElement = null;
 };
 document.getElementById('btn-confirm-yes').addEventListener('click', async () => {
-    const element = pendingSphereElement; 
+    const element = pendingSphereElement;
     if (!element) return;
     closeConfirmModal();
     try {
@@ -611,12 +618,12 @@ document.getElementById('btn-confirm-yes').addEventListener('click', async () =>
 });
 
 // --- PLANS ---
-window.openPlanModal = function() { document.getElementById('plan-selection-modal').classList.remove('hidden'); }
-window.removePlan = async function() {
-    if(!confirm("Retirer le plan actuel de ce Dinoz ?")) return;
+window.openPlanModal = function () { document.getElementById('plan-selection-modal').classList.remove('hidden'); }
+window.removePlan = async function () {
+    if (!confirm("Retirer le plan actuel de ce Dinoz ?")) return;
     assignPlan(null);
 }
-window.assignPlan = async function(planId) {
+window.assignPlan = async function (planId) {
     try {
         const response = await fetch('/dinoz/assign-plan', {
             method: 'POST',
@@ -646,12 +653,12 @@ function renderMiniTrees() {
         const block = document.createElement('div');
         block.className = 'mini-tree-block';
         block.innerHTML = `<div class="mini-elem-title" style="color:${getColorForElem(elem)}">${elem}</div>`;
-        
+
         const wrapper = document.createElement('div');
         wrapper.className = 'mini-tree-wrapper';
-        
+
         const roots = skillsInPlanForElem.filter(s => !s.parents.some(p => PLAN_IDS.has(p.id)));
-        roots.sort((a,b) => a.id - b.id);
+        roots.sort((a, b) => a.id - b.id);
 
         roots.forEach(root => {
             wrapper.appendChild(buildMiniBranch(root, skillsInPlanForElem, elem));
@@ -664,9 +671,9 @@ function renderMiniTrees() {
 function buildMiniBranch(skill, pool, elementName) {
     const branchContainer = document.createElement('div');
     branchContainer.className = 'skill-branch';
-    
+
     const brick = document.createElement('div');
-    brick.className = `skill-brick brick-${elementName.toLowerCase()} selected`; 
+    brick.className = `skill-brick brick-${elementName.toLowerCase()} selected`;
     brick.innerText = skill.name;
     brick.addEventListener('mouseenter', () => showTooltip(skill));
     brick.addEventListener('mouseleave', () => hideTooltip());
@@ -676,7 +683,7 @@ function buildMiniBranch(skill, pool, elementName) {
     if (children.length > 0) {
         const col = document.createElement('div');
         col.className = 'children-column';
-        children.sort((a,b) => a.id - b.id);
+        children.sort((a, b) => a.id - b.id);
         children.forEach(child => col.appendChild(buildMiniBranch(child, pool, elementName)));
         branchContainer.appendChild(col);
     }
@@ -684,7 +691,7 @@ function buildMiniBranch(skill, pool, elementName) {
 }
 
 function getColorForElem(elem) {
-    const map = { 'Feu':'#ef5350', 'Bois':'#66bb6a', 'Eau':'#42a5f5', 'Foudre':'#ffee58', 'Air':'#b0bec5' };
+    const map = { 'Feu': '#ef5350', 'Bois': '#66bb6a', 'Eau': '#42a5f5', 'Foudre': '#ffee58', 'Air': '#b0bec5' };
     return map[elem] || '#fff';
 }
 
@@ -692,12 +699,12 @@ function getColorForElem(elem) {
 const tooltip = document.getElementById('skill-tooltip');
 document.addEventListener('mousemove', (e) => {
     if (tooltip && tooltip.style.display === 'block') {
-        const offsetX = 15; 
+        const offsetX = 15;
         const offsetY = 15;
         let left = e.pageX + offsetX;
         let top = e.pageY + offsetY;
-        if (left + 280 > window.innerWidth) left = e.pageX - 295; 
-        if (top + 150 > window.innerHeight) top = e.pageY - 160; 
+        if (left + 280 > window.innerWidth) left = e.pageX - 295;
+        if (top + 150 > window.innerHeight) top = e.pageY - 160;
         tooltip.style.left = left + 'px';
         tooltip.style.top = top + 'px';
     }
@@ -730,17 +737,17 @@ function showTooltip(skill) {
 function hideTooltip() { if (tooltip) tooltip.style.display = 'none'; }
 
 // --- MODIFICATION DU DINOZ ---
-window.openEditModal = function() { 
-    document.getElementById('edit-dino-modal').classList.remove('hidden'); 
+window.openEditModal = function () {
+    document.getElementById('edit-dino-modal').classList.remove('hidden');
 }
 
-window.closeEditModal = function() { 
-    document.getElementById('edit-dino-modal').classList.add('hidden'); 
+window.closeEditModal = function () {
+    document.getElementById('edit-dino-modal').classList.add('hidden');
 }
 
-window.toggleEditUrlInput = function(show) {
+window.toggleEditUrlInput = function (show) {
     const input = document.getElementById('edit-url-input');
-    if(show) {
+    if (show) {
         input.classList.remove('hidden');
         input.required = true;
     } else {
