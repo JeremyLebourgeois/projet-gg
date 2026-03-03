@@ -440,6 +440,29 @@ async function saveGridData(rowIndex, colIndex, value) {
                 document.getElementById('val-water').innerText = json.stats.statWater;
                 document.getElementById('val-bolt').innerText = json.stats.statBolt;
                 document.getElementById('val-air').innerText = json.stats.statAir;
+
+                // Update general stats
+                if (document.getElementById('stat-life')) document.getElementById('stat-life').innerText = json.stats.statLife;
+                if (document.getElementById('stat-initiative')) document.getElementById('stat-initiative').innerText = json.stats.statInitiative;
+                if (document.getElementById('stat-armor')) document.getElementById('stat-armor').innerText = (json.stats.statArmor || 0).toFixed(1);
+                if (document.getElementById('stat-speed')) document.getElementById('stat-speed').innerText = (json.stats.statSpeed || 10).toFixed(2);
+                if (document.getElementById('stat-counter')) document.getElementById('stat-counter').innerText = (json.stats.statCounter || 0).toFixed(1);
+                if (document.getElementById('stat-multihit')) document.getElementById('stat-multihit').innerText = (json.stats.statMultiHit || 0).toFixed(1);
+
+                // Update assaults
+                if (document.getElementById('assault-fire')) document.getElementById('assault-fire').innerText = (json.stats.statFire * 5) + json.stats.statAssaultFire;
+                if (document.getElementById('assault-wood')) document.getElementById('assault-wood').innerText = (json.stats.statWood * 5) + json.stats.statAssaultWood;
+                if (document.getElementById('assault-water')) document.getElementById('assault-water').innerText = (json.stats.statWater * 5) + json.stats.statAssaultWater;
+                if (document.getElementById('assault-bolt')) document.getElementById('assault-bolt').innerText = (json.stats.statBolt * 5) + json.stats.statAssaultBolt;
+                if (document.getElementById('assault-air')) document.getElementById('assault-air').innerText = (json.stats.statAir * 5) + json.stats.statAssaultAir;
+
+                // Update derived unique damage stats
+                if (document.getElementById('stat-torche')) {
+                    document.getElementById('stat-torche').innerText = Math.round(json.stats.statFire ** 0.6);
+                }
+                if (document.getElementById('stat-acidblood')) {
+                    document.getElementById('stat-acidblood').innerText = Math.round((json.stats.statWater / 2) ** 0.6);
+                }
             }
             if (json.defenses) {
                 document.getElementById('def-fire').innerText = json.defenses.fire;

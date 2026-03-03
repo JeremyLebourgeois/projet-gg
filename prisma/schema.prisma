@@ -62,11 +62,19 @@ model Dinoz {
 
 // Stats Générales
   statLife       Int @default(100)
-  statSpeed      Int @default(10)
+  statSpeed      Float @default(10.0)
   statInitiative Int @default(0)
-  statCounter    Int @default(0)
-  statDodge      Int @default(0)
-  statArmor      Int @default(0)
+  statCounter    Float @default(0.0)
+  statDodge      Float @default(0.0)
+  statArmor      Float @default(0.0)
+  statMultiHit   Float @default(0.0)
+
+// Assauts
+  statAssaultFire  Int @default(0)
+  statAssaultWood  Int @default(0)
+  statAssaultWater Int @default(0)
+  statAssaultBolt  Int @default(0)
+  statAssaultAir   Int @default(0)
 
 // Propriétaire
   userId    Int
@@ -102,6 +110,9 @@ model RefSkill {
   energy      Int?    @default(0)
   probability Int?    @default(0)
   priority    Int?    @default(0)
+
+  // Modificateurs de statistiques (effets)
+  modifiers   Json?
  
   // Relations inverses vers les Dinozs
   dinozsLearned   Dinoz[] @relation("LearnedSkills")

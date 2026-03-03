@@ -3,7 +3,7 @@
 // ==========================================
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-const session = require('express-session'); 
+const session = require('express-session');
 const bcrypt = require('bcrypt');
 const { exec } = require('child_process');
 
@@ -13,13 +13,13 @@ const PORT = 3000;
 
 // Configuration Express
 app.set('view engine', 'ejs');
-app.use(express.static('public')); 
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Configuration Session
 app.use(session({
-    secret: 'shjs17fd6sfz$e^"uf5mzf,sofjcp"m!s;,:cksi', 
+    secret: 'shjs17fd6sfz$e^"uf5mzf,sofjcp"m!s;,:cksi',
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 heures
@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => res.render('login', { error: null }));
 
 app.post('/login', async (req, res) => {
-    const { pseudo, password } = req.body; 
+    const { pseudo, password } = req.body;
     const user = await prisma.user.findUnique({ where: { pseudo } });
 
     if (!user) return res.render('login', { error: "Pseudo ou mot de passe incorrect." });
@@ -59,11 +59,11 @@ app.post('/login', async (req, res) => {
 
     if (!isValid) return res.render('login', { error: "Pseudo ou mot de passe incorrect." });
 
-    req.session.userId = user.id; 
-    req.session.pseudo = user.pseudo; 
+    req.session.userId = user.id;
+    req.session.pseudo = user.pseudo;
 
     if (user.firstLogin) return res.redirect('/change-password');
-    res.redirect('/dashboard'); 
+    res.redirect('/dashboard');
 });
 
 app.get('/logout', (req, res) => {
@@ -84,7 +84,7 @@ app.post('/change-password', async (req, res) => {
     }
 
     try {
-        const hashedPassword = await bcrypt.hash(newPassword, 10); 
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
         await prisma.user.update({
             where: { id: req.session.userId },
             data: { passwordHash: hashedPassword, firstLogin: false }
@@ -119,7 +119,7 @@ app.get('/dashboard', async (req, res) => {
 app.post('/api/preference', async (req, res) => {
     if (!req.session.userId) return res.status(401).json({ error: 'Non connecté' });
     const { key, value } = req.body;
-    
+
     if (key === 'treeMode') {
         await prisma.user.update({
             where: { id: req.session.userId },
@@ -138,12 +138,12 @@ app.post('/api/preference', async (req, res) => {
 app.get('/dinozs', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
     const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
-    
+
     const dinozs = await prisma.dinoz.findMany({
         where: { userId: user.id },
         orderBy: { level: 'desc' }
     });
-    
+
     const daysMember = Math.ceil(Math.abs(new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
     res.render('my-dinozs', { pseudo: user.pseudo, role: user.role, daysMember, dinozs });
 });
@@ -151,7 +151,7 @@ app.get('/dinozs', async (req, res) => {
 // Détails d'un Dinoz
 app.get('/dinoz/:id', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
-    
+
     try {
         const dino = await prisma.dinoz.findUnique({
             where: { id: parseInt(req.params.id) },
@@ -168,18 +168,31 @@ app.get('/dinoz/:id', async (req, res) => {
         const hasPDC = dino.learnedSkills.some(s => s.name === "Plan de Carrière");
         const hasReincarnationSkill = dino.learnedSkills.some(s => s.id === 41406);
 
+        let defMods = { fire: 0, wood: 0, water: 0, bolt: 0, air: 0 };
+        if (dino.learnedSkills) {
+            dino.learnedSkills.forEach(skill => {
+                if (skill.modifiers) {
+                    if (skill.modifiers.FIRE_DEFENSE) defMods.fire += skill.modifiers.FIRE_DEFENSE;
+                    if (skill.modifiers.WOOD_DEFENSE) defMods.wood += skill.modifiers.WOOD_DEFENSE;
+                    if (skill.modifiers.WATER_DEFENSE) defMods.water += skill.modifiers.WATER_DEFENSE;
+                    if (skill.modifiers.LIGHTNING_DEFENSE) defMods.bolt += skill.modifiers.LIGHTNING_DEFENSE;
+                    if (skill.modifiers.AIR_DEFENSE) defMods.air += skill.modifiers.AIR_DEFENSE;
+                }
+            });
+        }
+
         // Calcul des défenses
         const defenses = {
-            fire:      (dino.statFire * 1)   + (dino.statWood * 0.5) + (dino.statWater * 0.5) + (dino.statBolt * 1.5) + (dino.statAir * 1.5),
-            wood:      (dino.statFire * 1.5) + (dino.statWood * 1)   + (dino.statWater * 0.5) + (dino.statBolt * 0.5) + (dino.statAir * 1.5),
-            water:     (dino.statFire * 1.5) + (dino.statWood * 1.5) + (dino.statWater * 1)   + (dino.statBolt * 0.5) + (dino.statAir * 0.5),
-            lightning: (dino.statFire * 0.5) + (dino.statWood * 1.5) + (dino.statWater * 1.5) + (dino.statBolt * 1)   + (dino.statAir * 0.5),
-            air:       (dino.statFire * 0.5) + (dino.statWood * 0.5) + (dino.statWater * 1.5) + (dino.statBolt * 1.5) + (dino.statAir * 1)
+            fire: parseFloat(((dino.statFire * 1) + (dino.statWood * 0.5) + (dino.statWater * 0.5) + (dino.statBolt * 1.5) + (dino.statAir * 1.5) + defMods.fire).toFixed(1)),
+            wood: parseFloat(((dino.statFire * 1.5) + (dino.statWood * 1) + (dino.statWater * 0.5) + (dino.statBolt * 0.5) + (dino.statAir * 1.5) + defMods.wood).toFixed(1)),
+            water: parseFloat(((dino.statFire * 1.5) + (dino.statWood * 1.5) + (dino.statWater * 1) + (dino.statBolt * 0.5) + (dino.statAir * 0.5) + defMods.water).toFixed(1)),
+            lightning: parseFloat(((dino.statFire * 0.5) + (dino.statWood * 1.5) + (dino.statWater * 1.5) + (dino.statBolt * 1) + (dino.statAir * 0.5) + defMods.bolt).toFixed(1)),
+            air: parseFloat(((dino.statFire * 0.5) + (dino.statWood * 0.5) + (dino.statWater * 1.5) + (dino.statBolt * 1.5) + (dino.statAir * 1) + defMods.air).toFixed(1))
         };
 
-        res.render('dinoz-details', { 
+        res.render('dinoz-details', {
             dino, user, pseudo: user.pseudo, role: user.role, daysMember,
-            allSkills, hasPDC, hasReincarnationSkill, myPlans, defenses 
+            allSkills, hasPDC, hasReincarnationSkill, myPlans, defenses
         });
     } catch (error) {
         console.error(error);
@@ -191,7 +204,7 @@ app.get('/dinoz/:id', async (req, res) => {
 app.post('/dinozs/create', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
     const { name, race, imageUrl, skinType } = req.body;
-    
+
     try {
         const raceNameFormatted = race.charAt(0).toUpperCase() + race.slice(1).toLowerCase();
         const raceInfo = await prisma.refRace.findUnique({
@@ -245,10 +258,10 @@ app.post('/dinoz/update-grid', async (req, res) => {
         if (!dino || dino.userId !== req.session.userId) return res.status(403).json({ error: "Interdit" });
 
         // 1. Mise à jour JSON
-        let gridData = dino.ups || {}; 
-        if (!gridData[rowIndex]) gridData[rowIndex] = {}; 
+        let gridData = dino.ups || {};
+        if (!gridData[rowIndex]) gridData[rowIndex] = {};
         const colKey = `col${colIndex}`;
-        
+
         value === "" ? delete gridData[rowIndex][colKey] : gridData[rowIndex][colKey] = value;
 
         // 2. Calcul Niveau
@@ -259,20 +272,20 @@ app.post('/dinoz/update-grid', async (req, res) => {
 
         // 3. Calcul Stats & Compétences
         const raceInfo = await prisma.refRace.findUnique({ where: { name: dino.race } });
-        
+
         let base = raceInfo ? {
-            fire: raceInfo.baseFire, wood: raceInfo.baseWood, water: raceInfo.baseWater, 
+            fire: raceInfo.baseFire, wood: raceInfo.baseWood, water: raceInfo.baseWater,
             bolt: raceInfo.baseBolt, air: raceInfo.baseAir
         } : { fire: 0, wood: 0, water: 0, bolt: 0, air: 0 };
 
         let bonus = {
-            fire: dino.bonusFire||0, wood: dino.bonusWood||0, water: dino.bonusWater||0,
-            bolt: dino.bonusBolt||0, air: dino.bonusAir||0
+            fire: dino.bonusFire || 0, wood: dino.bonusWood || 0, water: dino.bonusWater || 0,
+            bolt: dino.bonusBolt || 0, air: dino.bonusAir || 0
         };
 
         let gridPoints = { fire: 0, wood: 0, water: 0, bolt: 0, air: 0 };
         const ELEM_TO_KEY = { 'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'bolt', 'Air': 'air' };
-        
+
         // Reconstruction des compétences
         let skillIdsToConnect = [];
         if (raceInfo?.innateSkillId) skillIdsToConnect.push({ id: raceInfo.innateSkillId });
@@ -296,29 +309,96 @@ app.post('/dinoz/update-grid', async (req, res) => {
                     if (dec.action === 'learn' && dec.skillId && !skillIdsToConnect.find(x => x.id === dec.skillId)) {
                         skillIdsToConnect.push({ id: dec.skillId });
                     }
-                } catch (e) {}
+                } catch (e) { }
             }
         }
 
-        const finalStats = {
+        const skillsInfo = await prisma.refSkill.findMany({
+            where: { id: { in: skillIdsToConnect.map(s => s.id) } },
+            select: { modifiers: true }
+        });
+
+        let flatStats = {
+            statLife: 100, statInitiative: 0, statArmor: 0,
+            statAssaultFire: 0, statAssaultWood: 0, statAssaultWater: 0, statAssaultBolt: 0, statAssaultAir: 0,
             statFire: base.fire + bonus.fire + gridPoints.fire,
             statWood: base.wood + bonus.wood + gridPoints.wood,
             statWater: base.water + bonus.water + gridPoints.water,
             statBolt: base.bolt + bonus.bolt + gridPoints.bolt,
-            statAir: base.air + bonus.air + gridPoints.air
+            statAir: base.air + bonus.air + gridPoints.air,
+            statCounter: 0, statDodge: 0, statMultiHit: 0, statSpeed: 10,
+            defFire: 0, defWood: 0, defWater: 0, defBolt: 0, defAir: 0
         };
 
+        let mults = {
+            statSpeed: 1.0, statLife: 1.0, statInitiative: 1.0,
+            statArmor: 1.0, statCounter: 1.0, statDodge: 1.0, statMultiHit: 1.0
+        };
+
+        skillsInfo.forEach(skill => {
+            if (skill.modifiers) {
+                for (const [key, val] of Object.entries(skill.modifiers)) {
+                    const isMult = val && typeof val === 'object' && val.type === 'multiply';
+                    const amount = isMult ? val.value : val;
+
+                    if (key === 'MAX_HP') isMult ? mults.statLife *= amount : flatStats.statLife += amount;
+                    else if (key === 'INITIATIVE') isMult ? mults.statInitiative *= amount : flatStats.statInitiative += amount;
+                    else if (key === 'ARMOR') isMult ? mults.statArmor *= amount : flatStats.statArmor += amount;
+                    else if (key === 'SPEED') isMult ? mults.statSpeed *= amount : flatStats.statSpeed += amount;
+                    else if (key === 'COUNTER') isMult ? mults.statCounter *= amount : flatStats.statCounter += amount;
+                    else if (key === 'DODGE') isMult ? mults.statDodge *= amount : flatStats.statDodge += amount;
+                    else if (key === 'MULTIHIT' || key === 'MULTI_HIT') isMult ? mults.statMultiHit *= amount : flatStats.statMultiHit += amount;
+
+                    else if (key === 'FIRE_ELEMENT') flatStats.statFire += amount;
+                    else if (key === 'WOOD_ELEMENT') flatStats.statWood += amount;
+                    else if (key === 'WATER_ELEMENT') flatStats.statWater += amount;
+                    else if (key === 'LIGHTNING_ELEMENT') flatStats.statBolt += amount;
+                    else if (key === 'AIR_ELEMENT') flatStats.statAir += amount;
+
+                    else if (key === 'FIRE_ASSAULT') flatStats.statAssaultFire += amount;
+                    else if (key === 'WOOD_ASSAULT') flatStats.statAssaultWood += amount;
+                    else if (key === 'WATER_ASSAULT') flatStats.statAssaultWater += amount;
+                    else if (key === 'LIGHTNING_ASSAULT') flatStats.statAssaultBolt += amount;
+                    else if (key === 'AIR_ASSAULT') flatStats.statAssaultAir += amount;
+
+                    else if (key === 'FIRE_DEFENSE') flatStats.defFire += amount;
+                    else if (key === 'WOOD_DEFENSE') flatStats.defWood += amount;
+                    else if (key === 'WATER_DEFENSE') flatStats.defWater += amount;
+                    else if (key === 'LIGHTNING_DEFENSE') flatStats.defBolt += amount;
+                    else if (key === 'AIR_DEFENSE') flatStats.defAir += amount;
+                }
+            }
+        });
+
+        const finalStats = {
+            ...flatStats,
+            statLife: Math.round(flatStats.statLife * mults.statLife),
+            statSpeed: parseFloat((flatStats.statSpeed * mults.statSpeed).toFixed(2)),
+            statInitiative: Math.round(flatStats.statInitiative * mults.statInitiative),
+            statArmor: parseFloat((flatStats.statArmor + (mults.statArmor - 1) * 100).toFixed(1)),
+            statCounter: parseFloat((flatStats.statCounter + (mults.statCounter - 1) * 100).toFixed(1)),
+            statDodge: parseFloat((flatStats.statDodge + (mults.statDodge - 1) * 100).toFixed(1)),
+            statMultiHit: parseFloat((flatStats.statMultiHit + (mults.statMultiHit - 1) * 100).toFixed(1))
+        };
+
+        // Remove defFire, defWood, etc so they aren't incorrectly inserted into Dinoz table
+        delete finalStats.defFire;
+        delete finalStats.defWood;
+        delete finalStats.defWater;
+        delete finalStats.defBolt;
+        delete finalStats.defAir;
+
         const defenses = {
-            fire:      (finalStats.statFire * 1)   + (finalStats.statWood * 0.5) + (finalStats.statWater * 0.5) + (finalStats.statBolt * 1.5) + (finalStats.statAir * 1.5),
-            wood:      (finalStats.statFire * 1.5) + (finalStats.statWood * 1)   + (finalStats.statWater * 0.5) + (finalStats.statBolt * 0.5) + (finalStats.statAir * 1.5),
-            water:     (finalStats.statFire * 1.5) + (finalStats.statWood * 1.5) + (finalStats.statWater * 1)   + (finalStats.statBolt * 0.5) + (finalStats.statAir * 0.5),
-            lightning: (finalStats.statFire * 0.5) + (finalStats.statWood * 1.5) + (finalStats.statWater * 1.5) + (finalStats.statBolt * 1)   + (finalStats.statAir * 0.5),
-            air:       (finalStats.statFire * 0.5) + (finalStats.statWood * 0.5) + (finalStats.statWater * 1.5) + (finalStats.statBolt * 1.5) + (finalStats.statAir * 1)
+            fire: parseFloat(((finalStats.statFire * 1) + (finalStats.statWood * 0.5) + (finalStats.statWater * 0.5) + (finalStats.statBolt * 1.5) + (finalStats.statAir * 1.5) + flatStats.defFire).toFixed(1)),
+            wood: parseFloat(((finalStats.statFire * 1.5) + (finalStats.statWood * 1) + (finalStats.statWater * 0.5) + (finalStats.statBolt * 0.5) + (finalStats.statAir * 1.5) + flatStats.defWood).toFixed(1)),
+            water: parseFloat(((finalStats.statFire * 1.5) + (finalStats.statWood * 1.5) + (finalStats.statWater * 1) + (finalStats.statBolt * 0.5) + (finalStats.statAir * 0.5) + flatStats.defWater).toFixed(1)),
+            lightning: parseFloat(((finalStats.statFire * 0.5) + (finalStats.statWood * 1.5) + (finalStats.statWater * 1.5) + (finalStats.statBolt * 1) + (finalStats.statAir * 0.5) + flatStats.defBolt).toFixed(1)),
+            air: parseFloat(((finalStats.statFire * 0.5) + (finalStats.statWood * 0.5) + (finalStats.statWater * 1.5) + (finalStats.statBolt * 1.5) + (finalStats.statAir * 1) + flatStats.defAir).toFixed(1))
         };
 
         await prisma.dinoz.update({
             where: { id: parseInt(dinoId) },
-            data: { 
+            data: {
                 ups: gridData, level: newLevel, ...finalStats,
                 learnedSkills: { set: skillIdsToConnect }
             }
@@ -334,16 +414,16 @@ app.post('/dinoz/update-grid', async (req, res) => {
 // Réincarnation
 app.post('/dinoz/reincarnate', async (req, res) => {
     if (!req.session.userId) return res.status(401).json({ error: "Non connecté" });
-    const { dinoId, bonuses } = req.body; 
+    const { dinoId, bonuses } = req.body;
 
     try {
-        const dino = await prisma.dinoz.findUnique({ 
-            where: { id: parseInt(dinoId) }, include: { learnedSkills: true } 
+        const dino = await prisma.dinoz.findUnique({
+            where: { id: parseInt(dinoId) }, include: { learnedSkills: true }
         });
         if (!dino || dino.userId !== req.session.userId) return res.status(403).json({ error: "Interdit" });
 
         const raceInfo = await prisma.refRace.findUnique({ where: { name: dino.race } });
-        
+
         // On conserve la grille de tirage (col1/col2) mais on efface les décisions (col3)
         let newUps = {};
         if (dino.ups && typeof dino.ups === 'object') {
@@ -356,7 +436,7 @@ app.post('/dinoz/reincarnate', async (req, res) => {
 
         // Calcul stats de base + bonus choisis
         const base = raceInfo ? {
-            fire: raceInfo.baseFire, wood: raceInfo.baseWood, water: raceInfo.baseWater, 
+            fire: raceInfo.baseFire, wood: raceInfo.baseWood, water: raceInfo.baseWater,
             bolt: raceInfo.baseBolt, air: raceInfo.baseAir
         } : { fire: 0, wood: 0, water: 0, bolt: 0, air: 0 };
 
@@ -382,7 +462,7 @@ app.post('/dinoz/reincarnate', async (req, res) => {
 // Ajout Sphère
 app.post('/dinoz/add-sphere', async (req, res) => {
     if (!req.session.userId) return res.status(401).json({ error: "Non connecté" });
-    const { dinoId, element } = req.body; 
+    const { dinoId, element } = req.body;
 
     try {
         const dino = await prisma.dinoz.findUnique({ where: { id: parseInt(dinoId) } });
@@ -416,7 +496,7 @@ app.post('/dinoz/add-sphere', async (req, res) => {
 // Assigner un Plan
 app.post('/dinoz/assign-plan', async (req, res) => {
     if (!req.session.userId) return res.status(401).json({ error: "Non connecté" });
-    const { dinoId, planId } = req.body; 
+    const { dinoId, planId } = req.body;
 
     try {
         const dino = await prisma.dinoz.findUnique({ where: { id: parseInt(dinoId) } });
@@ -441,7 +521,7 @@ app.get('/arbres', async (req, res) => {
     const allSkills = await prisma.refSkill.findMany({
         include: { parents: { select: { id: true } }, children: { select: { id: true } } }
     });
-    
+
     const daysMember = Math.ceil(Math.abs(new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
     res.render('arbres', { user, pseudo: user.pseudo, role: user.role, daysMember, skills: allSkills, userTreeMode: user.treeMode || "COMPRESSED" });
 });
@@ -496,12 +576,12 @@ app.post('/architecte/save', async (req, res) => {
 app.get('/plans', async (req, res) => {
     if (!req.session.userId) return res.redirect('/');
     const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
-    
+
     const myPlans = await prisma.skillPlan.findMany({
         where: { authorId: user.id }, orderBy: { createdAt: 'desc' },
         include: { author: { select: { pseudo: true } } }
     });
-    
+
     const daysMember = Math.ceil(Math.abs(new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
     res.render('plans', { user, pseudo: user.pseudo, role: user.role, daysMember, plans: myPlans });
 });
@@ -524,8 +604,8 @@ app.get('/clan/plans', async (req, res) => {
 app.get('/plan/:id', async (req, res) => {
     if (!req.session.userId) return res.redirect('/');
     const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
-    
-    const plan = await prisma.skillPlan.findUnique({ 
+
+    const plan = await prisma.skillPlan.findUnique({
         where: { id: parseInt(req.params.id) },
         include: { author: { select: { pseudo: true, id: true } } }
     });
@@ -631,7 +711,7 @@ app.post('/admin/sync-skills', checkLeader, (req, res) => {
     exec('node scripts/sync-skills.js', (err, out) => {
         if (err) return res.redirect('/admin');
         console.log(`Skills sync: ${out}`);
-        
+
         exec('node scripts/sync-races.js', (err2, out2) => {
             if (err2) return res.redirect('/admin');
             console.log(`Races sync: ${out2}`);
@@ -646,7 +726,7 @@ app.post('/admin/sync-skills', checkLeader, (req, res) => {
 app.post('/dinozs/edit', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
     const { dinozId, name, skinType, imageUrl } = req.body;
-    
+
     try {
         const dino = await prisma.dinoz.findUnique({ where: { id: parseInt(dinozId) } });
         // Vérification de sécurité : le Dinoz doit appartenir à l'utilisateur
@@ -657,12 +737,12 @@ app.post('/dinozs/edit', async (req, res) => {
 
         await prisma.dinoz.update({
             where: { id: parseInt(dinozId) },
-            data: { 
-                name: name, 
-                imageUrl: finalImageUrl 
+            data: {
+                name: name,
+                imageUrl: finalImageUrl
             }
         });
-        
+
         res.redirect(`/dinoz/${dinozId}`);
     } catch (error) {
         console.error(error);

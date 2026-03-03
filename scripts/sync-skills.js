@@ -127,12 +127,12 @@ async function syncSkills() {
         // 4. PARSING DES BLOCS DE COMPÉTENCES
         const skillsToUpsert = [];
         const startRegex = /\[(Skill\.\w+)\]:\s*\{/g;
-        const usedNames = new Set(); 
+        const usedNames = new Set();
 
         while ((match = startRegex.exec(mtsText)) !== null) {
-            const skillVarName = match[1]; 
+            const skillVarName = match[1];
             const id = skillIdMap[skillVarName];
-            
+
             if (!id) continue;
 
             // Isolation du bloc { ... }
@@ -153,11 +153,11 @@ async function syncSkills() {
             // A. Nom et Description
             const nameMatch = blockBody.match(/name:\s*'([^']+)'/);
             const rawName = nameMatch ? nameMatch[1] : 'Inconnu';
-            
+
             const searchKey = normalizeKey(rawName);
             let desc = descriptionsMap[searchKey];
             if (!desc && searchKey.endsWith('s')) desc = descriptionsMap[searchKey.slice(0, -1)];
-            
+
             let prettyName = formatPrettyName(rawName);
             if (usedNames.has(prettyName)) {
                 prettyName = `${prettyName} (${id})`;
@@ -167,10 +167,10 @@ async function syncSkills() {
             // B. Type et Élément
             const typeMatch = blockBody.match(/type:\s*(SkillType\.\w+)/);
             let type = typeMatch ? TYPE_MAP[typeMatch[1]] : 'P';
-            
+
             const elemMatch = blockBody.match(/element:\s*\[(.*?)\]/);
             let elementStr = elemMatch ? elemMatch[1] : '';
-            
+
             let finalElement = 'Neutre';
             if (elementStr.includes('VOID')) {
                 finalElement = 'Vide';
@@ -195,25 +195,25 @@ async function syncSkills() {
             // D. Nature
             const sphereMatch = blockBody.match(/isSphereSkill:\s*(true|false)/);
             const isSphere = sphereMatch && sphereMatch[1] === 'true';
-            
+
             const treeMatch = blockBody.match(/tree:\s*(SkillTreeType\.\w+)/);
             const treeType = treeMatch ? treeMatch[1] : 'SkillTreeType.VANILLA';
 
             let nature = 1;
             if (isSphere) {
-                nature = 3; 
+                nature = 3;
             } else if (treeType === 'SkillTreeType.ETHER') {
-                nature = 2; 
+                nature = 2;
             }
 
             // E. Race (LOGIQUE MIXTE : AUTO + MANUELLE)
             let raceEnum = null;
             let raceId = null;
-            
+
             // 1. Détection automatique
             const raceMatchStandard = blockBody.match(/race:\s*(RaceEnum\.\w+)/);
             if (raceMatchStandard) raceEnum = raceMatchStandard[1];
-            
+
             if (!raceEnum) {
                 const availableMatch = blockBody.match(/availableFor:\s*\[\s*(RaceEnum\.\w+)/);
                 if (availableMatch) raceEnum = availableMatch[1];
@@ -246,34 +246,68 @@ async function syncSkills() {
             // F. Parents (UnlockedFrom)
             const parentMatch = blockBody.match(/unlockedFrom:\s*\[([\s\S]*?)\]/);
             let parentIds = [];
-            
+
             if (parentMatch && parentMatch[1].trim() !== '') {
                 const parentsRaw = parentMatch[1].split(',').map(s => s.trim());
-                
+
                 parentsRaw.forEach(p => {
                     if (!p) return;
                     if (skillIdMap[p]) {
                         parentIds.push(skillIdMap[p]);
-                    } 
+                    }
                     else if (!isNaN(p) && parseInt(p) > 0) {
                         parentIds.push(parseInt(p));
                     }
                 });
             }
 
+            // G. Modificateurs (Effects / GlobalEffects)
+            let modifiers = {};
+            const parseEffectsBlock = (blockName) => {
+                const regex = new RegExp(blockName + ':\\s*\\{([\\s\\S]*?)\\}');
+                const blockMatch = blockBody.match(regex);
+                if (!blockMatch) return;
+
+                const content = blockMatch[1];
+                const statRegex = /\[Stat\.([A-Z_]+)\]:\s*(.+)/g;
+                let statMatch;
+                while ((statMatch = statRegex.exec(content)) !== null) {
+                    const statName = statMatch[1];
+                    let statValueStr = statMatch[2].replace(/,$/, '').trim();
+                    let statValue;
+
+                    if (statValueStr.startsWith("['x'")) {
+                        const valMatch = statValueStr.match(/\[\s*'x'\s*,\s*([\d.]+)\s*\]/);
+                        if (valMatch) statValue = { type: 'multiply', value: parseFloat(valMatch[1]) };
+                    } else if (statValueStr.startsWith("['+'")) {
+                        const valMatch = statValueStr.match(/\[\s*'\+'\s*,\s*([\d.-]+)\s*\]/);
+                        if (valMatch) statValue = parseFloat(valMatch[1]);
+                    } else {
+                        const parsed = parseFloat(statValueStr);
+                        if (!isNaN(parsed)) statValue = parsed;
+                    }
+
+                    if (statValue !== undefined) modifiers[statName] = statValue;
+                }
+            };
+
+            parseEffectsBlock('effects');
+            parseEffectsBlock('globalEffects');
+
             // --- AJOUT À LA LISTE ---
             skillsToUpsert.push({
                 data: {
-                    id, 
-                    name: prettyName, 
-                    type: type || 'P', 
+                    id,
+                    name: prettyName,
+                    type: type || 'P',
                     element: finalElement,
                     description: desc || "Description indisponible",
-                    skillNature: nature, 
-                    energy, 
-                    probability: prob, 
-                    priority: prio, 
-                    raceId
+                    skillNature: nature,
+                    energy,
+                    probability: prob,
+                    priority: prio,
+                    raceId,
+                    modifiers: Object.keys(modifiers).length > 0 ? modifiers : null
                 },
                 parentIds: parentIds
             });
@@ -309,7 +343,7 @@ async function syncSkills() {
                         }
                     });
                 } else {
-                     await prisma.refSkill.update({
+                    await prisma.refSkill.update({
                         where: { id: item.data.id },
                         data: { parents: { set: [] } }
                     });

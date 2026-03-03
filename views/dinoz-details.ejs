@@ -73,6 +73,9 @@
                     style="font-size: 0.8em; margin-left: 5px;"></i>
             </div>
             <div class="stats-content hidden" id="dino-stats-content">
+                <hr style="border-color: rgba(255,255,255,0.3); margin-top: 5px;">
+                <div style="text-align: center; font-weight: bold; font-size: 0.9em; color: rgb(255, 142, 66);">
+                    Éléments</div>
                 <div class="stats-elements-row">
                     <div class="element-box"><img src="/img/elements/fire.webp" class="element-img"><span
                             class="element-val" id="val-fire">
@@ -95,6 +98,9 @@
                             <%= dino.statAir %>
                         </span></div>
                 </div>
+                <hr style="border-color: rgba(255,255,255,0.3); margin-top: 5px;">
+                <div style="text-align: center; font-weight: bold; font-size: 0.9em; color: rgb(255, 142, 66);">
+                    Défenses</div>
                 <div class="stats-elements-row">
                     <div class="element-box" title="Défense Feu"><img src="/img/elements/fire.webp"
                             class="element-img"><span class="element-val" id="def-fire">
@@ -120,20 +126,71 @@
                 <hr style="border-color: rgba(255,255,255,0.3);">
                 <div class="stats-general-grid">
                     <div class="stat-line"><i class="fas fa-heart"></i>
-                        <%= dino.statLife %> PV
+                        <span id="stat-life">
+                            <%= dino.statLife %>
+                        </span> PV
                     </div>
                     <div class="stat-line"><i class="fas fa-hourglass-start"></i>
-                        <%= dino.statInitiative %> Init.
+                        <span id="stat-initiative">
+                            <%= dino.statInitiative %>
+                        </span> Init.
                     </div>
                     <div class="stat-line"><i class="fas fa-shield-alt"></i>
-                        <%= dino.statArmor %>% Armure
+                        <span id="stat-armor">
+                            <%= (dino.statArmor || 0).toFixed(1) %>
+                        </span>% Armure
                     </div>
                     <div class="stat-line"><i class="fas fa-running"></i>
-                        <%= dino.statSpeed %> Vit.
+                        <span id="stat-speed">
+                            <%= (dino.statSpeed || 10).toFixed(2) %>
+                        </span> Vit.
                     </div>
                     <div class="stat-line"><i class="fas fa-hand-fist"></i>
-                        <%= dino.statCounter %>% Contre
+                        <span id="stat-counter">
+                            <%= (dino.statCounter || 0).toFixed(1) %>
+                        </span>% Contre
                     </div>
+                    <div class="stat-line"><i class="fas fa-bolt"></i>
+                        <span id="stat-multihit">
+                            <%= (dino.statMultiHit || 0).toFixed(1) %>
+                        </span>% Multi-coup
+                    </div>
+                    <div class="stat-line"><i class="fas fa-fire"></i>
+                        <span id="stat-torche">
+                            <%= Math.round(dino.statFire ** 0.6) %>
+                        </span> Dégâts Torche
+                    </div>
+                    <div class="stat-line"><i class="fas fa-tint"></i>
+                        <span id="stat-acidblood">
+                            <%= Math.round((dino.statWater / 2) ** 0.6) %>
+                        </span> Dégâts Acide
+                    </div>
+                </div>
+
+                <hr style="border-color: rgba(255,255,255,0.3); margin-top: 5px;">
+                <div style="text-align: center; font-weight: bold; font-size: 0.9em; color: rgb(255, 142, 66);">
+                    Assauts</div>
+                <div class="stats-elements-row">
+                    <div class="element-box" title="Assaut Feu"><img src="/img/elements/fire.webp"
+                            class="element-img"><span class="element-val" id="assault-fire">
+                            <%= dino.statFire*5 + dino.statAssaultFire %>
+                        </span></div>
+                    <div class="element-box" title="Assaut Bois"><img src="/img/elements/wood.webp"
+                            class="element-img"><span class="element-val" id="assault-wood">
+                            <%= dino.statWood*5 + dino.statAssaultWood %>
+                        </span></div>
+                    <div class="element-box" title="Assaut Eau"><img src="/img/elements/water.webp"
+                            class="element-img"><span class="element-val" id="assault-water">
+                            <%= dino.statWater*5 + dino.statAssaultWater %>
+                        </span></div>
+                    <div class="element-box" title="Assaut Foudre"><img src="/img/elements/lightning.webp"
+                            class="element-img"><span class="element-val" id="assault-bolt">
+                            <%= dino.statBolt*5 + dino.statAssaultBolt %>
+                        </span></div>
+                    <div class="element-box" title="Assaut Air"><img src="/img/elements/air.webp"
+                            class="element-img"><span class="element-val" id="assault-air">
+                            <%= dino.statAir*5 + dino.statAssaultAir %>
+                        </span></div>
                 </div>
             </div>
         </div>
