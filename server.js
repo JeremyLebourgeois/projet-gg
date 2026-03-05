@@ -563,6 +563,14 @@ app.get('/architecte', async (req, res) => {
 
     const raceList = ['castivore', 'gorilloz', 'hippoclamp', 'moueffe', 'nuagoz', 'pigmou', 'planaille', 'pteroz', 'rocky', 'sirain', 'wanwan', 'winks', 'feross', 'kabuki', 'mahamuti', 'quetzu', 'santaz', 'smog', 'soufflet', 'toufufu', 'triceragnon'].sort();
 
+    const valeursAjoutDefaut = {
+        fire: 0,
+        wood: 0,
+        water: 0,
+        lightning: 0,
+        air: 0
+    };
+
     let planToEdit = null;
     if (req.query.id) {
         const existingPlan = await prisma.skillPlan.findUnique({ where: { id: parseInt(req.query.id) } });
@@ -570,7 +578,7 @@ app.get('/architecte', async (req, res) => {
     }
 
     const daysMember = Math.ceil(Math.abs(new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
-    res.render('architecte', { user, pseudo: user.pseudo, role: user.role, skills: allSkills, daysMember, raceList, plan: planToEdit });
+    res.render('architecte', { user, pseudo: user.pseudo, role: user.role, skills: allSkills, daysMember, raceList, plan: planToEdit, ajout: valeursAjoutDefaut });
 });
 
 // Sauvegarder un plan
@@ -775,9 +783,20 @@ app.post('/dinozs/edit', async (req, res) => {
     }
 });
 
+// ==========================================
+// 7. page simulation de combat 
+// ==========================================
+app.get('/simulation', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/login');
+    const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
+
+    const daysMember = Math.ceil(Math.abs(new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
+    res.render('simulation', { pseudo: user.pseudo, role: user.role, daysMember });
+});
+
 
 // ==========================================
-// 7. DÉMARRAGE SERVEUR
+// 8. DÉMARRAGE SERVEUR
 // ==========================================
 app.listen(PORT, () => {
     console.log(`❄️  Serveur Guerriers du Givre lancé sur http://localhost:${PORT}`);

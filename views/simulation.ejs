@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulation</title>
+    <link rel="icon" type="image/png" href="/img/logo.png">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/pages/arbres.css"> 
+    <link rel="stylesheet" href="/css/pages/architecte.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>  
+    <header class="hub-header">
+        <div class="header-overlay">
+            <div class="header-content">
+                <div class="user-info">
+                    <h1>
+                        <%= pseudo %>
+                    </h1>
+                    <p class="status"><strong>
+                            <%= role %>
+                        </strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
+                </div>
+
+                <div class="nav-menu">
+                    <a href="/dashboard" class="nav-btn" title="Accueil"><i class="fas fa-home"></i></a>
+                    <a href="/dinozs" class="nav-btn" title="Mes Dinozs"><i class="fas fa-paw"></i></a>
+                    <a href="/clan" class="nav-btn disabled" title="Mon Clan"><i class="fas fa-chess-rook"></i></a>
+                    <a href="/arbres" class="nav-btn" title="Plans"><i class="fas fa-scroll"></i></a>
+                    <a href="/simulation" class="nav-btn" title="Simulation"><i class="fas fa-flask"></i></a>
+                </div>
+            </div>
+        </div>
+    </header>
+</body>

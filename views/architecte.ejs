@@ -22,8 +22,8 @@
                     <a href="/dashboard" class="nav-btn" title="Accueil"><i class="fas fa-home"></i></a>
                     <a href="/dinozs" class="nav-btn" title="Mes Dinozs"><i class="fas fa-paw"></i></a>
                     <a href="/clan" class="nav-btn disabled" title="Mon Clan"><i class="fas fa-chess-rook"></i></a>
-                    <a href="/arbres" class="nav-btn active" title="Plans"><i class="fas fa-scroll"></i></a>
-                    <a href="#" class="nav-btn disabled" title="Travaux"><i class="fas fa-hammer"></i></a>
+                    <a href="/arbres" class="nav-btn" title="Plans"><i class="fas fa-scroll"></i></a>
+                    <a href="/simulation" class="nav-btn" title="Simulation"><i class="fas fa-flask"></i></a>
                 </div>
             </div>
         </div>
@@ -104,6 +104,37 @@
                 </div>
             </div>
 
+            <div class="ajout-element-box">
+            <div class="ups-title" style="margin-bottom: 15px; text-align: center;">Ajouter des éléments</div>
+            
+            <div class="points-distributor" style="display: flex; flex-direction: column; gap: 8px;">
+                <% const elements = ['fire', 'wood', 'water', 'lightning', 'air']; %>
+                <% const labels = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air']; %>
+
+                <% elements.forEach((elem, index) => { %>
+                    <div class="distrib-row" style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.2); padding: 5px 10px; border-radius: 5px;">
+                        
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="/img/elements/<%= elem %>.webp" class="mini-icon" style="width: 24px; height: 24px;">
+                            <span class="elem-name" style="color: #fff; font-weight: bold;">
+                                <%= labels[index] %>
+                            </span>
+                        </div>
+
+                        <div class="counter-box" style="display: flex; align-items: center; gap: 8px;">
+                            <button type="button" class="btn-mini" onclick="updateAjout('<%= elem %>', -1)">-</button>
+                            <span class="element-val" id="ajout-<%= elem %>" style="color: #fff; font-weight: bold; min-width: 20px; text-align: center;">
+                                <%= locals.ajout ? locals.ajout[elem] : 0 %>
+                            </span>
+                            <button type="button" class="btn-mini" onclick="updateAjout('<%= elem %>', 1)">+</button>
+                        </div>
+                        
+                    </div>
+                <% }); %>
+            </div>
+        </aside>
+    </div>
+
         </aside>
 
     </div>
@@ -117,5 +148,6 @@
     </script>
 
     <script src="/js/pages/architecte.js"></script>
+    
 </body>
 </html>

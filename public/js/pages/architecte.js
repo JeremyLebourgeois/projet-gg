@@ -292,3 +292,22 @@ async function savePlan() {
         alert("Erreur serveur.");
     }
 }
+
+// --- GESTION DES BOUTONS + ET - ---
+function updateAjout(element, change) {
+    // 1. On cible l'élément HTML qui contient le chiffre
+    const spanElement = document.getElementById(`ajout-${element}`);
+    if (!spanElement) return; // Sécurité
+    
+    // 2. On lit la valeur actuelle affichée
+    let currentValue = parseInt(spanElement.innerText) || 0;
+    
+    // 3. On calcule la nouvelle valeur
+    let newValue = currentValue + change;
+    
+    // 4. On bloque à 0 minimum
+    if (newValue < 0) return; 
+    
+    // 5. On met à jour l'affichage
+    spanElement.innerText = newValue;
+}
