@@ -49,13 +49,14 @@
         </div>
 
         <div class="identity-card">
-            <div class="dino-avatar">
+            <div class="dino-avatar <%= dino.note ? 'card-with-note' : '' %>" 
+                <% if (dino.note) { %> data-note="Note : <%= dino.note %>" <% } %>>
+                
                 <% if (dino.imageUrl) { %>
                     <img src="<%= dino.imageUrl %>" alt="<%= dino.name %>" class="dino-img">
-                    <% } else { %>
-                        <img src="/img/races/<%= dino.race.toLowerCase() %>.png" alt="<%= dino.race %>"
-                            class="dino-img">
-                        <% } %>
+                <% } else { %>
+                    <img src="/img/races/<%= dino.race.toLowerCase() %>.png" alt="<%= dino.race %>" class="dino-img">
+                <% } %>
             </div>
             <div class="dino-header-info">
                 <h2>

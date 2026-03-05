@@ -1477,3 +1477,60 @@ button:hover {
     line-height: 1.4;
     color: #ddd;
 }
+
+/* --- TOOLTIP POUR LES NOTES --- */
+.card-with-note {
+    position: relative;
+}
+
+/* La bulle de texte */
+.card-with-note::after {
+    content: attr(data-note);
+    position: absolute;
+    bottom: calc(100% + 10px); 
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(12, 36, 61, 0.95);
+    border: 2px solid #4fc3f7; 
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    white-space: normal;
+    
+    /* LES DEUX LIGNES IMPORTANTES ICI */
+    width: max-content; 
+    max-width: 220px;
+    
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 1000;
+    pointer-events: none; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+/* La petite flèche sous la bulle */
+.card-with-note::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #4fc3f7 transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+/* Apparition au survol */
+.card-with-note:hover::after,
+.card-with-note:hover::before {
+    opacity: 1;
+    visibility: visible;
+}

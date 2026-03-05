@@ -47,7 +47,10 @@
 
         <div class="dino-grid" id="user-dino-grid">
             <% dinozs.forEach(dino => { %>
-                <a href="/dinoz/<%= dino.id %>" class="dino-card">
+                <a href="/dinoz/<%= dino.id %>" 
+                class="dino-card <%= dino.note ? 'card-with-note' : '' %>" 
+                <% if (dino.note) { %> data-note="<%= dino.note %>" <% } %>>
+                    
                     <div class="card-img-container">
                         <img src="<%= dino.imageUrl ? dino.imageUrl : '/img/races/' + dino.race.toLowerCase() + '.png' %>" alt="<%= dino.race %>">
                     </div>
