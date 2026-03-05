@@ -210,7 +210,7 @@ app.get('/dinoz/:id', async (req, res) => {
 // Création Dinoz
 app.post('/dinozs/create', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
-    const { name, race, imageUrl, skinType } = req.body;
+    const { name, race, imageUrl, skinType, role, note } = req.body;
 
     try {
         const raceNameFormatted = race.charAt(0).toUpperCase() + race.slice(1).toLowerCase();
@@ -231,7 +231,9 @@ app.post('/dinozs/create', async (req, res) => {
                 name, race, level: 1, userId: req.session.userId,
                 imageUrl: (skinType !== 'default' && imageUrl) ? imageUrl : null,
                 ...stats,
-                learnedSkills: { connect: skillsToConnect }
+                learnedSkills: { connect: skillsToConnect },
+                note,
+                role
             }
         });
         res.redirect('/dinozs');
@@ -758,7 +760,7 @@ app.post('/admin/sync-skills', checkLeader, (req, res) => {
 // ==========================================
 app.post('/dinozs/edit', async (req, res) => {
     if (!req.session.userId) return res.redirect('/login');
-    const { dinozId, name, skinType, imageUrl } = req.body;
+    const { dinozId, name, skinType, imageUrl, role, note } = req.body;
 
     try {
         const dino = await prisma.dinoz.findUnique({ where: { id: parseInt(dinozId) } });
@@ -772,7 +774,9 @@ app.post('/dinozs/edit', async (req, res) => {
             where: { id: parseInt(dinozId) },
             data: {
                 name: name,
-                imageUrl: finalImageUrl
+                imageUrl: finalImageUrl,
+                note: note,
+                role: role
             }
         });
 

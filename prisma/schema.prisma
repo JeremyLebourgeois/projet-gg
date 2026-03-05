@@ -36,7 +36,8 @@ model Dinoz {
   race      String
   imageUrl  String?
   level     Int     @default(1)
-  notes     String?
+  note     String?
+  role      String @default("test")
   
 // Stats
   statFire  Int     @default(0)
