@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <title>Architecte - Créer un Plan</title>
     <link rel="icon" type="image/png" href="/img/logo.png">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/pages/arbres.css"> 
+    <link rel="stylesheet" href="/css/pages/arbres.css">
     <link rel="stylesheet" href="/css/pages/architecte.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body class="hub-body" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
 
     <header class="hub-header">
         <div class="header-overlay">
             <div class="header-content">
                 <div class="user-info">
-                    <h1><%= pseudo %></h1>
-                    <p class="status"><strong><%= role %></strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
+                    <h1>
+                        <%= pseudo %>
+                    </h1>
+                    <p class="status"><strong>
+                            <%= role %>
+                        </strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
                 </div>
                 <div class="nav-menu">
                     <a href="/dashboard" class="nav-btn" title="Accueil"><i class="fas fa-home"></i></a>
@@ -30,7 +36,8 @@
     </header>
 
     <section class="architect-top-bar">
-        <a href="/arbres" class="btn-back-dino" style="margin: 0; align-self: center; background: #34495e; padding: 10px 15px; border-radius: 5px; color: white; text-decoration: none;">
+        <a href="/arbres" class="btn-back-dino"
+            style="margin: 0; align-self: center; background: #34495e; padding: 10px 15px; border-radius: 5px; color: white; text-decoration: none;">
             <i class="fas fa-arrow-left"></i> Retour
         </a>
 
@@ -42,9 +49,11 @@
         <div class="control-group" style="flex: 1;">
             <label>Race Cible</label>
             <select id="plan-race" class="input-architect" style="text-transform: capitalize;">
-                <% raceList.forEach(r => { %>
-                    <option value="<%= r %>"><%= r %></option>
-                <% }) %>
+                <% raceList.forEach(r=> { %>
+                    <option value="<%= r %>">
+                        <%= r %>
+                    </option>
+                    <% }) %>
             </select>
         </div>
 
@@ -62,23 +71,26 @@
     </section>
 
     <div class="architect-main-layout">
-        
+
         <main class="tree-container-scroll">
             <div id="trees-view" class="trees-grid">
-                <% ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'].forEach(elem => { %>
+                <% ['Feu', 'Bois' , 'Eau' , 'Foudre' , 'Air' ].forEach(elem=> { %>
                     <div class="element-block bg-<%= elem.toLowerCase() %>">
                         <div class="element-header">
-                            <img src="/img/elements/<%= {Feu:'fire', Bois:'wood', Eau:'water', Foudre:'lightning', Air:'air'}[elem] %>.webp" style="width:24px;">
-                            <span><%= elem %></span>
+                            <img src="/img/elements/<%= {Feu:'fire', Bois:'wood', Eau:'water', Foudre:'lightning', Air:'air'}[elem] %>.webp"
+                                style="width:24px;">
+                            <span>
+                                <%= elem %>
+                            </span>
                         </div>
                         <div class="tree-wrapper" id="tree-container-<%= elem %>"></div>
                     </div>
-                <% }) %>
+                    <% }) %>
             </div>
         </main>
 
         <aside class="stats-sidebar">
-            
+
             <div class="level-target-box">
                 <div class="lvl-title">Niveau Requis</div>
                 <div class="lvl-value" id="level-display">1</div>
@@ -86,7 +98,7 @@
 
             <div class="ups-details-box">
                 <div class="ups-title">Détail des Ups</div>
-                
+
                 <div class="ups-row zero" id="row-fire">
                     <img src="/img/elements/fire.webp"> <span id="count-fire">0</span>
                 </div>
@@ -104,37 +116,95 @@
                 </div>
             </div>
 
-            <div class="ajout-element-box">
-            <div class="ups-title" style="margin-bottom: 15px; text-align: center;">Ajouter des éléments</div>
-            
-            <div class="points-distributor" style="display: flex; flex-direction: column; gap: 8px;">
-                <% const elements = ['fire', 'wood', 'water', 'lightning', 'air']; %>
-                <% const labels = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air']; %>
+            <div class="ups-details-box stats-global-box">
+                <div class="ups-title" style="margin-bottom: 15px; text-align: center;">Statistiques</div>
+                <div style="color: #fff; font-size: 0.9em; display: flex; flex-direction: column; gap: 5px;">
+                    <div style="display:flex; justify-content:space-between;"><span>❤️ Points de Vie</span> <strong
+                            id="stat-life">100</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>⚡ Vitesse</span> <strong
+                            id="stat-speed">10</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>⏱️ Initiative</span> <strong
+                            id="stat-initiative">0</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>🛡️ Armure</span> <strong
+                            id="stat-armor">0</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>⚔️ Contre</span> <strong
+                            id="stat-counter">0%</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>🏃 Esquive</span> <strong
+                            id="stat-esquive">0%</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>💨 S-Esquive</span> <strong
+                            id="stat-superesquive">0%</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>🔄 Multi-coups</span> <strong
+                            id="stat-multihit">0%</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>🔥 Torche</span> <strong
+                            id="stat-torche">0</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>💧 Sang-Acide</span> <strong
+                            id="stat-acidblood">0</strong></div>
 
-                <% elements.forEach((elem, index) => { %>
-                    <div class="distrib-row" style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.2); padding: 5px 10px; border-radius: 5px;">
-                        
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <img src="/img/elements/<%= elem %>.webp" class="mini-icon" style="width: 24px; height: 24px;">
-                            <span class="elem-name" style="color: #fff; font-weight: bold;">
-                                <%= labels[index] %>
-                            </span>
-                        </div>
-
-                        <div class="counter-box" style="display: flex; align-items: center; gap: 8px;">
-                            <button type="button" class="btn-mini" onclick="updateAjout('<%= elem %>', -1)">-</button>
-                            <span class="element-val" id="ajout-<%= elem %>" style="color: #fff; font-weight: bold; min-width: 20px; text-align: center;">
-                                <%= locals.ajout ? locals.ajout[elem] : 0 %>
-                            </span>
-                            <button type="button" class="btn-mini" onclick="updateAjout('<%= elem %>', 1)">+</button>
-                        </div>
-                        
+                    <div style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;"></div>
+                    <div
+                        style="text-align: center; font-weight: bold; font-size: 0.9em; color: rgb(255, 142, 66); margin-bottom: 5px;">
+                        Éléments
                     </div>
-                <% }); %>
+                    <div class="stats-elements-row"
+                        style="display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); border-radius: 5px;">
+                        <div class="element-box" style="display: flex; flex-direction: column; align-items: center;">
+                            <img src="/img/elements/fire.webp" class="element-img"><span class="element-val"
+                                id="stat-fire" style="font-weight: bold; color: white; margin-top: 3px;">0</span>
+                        </div>
+                        <div class="element-box" style="display: flex; flex-direction: column; align-items: center;">
+                            <img src="/img/elements/wood.webp" class="element-img"><span class="element-val"
+                                id="stat-wood" style="font-weight: bold; color: white; margin-top: 3px;">0</span>
+                        </div>
+                        <div class="element-box" style="display: flex; flex-direction: column; align-items: center;">
+                            <img src="/img/elements/water.webp" class="element-img"><span class="element-val"
+                                id="stat-water" style="font-weight: bold; color: white; margin-top: 3px;">0</span>
+                        </div>
+                        <div class="element-box" style="display: flex; flex-direction: column; align-items: center;">
+                            <img src="/img/elements/lightning.webp" class="element-img"><span class="element-val"
+                                id="stat-lightning" style="font-weight: bold; color: white; margin-top: 3px;">0</span>
+                        </div>
+                        <div class="element-box" style="display: flex; flex-direction: column; align-items: center;">
+                            <img src="/img/elements/air.webp" class="element-img"><span class="element-val"
+                                id="stat-air" style="font-weight: bold; color: white; margin-top: 3px;">0</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </aside>
-    </div>
 
+            <div class="ups-details-box ajout-element-box">
+                <div class="ups-title" style="margin-bottom: 15px; text-align: center;">Ajouter des éléments</div>
+
+                <div class="points-distributor" style="display: flex; flex-direction: column; gap: 8px;">
+                    <% const elements=['fire', 'wood' , 'water' , 'lightning' , 'air' ]; %>
+                        <% const labels=['Feu', 'Bois' , 'Eau' , 'Foudre' , 'Air' ]; %>
+
+                            <% elements.forEach((elem, index)=> { %>
+                                <div class="distrib-row"
+                                    style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.2); padding: 5px 10px; border-radius: 5px;">
+
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <img src="/img/elements/<%= elem %>.webp" class="mini-icon"
+                                            style="width: 24px; height: 24px;">
+                                        <span class="elem-name" style="color: #fff; font-weight: bold;">
+                                            <%= labels[index] %>
+                                        </span>
+                                    </div>
+
+                                    <div class="counter-box" style="display: flex; align-items: center; gap: 8px;">
+                                        <button type="button" class="btn-mini"
+                                            onclick="updateAjout('<%= elem %>', -1)">-</button>
+                                        <span class="element-val" id="ajout-<%= elem %>"
+                                            style="color: #fff; font-weight: bold; min-width: 20px; text-align: center;">
+                                            <%= locals.ajout ? locals.ajout[elem] : 0 %>
+                                        </span>
+                                        <button type="button" class="btn-mini"
+                                            onclick="updateAjout('<%= elem %>', 1)">+</button>
+                                    </div>
+
+                                </div>
+                                <% }); %>
+                </div>
+            </div>
         </aside>
 
     </div>
@@ -142,12 +212,16 @@
     <div id="skill-tooltip"></div>
 
     <script>
-        const ALL_SKILLS = <%- JSON.stringify(skills) %>;
-        // On passe le plan s'il existe (mode édition), sinon null
-        const PLAN_DATA = <%- plan ? JSON.stringify(plan) : 'null' %>;
+        // prettier-ignore
+        const ALL_SKILLS = JSON.parse(`<%- JSON.stringify(skills).replace(/\\/g, '\\\\').replace(/'/g, "\\'") %>`);
+        // prettier-ignore
+        const RACES_DB = JSON.parse(`<%- JSON.stringify(raceListDb).replace(/\\/g, '\\\\').replace(/'/g, "\\'") %>`);
+        // prettier-ignore
+        const PLAN_DATA = JSON.parse(`<%- plan ? JSON.stringify(plan).replace(/\\/g, '\\\\').replace(/'/g, "\\'") : 'null' %>`);
     </script>
 
     <script src="/js/pages/architecte.js"></script>
-    
+
 </body>
+
 </html>

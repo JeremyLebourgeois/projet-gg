@@ -335,19 +335,23 @@ app.post('/dinoz/update-grid', async (req, res) => {
             statWater: base.water + bonus.water + gridPoints.water,
             statBolt: base.bolt + bonus.bolt + gridPoints.bolt,
             statAir: base.air + bonus.air + gridPoints.air,
-            statCounter: 0, statDodge: 0, statMultiHit: 0, statSpeed: 10,
+            statCounter: 0, statEsquive: 0, statSuperEsquive: 0, statMultiHit: 0, statSpeed: 10,
             defFire: 0, defWood: 0, defWater: 0, defBolt: 0, defAir: 0,
             defRatioFire: 0, defRatioWood: 0, defRatioWater: 0, defRatioBolt: 0, defRatioAir: 0
         };
 
         let mults = {
             statSpeed: 1.0, statLife: 1.0, statInitiative: 1.0,
-            statArmor: 1.0, statCounter: 1.0, statDodge: 1.0, statMultiHit: 1.0
+            statArmor: 1.0, statCounter: 1.0, statEsquive: 1.0, statSuperEsquive: 1.0, statMultiHit: 1.0
         };
 
         skillsInfo.forEach(skill => {
-            if (skill.modifiers) {
-                for (const [key, val] of Object.entries(skill.modifiers)) {
+            let mods = skill.modifiers;
+            if (typeof mods === 'string') {
+                try { mods = JSON.parse(mods); } catch (e) { mods = null; }
+            }
+            if (mods) {
+                for (const [key, val] of Object.entries(mods)) {
                     const isMult = val && typeof val === 'object' && val.type === 'multiply';
                     const amount = isMult ? val.value : val;
 
@@ -356,7 +360,8 @@ app.post('/dinoz/update-grid', async (req, res) => {
                     else if (key === 'ARMOR') isMult ? mults.statArmor *= amount : flatStats.statArmor += amount;
                     else if (key === 'SPEED') isMult ? mults.statSpeed *= amount : flatStats.statSpeed += amount;
                     else if (key === 'COUNTER') isMult ? mults.statCounter *= amount : flatStats.statCounter += amount;
-                    else if (key === 'DODGE') isMult ? mults.statDodge *= amount : flatStats.statDodge += amount;
+                    else if (key === 'EVASION' || key === 'DODGE' || key === 'ESQUIVE') isMult ? mults.statEsquive *= amount : flatStats.statEsquive += amount;
+                    else if (key === 'SUPER_EVASION') isMult ? mults.statSuperEsquive *= amount : flatStats.statSuperEsquive += amount;
                     else if (key === 'MULTIHIT' || key === 'MULTI_HIT') isMult ? mults.statMultiHit *= amount : flatStats.statMultiHit += amount;
 
                     else if (key === 'FIRE_ELEMENT') flatStats.statFire += amount;
@@ -393,7 +398,8 @@ app.post('/dinoz/update-grid', async (req, res) => {
             statInitiative: Math.round(flatStats.statInitiative * mults.statInitiative),
             statArmor: parseFloat((flatStats.statArmor + (mults.statArmor - 1) * 100).toFixed(1)),
             statCounter: parseFloat((flatStats.statCounter + (mults.statCounter - 1) * 100).toFixed(1)),
-            statDodge: parseFloat((flatStats.statDodge + (mults.statDodge - 1) * 100).toFixed(1)),
+            statEsquive: parseFloat((flatStats.statEsquive + (mults.statEsquive - 1) * 100).toFixed(1)),
+            statSuperEsquive: parseFloat((flatStats.statSuperEsquive + (mults.statSuperEsquive - 1) * 100).toFixed(1)),
             statMultiHit: parseFloat((flatStats.statMultiHit + (mults.statMultiHit - 1) * 100).toFixed(1))
         };
 
@@ -564,6 +570,7 @@ app.get('/architecte', async (req, res) => {
     });
 
     const raceList = ['castivore', 'gorilloz', 'hippoclamp', 'moueffe', 'nuagoz', 'pigmou', 'planaille', 'pteroz', 'rocky', 'sirain', 'wanwan', 'winks', 'feross', 'kabuki', 'mahamuti', 'quetzu', 'santaz', 'smog', 'soufflet', 'toufufu', 'triceragnon'].sort();
+    const raceListDb = await prisma.refRace.findMany();
 
     const valeursAjoutDefaut = {
         fire: 0,
@@ -574,25 +581,30 @@ app.get('/architecte', async (req, res) => {
     };
 
     let planToEdit = null;
+    let ajoutToEdit = valeursAjoutDefaut;
     if (req.query.id) {
         const existingPlan = await prisma.skillPlan.findUnique({ where: { id: parseInt(req.query.id) } });
-        if (existingPlan && existingPlan.authorId === user.id) planToEdit = existingPlan;
+        if (existingPlan && existingPlan.authorId === user.id) {
+            planToEdit = existingPlan;
+            if (existingPlan.ajout) ajoutToEdit = existingPlan.ajout;
+        }
     }
 
     const daysMember = Math.ceil(Math.abs(new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
-    res.render('architecte', { user, pseudo: user.pseudo, role: user.role, skills: allSkills, daysMember, raceList, plan: planToEdit, ajout: valeursAjoutDefaut });
+    res.render('architecte', { user, pseudo: user.pseudo, role: user.role, skills: allSkills, daysMember, raceList, raceListDb, plan: planToEdit, ajout: ajoutToEdit });
 });
 
 // Sauvegarder un plan
 app.post('/architecte/save', async (req, res) => {
     if (!req.session.userId) return res.status(401).json({ error: 'Non connecté' });
-    const { id, name, race, isPublic, selectedSkillIds, level } = req.body;
+    const { id, name, race, isPublic, selectedSkillIds, level, ajout } = req.body;
 
     try {
         const data = {
             name: name.trim() || 'Plan sans nom',
             race, isPublic: isPublic === true || isPublic === 'true',
             skillIds: selectedSkillIds, level: parseInt(level) || 1,
+            ajout: ajout || null,
             originalAuthor: null // Si modifié, je deviens l'auteur principal
         };
 
@@ -652,8 +664,10 @@ app.get('/plan/:id', async (req, res) => {
         orderBy: { id: 'asc' }
     });
 
+    const raceListDb = await prisma.refRace.findMany();
+
     const daysMember = Math.ceil(Math.abs(new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
-    res.render('plan-details', { user, pseudo: user.pseudo, role: user.role, daysMember, plan, skills: allSkills });
+    res.render('plan-details', { user, pseudo: user.pseudo, role: user.role, daysMember, plan, skills: allSkills, raceListDb });
 });
 
 // Supprimer Plan

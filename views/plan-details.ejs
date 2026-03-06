@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <title><%= plan.name %> - Détails</title>
+    <title>
+        <%= plan.name %> - Détails
+    </title>
     <link rel="icon" type="image/png" href="/img/logo.png">
-    
+
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="/css/pages/arbres.css"> 
+
+    <link rel="stylesheet" href="/css/pages/arbres.css">
     <link rel="stylesheet" href="/css/pages/architecte.css">
     <link rel="stylesheet" href="/css/pages/plan-details.css">
 </head>
+
 <body class="hub-body" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
 
     <header class="hub-header">
         <div class="header-overlay">
             <div class="header-content">
                 <div class="user-info">
-                    <h1><%= pseudo %></h1>
-                    <p class="status"><strong><%= role %></strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
+                    <h1>
+                        <%= pseudo %>
+                    </h1>
+                    <p class="status"><strong>
+                            <%= role %>
+                        </strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
                 </div>
                 <div class="nav-menu">
                     <a href="/dashboard" class="nav-btn" title="Accueil"><i class="fas fa-home"></i></a>
@@ -38,74 +46,149 @@
         </a>
 
         <div class="plan-info-container">
-            <h2><%= plan.name %></h2>
+            <h2>
+                <%= plan.name %>
+            </h2>
             <div class="plan-meta">
-                Par <%= plan.originalAuthor || plan.author.pseudo %> | Race : <span style="color:#f1c40f"><%= plan.race %></span> | <%= plan.isPublic ? 'Public' : 'Privé' %>
+                Par <%= plan.originalAuthor || plan.author.pseudo %> | Race : <span style="color:#f1c40f">
+                        <%= plan.race %>
+                    </span> | <%= plan.isPublic ? 'Public' : 'Privé' %>
             </div>
         </div>
 
         <div class="plan-actions">
-            <% if (plan.author.id === user.id) { %>
+            <% if (plan.author.id===user.id) { %>
                 <button onclick="editPlan(<%= plan.id %>)" class="btn-ice btn-edit">
                     <i class="fas fa-edit"></i> Modifier
                 </button>
                 <button onclick="deletePlan(<%= plan.id %>)" class="btn-ice btn-delete">
                     <i class="fas fa-trash"></i> Supprimer
                 </button>
-            <% } else { %>
-                <button onclick="clonePlan(<%= plan.id %>)" class="btn-ice btn-clone">
-                    <i class="fas fa-copy"></i> Ajouter à mes plans
-                </button>
-                
-                <% if (role === 'LEADER') { %>
-                    <button onclick="deletePlan(<%= plan.id %>)" class="btn-ice btn-delete">
-                        <i class="fas fa-trash"></i> Supprimer (Admin)
+                <% } else { %>
+                    <button onclick="clonePlan(<%= plan.id %>)" class="btn-ice btn-clone">
+                        <i class="fas fa-copy"></i> Ajouter à mes plans
                     </button>
-                <% } %>
-            <% } %>
+
+                    <% if (role==='LEADER' ) { %>
+                        <button onclick="deletePlan(<%= plan.id %>)" class="btn-ice btn-delete">
+                            <i class="fas fa-trash"></i> Supprimer (Admin)
+                        </button>
+                        <% } %>
+                            <% } %>
         </div>
     </section>
 
     <div class="architect-main-layout">
         <main class="tree-container-scroll">
             <div id="trees-view" class="trees-grid">
-                <% ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'].forEach(elem => { %>
+                <% ['Feu', 'Bois' , 'Eau' , 'Foudre' , 'Air' ].forEach(elem=> { %>
                     <div class="element-block bg-<%= elem.toLowerCase() %>">
                         <div class="element-header">
-                            <img src="/img/elements/<%= {Feu:'fire', Bois:'wood', Eau:'water', Foudre:'lightning', Air:'air'}[elem] %>.webp" style="width:24px;">
-                            <span><%= elem %></span>
+                            <img src="/img/elements/<%= {Feu:'fire', Bois:'wood', Eau:'water', Foudre:'lightning', Air:'air'}[elem] %>.webp"
+                                style="width:24px;">
+                            <span>
+                                <%= elem %>
+                            </span>
                         </div>
                         <div class="tree-wrapper" id="tree-container-<%= elem %>"></div>
                     </div>
-                <% }) %>
+                    <% }) %>
             </div>
         </main>
 
         <aside class="stats-sidebar">
             <div class="level-target-box">
                 <div class="lvl-title">Niveau Requis</div>
-                <div class="lvl-value" id="level-display"><%= plan.level %></div>
+                <div class="lvl-value" id="level-display">
+                    <%= plan.level %>
+                </div>
             </div>
             <div class="ups-details-box">
                 <div class="ups-title">Détail des Ups</div>
-                <div class="ups-row zero" id="row-fire"><img src="/img/elements/fire.webp"> <span id="count-fire">0</span></div>
-                <div class="ups-row zero" id="row-wood"><img src="/img/elements/wood.webp"> <span id="count-wood">0</span></div>
-                <div class="ups-row zero" id="row-water"><img src="/img/elements/water.webp"> <span id="count-water">0</span></div>
-                <div class="ups-row zero" id="row-lightning"><img src="/img/elements/lightning.webp"> <span id="count-lightning">0</span></div>
-                <div class="ups-row zero" id="row-air"><img src="/img/elements/air.webp"> <span id="count-air">0</span></div>
+                <div class="ups-row zero" id="row-fire"><img src="/img/elements/fire.webp"> <span
+                        id="count-fire">0</span></div>
+                <div class="ups-row zero" id="row-wood"><img src="/img/elements/wood.webp"> <span
+                        id="count-wood">0</span></div>
+                <div class="ups-row zero" id="row-water"><img src="/img/elements/water.webp"> <span
+                        id="count-water">0</span></div>
+                <div class="ups-row zero" id="row-lightning"><img src="/img/elements/lightning.webp"> <span
+                        id="count-lightning">0</span></div>
+                <div class="ups-row zero" id="row-air"><img src="/img/elements/air.webp"> <span id="count-air">0</span>
+                </div>
+            </div>
+            <div class="ups-details-box stats-global-box" style="margin-top:20px;">
+                <div class="ups-title" style="margin-bottom: 15px; text-align: center;">Statistiques</div>
+                <div style="color: #fff; font-size: 0.9em; display: flex; flex-direction: column; gap: 5px;">
+                    <div style="display:flex; justify-content:space-between;"><span>❤️ Points de Vie</span> <strong
+                            id="stat-life">100</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>⚡ Vitesse</span> <strong
+                            id="stat-speed">10</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>⏱️ Initiative</span> <strong
+                            id="stat-initiative">0</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>🛡️ Armure</span> <strong
+                            id="stat-armor">0</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>⚔️ Contre</span> <strong
+                            id="stat-counter">0%</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>🏃 Esquive</span> <strong
+                            id="stat-esquive">0%</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>💨 S-Esquive</span> <strong
+                            id="stat-superesquive">0%</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>🔄 Multi-coups</span> <strong
+                            id="stat-multihit">0%</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>🔥 Torche</span> <strong
+                            id="stat-torche">0</strong></div>
+                    <div style="display:flex; justify-content:space-between;"><span>💧 Sang-Acide</span> <strong
+                            id="stat-acidblood">0</strong></div>
+
+                    <div style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;"></div>
+                    <div
+                        style="text-align: center; font-weight: bold; font-size: 0.9em; color: rgb(255, 142, 66); margin-bottom: 5px;">
+                        Éléments
+                    </div>
+                    <div class="stats-elements-row"
+                        style="display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); border-radius: 5px;">
+                        <div class="element-box" style="display: flex; flex-direction: column; align-items: center;">
+                            <img src="/img/elements/fire.webp" class="element-img"><span class="element-val"
+                                id="stat-fire" style="font-weight: bold; color: white; margin-top: 3px;">0</span>
+                        </div>
+                        <div class="element-box" style="display: flex; flex-direction: column; align-items: center;">
+                            <img src="/img/elements/wood.webp" class="element-img"><span class="element-val"
+                                id="stat-wood" style="font-weight: bold; color: white; margin-top: 3px;">0</span>
+                        </div>
+                        <div class="element-box" style="display: flex; flex-direction: column; align-items: center;">
+                            <img src="/img/elements/water.webp" class="element-img"><span class="element-val"
+                                id="stat-water" style="font-weight: bold; color: white; margin-top: 3px;">0</span>
+                        </div>
+                        <div class="element-box" style="display: flex; flex-direction: column; align-items: center;">
+                            <img src="/img/elements/lightning.webp" class="element-img"><span class="element-val"
+                                id="stat-lightning" style="font-weight: bold; color: white; margin-top: 3px;">0</span>
+                        </div>
+                        <div class="element-box" style="display: flex; flex-direction: column; align-items: center;">
+                            <img src="/img/elements/air.webp" class="element-img"><span class="element-val"
+                                id="stat-air" style="font-weight: bold; color: white; margin-top: 3px;">0</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </aside>
     </div>
-    
+
     <div id="skill-tooltip"></div>
 
+    <script id="plan-data" type="application/json">
+        <%- JSON.stringify({
+            allSkills: skills,
+            planSkillIds: plan.skillIds,
+            raceListDb: raceListDb,
+            planRace: plan.race,
+            planAjout: plan.ajout || null
+        }) %>
+    </script>
     <script>
-        const PLAN_CONTEXT = {
-            allSkills: <%- JSON.stringify(skills) %>,
-            planSkillIds: <%- JSON.stringify(plan.skillIds) %>
-        };
+        const PLAN_CONTEXT = JSON.parse(document.getElementById('plan-data').textContent);
     </script>
 
     <script src="/js/pages/plan-details.js"></script>
 </body>
+
 </html>

@@ -445,6 +445,8 @@ async function saveGridData(rowIndex, colIndex, value) {
                 if (document.getElementById('stat-life')) document.getElementById('stat-life').innerText = json.stats.statLife;
                 if (document.getElementById('stat-initiative')) document.getElementById('stat-initiative').innerText = json.stats.statInitiative;
                 if (document.getElementById('stat-armor')) document.getElementById('stat-armor').innerText = (json.stats.statArmor || 0).toFixed(1);
+                if (document.getElementById('stat-esquive')) document.getElementById('stat-esquive').innerText = (json.stats.statEsquive || 0).toFixed(1);
+                if (document.getElementById('stat-superesquive')) document.getElementById('stat-superesquive').innerText = (json.stats.statSuperEsquive || 0).toFixed(1);
                 if (document.getElementById('stat-speed')) document.getElementById('stat-speed').innerText = (json.stats.statSpeed || 10).toFixed(2);
                 if (document.getElementById('stat-counter')) document.getElementById('stat-counter').innerText = (json.stats.statCounter || 0).toFixed(1);
                 if (document.getElementById('stat-multihit')) document.getElementById('stat-multihit').innerText = (json.stats.statMultiHit || 0).toFixed(1);

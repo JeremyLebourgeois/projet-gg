@@ -66,9 +66,10 @@ model Dinoz {
   statSpeed      Float @default(10.0)
   statInitiative Int @default(0)
   statCounter    Float @default(0.0)
-  statDodge      Float @default(0.0)
   statArmor      Float @default(0.0)
   statMultiHit   Float @default(0.0)
+  statEsquive    Float @default(0.0)
+  statSuperEsquive Float @default(0.0)
 
 // Assauts
   statAssaultFire  Int @default(0)
@@ -134,6 +135,7 @@ model SkillPlan {
   race      String   
   level     Int      @default(1) 
   skillIds  Json     
+  ajout     Json?
   isPublic  Boolean  @default(false) 
   createdAt DateTime @default(now())
 
