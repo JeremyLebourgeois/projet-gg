@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <title>Simulation</title>
-    <link rel="icon" type="image/png" href="/img/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guerriers du Givre - Simulation</title>
+    <!-- On inclut le CSS global, font-awesome, et le CSS spécifique -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/pages/arbres.css"> 
-    <link rel="stylesheet" href="/css/pages/architecte.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/pages/simulation.css">
+    <link rel="icon" type="image/png" href="/img/logo.png">
 </head>
-<body>  
+
+<body>
     <header class="hub-header">
         <div class="header-overlay">
             <div class="header-content">
@@ -32,4 +35,128 @@
             </div>
         </div>
     </header>
+
+    <main class="main-content">
+        <!-- FILTRES ET SELECTION D'EQUIPE -->
+        <section id="selection-section">
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Type :</label>
+                    <select id="filter-type">
+                        <option value="all">Tous</option>
+                        <option value="real">Dinozs</option>
+                        <option value="ghost">Plans</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Race :</label>
+                    <select id="filter-race">
+                        <option value="all">Toutes les races</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Niveau :</label>
+                    <div class="level-inputs">
+                        <input type="number" id="filter-level-min" min="1" max="80" value="1">
+                        <span>à</span>
+                        <input type="number" id="filter-level-max" min="1" max="80" value="80">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Joueur :</label>
+                    <select id="filter-player">
+                        <option value="all">Tous les joueurs</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Rôle :</label>
+                    <select id="filter-role">
+                        <option value="all">Tous les rôles</option>
+                        <option value="test">Test</option>
+                        <option value="PVP">PVP</option>
+                        <option value="Récolteur">Récolteur</option>
+                        <option value="Compétence U">Compétence U</option>
+                    </select>
+                </div>
+                <div class="filter-group" style="margin-left:auto;">
+                    <label>&nbsp;</label>
+                    <button id="btn-start-mode1" class="gg-btn start-btn" disabled>⚔️ Analyser (Mode 1)</button>
+                </div>
+            </div>
+
+            <div id="fighter-list-container" class="fighter-list-grid"></div>
+
+            <div class="teams-wrapper teams-hover">
+                <div class="teams-header">
+                    <span>🛡️ Équipes &mdash; A: <strong id="team-a-count">0</strong>/6 &nbsp;|&nbsp; B: <strong
+                            id="team-b-count">0</strong>/6</span>
+                    <span style="font-size:0.8em;color:#8b949e;">↑ Survoler pour développer</span>
+                </div>
+                <div class="teams-content">
+                    <div class="teams-container">
+                        <div class="team-box" id="team-a-box">
+                            <h3>Équipe A</h3>
+                            <div id="team-a-slots" class="team-slots"></div>
+                            <button class="btn-clear" id="btn-clear-a">Vider A</button>
+                        </div>
+                        <div class="team-box" id="team-b-box">
+                            <h3>Équipe B</h3>
+                            <div id="team-b-slots" class="team-slots"></div>
+                            <button class="btn-clear" id="btn-clear-b">Vider B</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERFACE D'ANALYSE MODE 1 -->
+        <section id="analysis-section" class="hidden">
+            <div class="analysis-top-bar">
+                <button id="btn-back-selection" class="gg-btn"><i class="fas fa-arrow-left"></i> Retour</button>
+                <div class="mode-toggles">
+                    <label class="switch-label">
+                        <input type="checkbox" id="toggle-display-range">
+                        <span class="switch-text">Afficher Plage [Min-Max]</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="analysis-panels">
+                <div class="panel" id="panel-a">
+                    <div class="panel-header">
+                        <select id="select-active-a" class="active-dropdown"></select>
+                        <div class="shield-toggle">
+                            <label><input type="checkbox" id="shield-toggle-a">🛡️ Aura Hermétique (+20%)</label>
+                        </div>
+                    </div>
+                    <div class="combat-stats" id="stats-container-a"></div>
+                    <div class="fighter-sheet" id="sheet-a"></div>
+                </div>
+
+                <div class="panel" id="panel-b">
+                    <div class="panel-header">
+                        <select id="select-active-b" class="active-dropdown"></select>
+                        <div class="shield-toggle">
+                            <label><input type="checkbox" id="shield-toggle-b">🛡️ Aura Hermétique (+20%)</label>
+                        </div>
+                    </div>
+                    <div class="combat-stats" id="stats-container-b"></div>
+                    <div class="fighter-sheet" id="sheet-b"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- INJECTION DES DONNEES RESTANTES -->
+    <script id="dinoz-data" type="application/json"><%- JSON.stringify(allDinozs) %></script>
+    <script id="plan-data" type="application/json"><%- JSON.stringify(allPlans) %></script>
+    <script id="skills-data" type="application/json"><%- JSON.stringify(allSkills) %></script>
+    <script id="races-data" type="application/json"><%- JSON.stringify(allRaces) %></script>
+
+    <script>
+        const CURRENT_USER_PSEUDO = "<%= pseudo %>";
+    </script>
+    <script src="/js/pages/simulation.js"></script>
 </body>
+
+</html>

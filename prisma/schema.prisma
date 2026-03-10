@@ -136,6 +136,8 @@ model SkillPlan {
   level     Int      @default(1) 
   skillIds  Json     
   ajout     Json?
+  stats     Json?
+  elements  Json?
   isPublic  Boolean  @default(false) 
   createdAt DateTime @default(now())
 

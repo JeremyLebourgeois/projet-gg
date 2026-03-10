@@ -2,6 +2,8 @@
 let selectedSkills = new Set();
 let skillTiers = new Map();
 let tooltip = document.getElementById('skill-tooltip');
+let currentStats = {};
+let currentElements = {};
 
 // --- INIT ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -275,7 +277,7 @@ function calculateAllStats(gridPoints) {
         fire: parseInt(document.getElementById('ajout-fire')?.innerText) || 0,
         wood: parseInt(document.getElementById('ajout-wood')?.innerText) || 0,
         water: parseInt(document.getElementById('ajout-water')?.innerText) || 0,
-        bolt: parseInt(document.getElementById('ajout-lightning')?.innerText) || 0,
+        lightning: parseInt(document.getElementById('ajout-lightning')?.innerText) || 0,
         air: parseInt(document.getElementById('ajout-air')?.innerText) || 0,
     };
 
@@ -284,7 +286,7 @@ function calculateAllStats(gridPoints) {
         statFire: base.fire + ajout.fire + gridPoints.fire,
         statWood: base.wood + ajout.wood + gridPoints.wood,
         statWater: base.water + ajout.water + gridPoints.water,
-        statBolt: base.bolt + ajout.bolt + gridPoints.lightning,
+        statBolt: base.bolt + ajout.lightning + gridPoints.lightning,
         statAir: base.air + ajout.air + gridPoints.air,
         statCounter: 0, statEsquive: 0, statSuperEsquive: 0, statMultiHit: 0, statSpeed: 10
     };
@@ -304,24 +306,45 @@ function calculateAllStats(gridPoints) {
         if (skill && skill.modifiers) applyModifiers(skill.modifiers, flatStats, mults);
     });
 
+    currentElements = {
+        fire: flatStats.statFire,
+        wood: flatStats.statWood,
+        water: flatStats.statWater,
+        bolt: flatStats.statBolt,
+        air: flatStats.statAir
+    };
+
+    currentStats = {
+        statLife: Math.round(flatStats.statLife * mults.statLife),
+        statSpeed: parseFloat((flatStats.statSpeed * mults.statSpeed).toFixed(2)),
+        statInitiative: Math.round(flatStats.statInitiative * mults.statInitiative),
+        statArmor: parseFloat((flatStats.statArmor + (mults.statArmor - 1) * 100).toFixed(1)),
+        statCounter: parseFloat((flatStats.statCounter + (mults.statCounter - 1) * 100).toFixed(1)),
+        statEsquive: parseFloat((flatStats.statEsquive + (mults.statEsquive - 1) * 100).toFixed(1)),
+        statSuperEsquive: parseFloat((flatStats.statSuperEsquive + (mults.statSuperEsquive - 1) * 100).toFixed(1)),
+        statMultiHit: parseFloat((flatStats.statMultiHit + (mults.statMultiHit - 1) * 100).toFixed(1)),
+        statTorche: Math.round(Math.pow(flatStats.statFire, 0.6)),
+        statAcidBlood: Math.round(Math.pow(flatStats.statWater / 2, 0.6))
+    };
+
     if (document.getElementById('stat-life')) {
-        document.getElementById('stat-life').innerText = Math.round(flatStats.statLife * mults.statLife);
-        document.getElementById('stat-speed').innerText = parseFloat((flatStats.statSpeed * mults.statSpeed).toFixed(2));
-        document.getElementById('stat-initiative').innerText = Math.round(flatStats.statInitiative * mults.statInitiative);
-        document.getElementById('stat-armor').innerText = parseFloat((flatStats.statArmor + (mults.statArmor - 1) * 100).toFixed(1));
-        document.getElementById('stat-counter').innerText = parseFloat((flatStats.statCounter + (mults.statCounter - 1) * 100).toFixed(1)) + '%';
-        if (document.getElementById('stat-esquive')) document.getElementById('stat-esquive').innerText = parseFloat((flatStats.statEsquive + (mults.statEsquive - 1) * 100).toFixed(1)) + '%';
-        if (document.getElementById('stat-superesquive')) document.getElementById('stat-superesquive').innerText = parseFloat((flatStats.statSuperEsquive + (mults.statSuperEsquive - 1) * 100).toFixed(1)) + '%';
-        document.getElementById('stat-multihit').innerText = parseFloat((flatStats.statMultiHit + (mults.statMultiHit - 1) * 100).toFixed(1)) + '%';
+        document.getElementById('stat-life').innerText = currentStats.statLife;
+        document.getElementById('stat-speed').innerText = currentStats.statSpeed;
+        document.getElementById('stat-initiative').innerText = currentStats.statInitiative;
+        document.getElementById('stat-armor').innerText = currentStats.statArmor;
+        document.getElementById('stat-counter').innerText = currentStats.statCounter + '%';
+        if (document.getElementById('stat-esquive')) document.getElementById('stat-esquive').innerText = currentStats.statEsquive + '%';
+        if (document.getElementById('stat-superesquive')) document.getElementById('stat-superesquive').innerText = currentStats.statSuperEsquive + '%';
+        document.getElementById('stat-multihit').innerText = currentStats.statMultiHit + '%';
 
-        if (document.getElementById('stat-torche')) document.getElementById('stat-torche').innerText = Math.round(Math.pow(flatStats.statFire, 0.6));
-        if (document.getElementById('stat-acidblood')) document.getElementById('stat-acidblood').innerText = Math.round(Math.pow(flatStats.statWater / 2, 0.6));
+        if (document.getElementById('stat-torche')) document.getElementById('stat-torche').innerText = currentStats.statTorche;
+        if (document.getElementById('stat-acidblood')) document.getElementById('stat-acidblood').innerText = currentStats.statAcidBlood;
 
-        document.getElementById('stat-fire').innerText = flatStats.statFire;
-        document.getElementById('stat-wood').innerText = flatStats.statWood;
-        document.getElementById('stat-water').innerText = flatStats.statWater;
-        document.getElementById('stat-lightning').innerText = flatStats.statBolt;
-        document.getElementById('stat-air').innerText = flatStats.statAir;
+        document.getElementById('stat-fire').innerText = currentElements.fire;
+        document.getElementById('stat-wood').innerText = currentElements.wood;
+        document.getElementById('stat-water').innerText = currentElements.water;
+        document.getElementById('stat-lightning').innerText = currentElements.bolt;
+        document.getElementById('stat-air').innerText = currentElements.air;
     }
 }
 
@@ -381,7 +404,9 @@ async function savePlan() {
                 isPublic,
                 level: window.calculatedLevel || 1,
                 selectedSkillIds: Array.from(selectedSkills),
-                ajout
+                ajout,
+                stats: currentStats,
+                elements: currentElements
             })
         });
         const json = await res.json();

@@ -597,7 +597,7 @@ app.get('/architecte', async (req, res) => {
 // Sauvegarder un plan
 app.post('/architecte/save', async (req, res) => {
     if (!req.session.userId) return res.status(401).json({ error: 'Non connecté' });
-    const { id, name, race, isPublic, selectedSkillIds, level, ajout } = req.body;
+    const { id, name, race, isPublic, selectedSkillIds, level, ajout, stats, elements } = req.body;
 
     try {
         const data = {
@@ -605,6 +605,8 @@ app.post('/architecte/save', async (req, res) => {
             race, isPublic: isPublic === true || isPublic === 'true',
             skillIds: selectedSkillIds, level: parseInt(level) || 1,
             ajout: ajout || null,
+            stats: stats || null,
+            elements: elements || null,
             originalAuthor: null // Si modifié, je deviens l'auteur principal
         };
 
@@ -809,7 +811,35 @@ app.get('/simulation', async (req, res) => {
     const user = await prisma.user.findUnique({ where: { id: req.session.userId } });
 
     const daysMember = Math.ceil(Math.abs(new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
-    res.render('simulation', { pseudo: user.pseudo, role: user.role, daysMember });
+
+    // Extracting all Dinozs with their owners and skills
+    const allDinozs = await prisma.dinoz.findMany({
+        include: {
+            user: { select: { pseudo: true } },
+            learnedSkills: { select: { id: true } }
+        }
+    });
+
+    // Extracting all Plans for Ghost Dinozs
+    const allPlans = await prisma.skillPlan.findMany({
+        include: {
+            author: { select: { pseudo: true } }
+        }
+    });
+
+    // Reference data for calculating Ghost Dinozs and damage stats
+    const allSkills = await prisma.refSkill.findMany();
+    const allRaces = await prisma.refRace.findMany();
+
+    res.render('simulation', {
+        pseudo: user.pseudo,
+        role: user.role,
+        daysMember,
+        allDinozs,
+        allPlans,
+        allSkills,
+        allRaces
+    });
 });
 
 

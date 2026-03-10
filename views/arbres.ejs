@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <title>Arbres de Compétences - Guerriers du Givre</title>
@@ -7,19 +8,24 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/pages/arbres.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script id="skills-data" type="application/json"><%- JSON.stringify(skills) %></script>
     <script>
-        const ALL_SKILLS = <%- JSON.stringify(skills) %>;
         const USER_TREE_MODE = "<%= userTreeMode %>";
     </script>
 </head>
+
 <body class="hub-body">
 
     <header class="hub-header">
         <div class="header-overlay">
             <div class="header-content">
                 <div class="user-info">
-                    <h1><%= pseudo %></h1>
-                    <p class="status"><strong><%= role %></strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
+                    <h1>
+                        <%= pseudo %>
+                    </h1>
+                    <p class="status"><strong>
+                            <%= role %>
+                        </strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
                 </div>
 
                 <div class="nav-menu">
@@ -34,35 +40,36 @@
     </header>
 
     <main class="viewer-container">
-        
+
         <section id="main-display" class="tree-area compressed">
-            
+
             <div id="trees-view" class="accordion-container">
-                <% const elements = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air']; %>
-                <% elements.forEach(elem => { %>
-                    <div class="accordion-item <%= elem.toLowerCase() %>" onmouseenter="expandItem(this)">
-                        <div class="tree-content" id="tree-container-<%= elem %>"></div>
-                    </div>
-                <% }) %>
+                <% const elements=['Feu', 'Bois' , 'Eau' , 'Foudre' , 'Air' ]; %>
+                    <% elements.forEach(elem=> { %>
+                        <div class="accordion-item <%= elem.toLowerCase() %>" onmouseenter="expandItem(this)">
+                            <div class="tree-content" id="tree-container-<%= elem %>"></div>
+                        </div>
+                        <% }) %>
             </div>
 
             <div id="spheres-view" class="spheres-container" style="display: none;">
                 <div class="spheres-grid" id="spheres-grid-container">
-                    
+
                     <div class="grid-header">ÉLÉMENT</div>
                     <div class="grid-header">NIVEAU 1</div>
                     <div class="grid-header">NIVEAU 2</div>
                     <div class="grid-header">NIVEAU 3</div>
 
-                    </div>
+                </div>
             </div>
 
         </section>
 
         <aside class="viewer-sidebar">
             <div class="sidebar-content">
-                <h3>Navigation</h3>
+                <h3>Création</h3>
                 <a href="/architecte" class="btn-ice">Créer un Plan</a>
+                <h3>Plans existants</h3>
                 <a href="/plans" class="btn-ice">Voir mes Plans</a>
                 <a href="/clan/plans" class="btn-ice">Plans du Clan</a>
 

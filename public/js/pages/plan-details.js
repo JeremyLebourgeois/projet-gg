@@ -98,14 +98,14 @@ function calculateAllStats(gridPoints) {
         bolt: raceInfo.baseBolt, air: raceInfo.baseAir
     } : { fire: 0, wood: 0, water: 0, bolt: 0, air: 0 };
 
-    const ajout = PLAN_CONTEXT.planAjout || { fire: 0, wood: 0, water: 0, bolt: 0, air: 0 };
+    const ajout = PLAN_CONTEXT.planAjout || { fire: 0, wood: 0, water: 0, lightning: 0, air: 0 };
 
     let flatStats = {
         statLife: 100, statInitiative: 0, statArmor: 0,
         statFire: base.fire + ajout.fire + gridPoints.fire,
         statWood: base.wood + ajout.wood + gridPoints.wood,
         statWater: base.water + ajout.water + gridPoints.water,
-        statBolt: base.bolt + ajout.bolt + gridPoints.lightning,
+        statBolt: base.bolt + (ajout.lightning || ajout.bolt || 0) + gridPoints.lightning,
         statAir: base.air + ajout.air + gridPoints.air,
         statCounter: 0, statEsquive: 0, statSuperEsquive: 0, statMultiHit: 0, statSpeed: 10
     };
