@@ -190,7 +190,13 @@
                 </div>
             </div>
 
-            <div class="bottom-actions">
+            <div class="bottom-actions" style="flex-direction: column; gap: 10px;">
+                <form action="/dinozs/toggle-congealed" method="POST" style="width: 100%; margin: 0;">
+                    <input type="hidden" name="dinozId" value="<%= dino.id %>">
+                    <button type="submit" class="btn-congeal">
+                        <i class="fas fa-snowflake"></i> <%= dino.isCongealed ? 'Décongeler' : 'Congeler' %>
+                    </button>
+                </form>
                 <button class="btn-sacrifice" onclick="openDeleteModal()">
                     <i class="fas fa-skull"></i> Sacrifier
                 </button>

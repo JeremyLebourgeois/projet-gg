@@ -257,6 +257,29 @@ app.post('/dinozs/delete', async (req, res) => {
     } catch (error) { console.error(error); res.redirect('/dinozs'); }
 });
 
+// Congeler / Décongeler Dinoz
+app.post('/dinozs/toggle-congealed', async (req, res) => {
+    if (!req.session.userId) return res.redirect('/login');
+    const { dinozId } = req.body;
+
+    try {
+        const dino = await prisma.dinoz.findUnique({ where: { id: parseInt(dinozId) } });
+        if (dino && dino.userId === req.session.userId) {
+            const newCongealedState = dino.isCongealed === 1 ? 0 : 1;
+            await prisma.dinoz.update({
+                where: { id: parseInt(dinozId) },
+                data: { isCongealed: newCongealedState }
+            });
+            res.redirect(`/dinoz/${dinozId}`);
+        } else {
+            res.redirect('/dinozs');
+        }
+    } catch (error) { 
+        console.error(error); 
+        res.redirect('/dinozs'); 
+    }
+});
+
 // Mise à jour de la grille (Logique principale)
 app.post('/dinoz/update-grid', async (req, res) => {
     if (!req.session.userId) return res.status(401).json({ error: "Non connecté" });
@@ -328,7 +351,7 @@ app.post('/dinoz/update-grid', async (req, res) => {
         });
 
         let flatStats = {
-            statLife: 100, statInitiative: 0, statArmor: 0,
+            statLife: 100, statInitiative: 0, statArmor: 0, statArmorBreak: 0,
             statAssaultFire: 0, statAssaultWood: 0, statAssaultWater: 0, statAssaultBolt: 0, statAssaultAir: 0,
             statFire: base.fire + bonus.fire + gridPoints.fire,
             statWood: base.wood + bonus.wood + gridPoints.wood,
@@ -342,7 +365,7 @@ app.post('/dinoz/update-grid', async (req, res) => {
 
         let mults = {
             statSpeed: 1.0, statLife: 1.0, statInitiative: 1.0,
-            statArmor: 1.0, statCounter: 1.0, statEsquive: 1.0, statSuperEsquive: 1.0, statMultiHit: 1.0
+            statArmor: 1.0, statArmorBreak: 1.0, statCounter: 1.0, statEsquive: 1.0, statSuperEsquive: 1.0, statMultiHit: 1.0
         };
 
         skillsInfo.forEach(skill => {
@@ -358,6 +381,7 @@ app.post('/dinoz/update-grid', async (req, res) => {
                     if (key === 'MAX_HP') isMult ? mults.statLife *= amount : flatStats.statLife += amount;
                     else if (key === 'INITIATIVE') isMult ? mults.statInitiative *= amount : flatStats.statInitiative += amount;
                     else if (key === 'ARMOR') isMult ? mults.statArmor *= amount : flatStats.statArmor += amount;
+                    else if (key === 'ARMOR_BREAK') isMult ? mults.statArmorBreak *= amount : flatStats.statArmorBreak += amount;
                     else if (key === 'SPEED') isMult ? mults.statSpeed *= amount : flatStats.statSpeed += amount;
                     else if (key === 'COUNTER') isMult ? mults.statCounter *= amount : flatStats.statCounter += amount;
                     else if (key === 'EVASION' || key === 'DODGE' || key === 'ESQUIVE') isMult ? mults.statEsquive *= amount : flatStats.statEsquive += amount;
@@ -397,6 +421,7 @@ app.post('/dinoz/update-grid', async (req, res) => {
             statSpeed: parseFloat((flatStats.statSpeed * mults.statSpeed).toFixed(2)),
             statInitiative: Math.round(flatStats.statInitiative * mults.statInitiative),
             statArmor: parseFloat((flatStats.statArmor + (mults.statArmor - 1) * 100).toFixed(1)),
+            statArmorBreak: parseFloat((flatStats.statArmorBreak + (mults.statArmorBreak - 1) * 100).toFixed(1)),
             statCounter: parseFloat((flatStats.statCounter + (mults.statCounter - 1) * 100).toFixed(1)),
             statEsquive: parseFloat((flatStats.statEsquive + (mults.statEsquive - 1) * 100).toFixed(1)),
             statSuperEsquive: parseFloat((flatStats.statSuperEsquive + (mults.statSuperEsquive - 1) * 100).toFixed(1)),

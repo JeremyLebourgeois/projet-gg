@@ -30,6 +30,81 @@ document.addEventListener('DOMContentLoaded', () => {
         raceGrid.appendChild(raceCard);
     });
 
+    let congealState = 0; // 0 = default (hide frozen), 1 = all, 2 = frozen only
+    let currentRaceFilter = null;
+    const btnCongealed = document.querySelector('.btn-congealed');
+
+    // Initial state style
+    btnCongealed.style.opacity = '0.5';
+    btnCongealed.style.borderColor = '#555';
+    btnCongealed.title = "Cacher les Dinozs congelés";
+
+    btnCongealed.addEventListener('click', () => {
+        congealState = (congealState + 1) % 3;
+        
+        if (congealState === 0) {
+            btnCongealed.style.opacity = '0.5';
+            btnCongealed.style.background = '';
+            btnCongealed.style.borderColor = '#555';
+            btnCongealed.title = "Cacher les Dinozs congelés";
+        } else if (congealState === 1) {
+            btnCongealed.style.opacity = '1';
+            btnCongealed.style.background = '';
+            btnCongealed.style.borderColor = '#4fc3f7';
+            btnCongealed.title = "Afficher tous les Dinozs";
+        } else if (congealState === 2) {
+            btnCongealed.style.opacity = '1';
+            btnCongealed.style.background = 'linear-gradient(180deg, #29b6f6, #0277bd)';
+            btnCongealed.style.borderColor = '#00e5ff';
+            btnCongealed.title = "Dinozs congelés uniquement";
+        }
+        
+        if (!raceGrid.classList.contains('hidden')) {
+            userGrid.classList.remove('hidden');
+            raceGrid.classList.add('hidden');
+            btnRace.innerHTML = 'Races';
+        }
+
+        applyFilters();
+    });
+
+    function applyFilters() {
+        const filterValue = searchInput.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        dinoCards.forEach(card => {
+            const isCongealed = card.getAttribute('data-congealed') === '1';
+            const cardRace = card.querySelector('.card-info p').textContent.toLowerCase();
+            const dinoName = card.querySelector('h3').textContent.toLowerCase();
+            
+            let showFrozen = false;
+            if (congealState === 0 && !isCongealed) showFrozen = true;
+            if (congealState === 1) showFrozen = true;
+            if (congealState === 2 && isCongealed) showFrozen = true;
+
+            let showSearch = filterValue === '' || dinoName.includes(filterValue);
+            let showRace = currentRaceFilter === null || cardRace.includes(currentRaceFilter.toLowerCase());
+
+            if (showFrozen && showSearch && showRace) {
+                card.style.display = '';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        if (visibleCount === 0) {
+            searchEmpty.style.display = 'block';
+            if (currentRaceFilter) {
+                searchEmpty.textContent = `Aucun ${currentRaceFilter.charAt(0).toUpperCase() + currentRaceFilter.slice(1)} avec ces filtres.`;
+            } else {
+                searchEmpty.textContent = "Aucun résultat pour cette recherche ou ces filtres.";
+            }
+        } else {
+            searchEmpty.style.display = 'none';
+        }
+    }
+
     // 2. LOGIQUE DU BOUTON "RACES"
     btnRace.addEventListener('click', () => {
         if (raceGrid.classList.contains('hidden')) {
@@ -45,10 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
         userGrid.classList.remove('hidden');
         raceGrid.classList.add('hidden');
         btnRace.innerHTML = 'Races';
-        
-        dinoCards.forEach(card => card.style.display = '');
-        searchEmpty.style.display = 'none';
         searchInput.value = '';
+        currentRaceFilter = null;
+        applyFilters();
     }
 
     // 3. FILTRAGE PAR RACE
@@ -56,56 +130,24 @@ document.addEventListener('DOMContentLoaded', () => {
         userGrid.classList.remove('hidden');
         raceGrid.classList.add('hidden');
         btnRace.innerHTML = 'Races';
-
-        let visibleCount = 0;
-        dinoCards.forEach(card => {
-            const cardText = card.querySelector('.card-info p').textContent;
-            if (cardText.includes(selectedRace)) {
-                card.style.display = '';
-                visibleCount++;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        if (visibleCount === 0) {
-            searchEmpty.style.display = 'block';
-            searchEmpty.textContent = `Aucun ${selectedRace} trouvé parmis tes p'tits guerriers givrés.`;
-        } else {
-            searchEmpty.style.display = 'none';
-        }
+        currentRaceFilter = selectedRace;
+        searchInput.value = ''; 
+        applyFilters();
     }
 
     // 4. RECHERCHE
-    function filterSearch() {
-        const filterValue = searchInput.value.toLowerCase().trim();
-        let visibleCount = 0;
-
-        if (userGrid.classList.contains('hidden')) {
+    searchInput.addEventListener('input', () => {
+        if (!raceGrid.classList.contains('hidden')) {
             userGrid.classList.remove('hidden');
             raceGrid.classList.add('hidden');
             btnRace.innerHTML = 'Races';
         }
+        currentRaceFilter = null; 
+        applyFilters();
+    });
 
-        dinoCards.forEach(card => {
-            const dinoName = card.querySelector('h3').textContent.toLowerCase();
-            if (dinoName.includes(filterValue)) {
-                card.style.display = '';
-                visibleCount++;
-            } else {
-                card.style.display = 'none';
-            }
-        });
-
-        if (visibleCount === 0) {
-            searchEmpty.style.display = 'block';
-            searchEmpty.textContent = "Aucun résultat pour cette recherche.";
-        } else {
-            searchEmpty.style.display = 'none';
-        }
-    }
-
-    searchInput.addEventListener('input', filterSearch);
+    // Appliquer l'état par défaut (cacher les congelés)
+    applyFilters();
 
     // 5. GESTION DE LA MODALE
     const modal = document.getElementById('new-dino-modal');

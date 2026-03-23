@@ -47,18 +47,25 @@
             </div>
 
             <button class="btn-tool btn-race">Races</button>
+            <button class="btn-tool btn-congealed"><i class="fas fa-snowflake"></i></button>
             <div class="spacer"></div>
             <button class="btn-tool btn-new">Nouveau Dinoz</button>
+
         </div>
 
         <div class="dino-grid" id="user-dino-grid">
             <% dinozs.forEach(dino=> { %>
-                <a href="/dinoz/<%= dino.id %>" class="dino-card <%= dino.note ? 'card-with-note' : '' %>" <% if
+                <a href="/dinoz/<%= dino.id %>" class="dino-card <%= dino.note ? 'card-with-note' : '' %>" data-congealed="<%= dino.isCongealed %>" <% if
                     (dino.note) { %> data-note="<%= dino.note %>" <% } %>>
 
-                            <div class="card-img-container">
+                            <div class="card-img-container" style="position: relative;">
                                 <img src="<%= dino.imageUrl ? dino.imageUrl : '/img/races/' + dino.race.toLowerCase() + '.png' %>"
                                     alt="<%= dino.race %>">
+                                <% if (dino.isCongealed === 1) { %>
+                                    <div style="position: absolute; top: 0px; right: 0px; color: #4fc3f7; text-shadow: 0 0 5px black; font-size: 1.5em;">
+                                        <i class="fas fa-snowflake"></i>
+                                    </div>
+                                <% } %>
                             </div>
                             <div class="card-info">
                                 <h3>

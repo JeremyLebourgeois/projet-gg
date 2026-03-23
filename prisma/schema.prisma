@@ -38,6 +38,9 @@ model Dinoz {
   level     Int     @default(1)
   note     String?
   role      String @default("test")
+
+  isReincarnate   Int @default(0) // Dinoz Récincarné ? -- 1 pour oui -- 0 pour non
+  isCongealed     Int @default(0) // Dinoz Congelé ? -- 1 pour oui -- 0 pour non
   
 // Stats
   statFire  Int     @default(0)
@@ -67,6 +70,7 @@ model Dinoz {
   statInitiative Int @default(0)
   statCounter    Float @default(0.0)
   statArmor      Float @default(0.0)
+  statArmorBreak Float @default(0.0)
   statMultiHit   Float @default(0.0)
   statEsquive    Float @default(0.0)
   statSuperEsquive Float @default(0.0)
@@ -82,15 +86,9 @@ model Dinoz {
   userId    Int
   user      User    @relation(fields: [userId], references: [id])
   
-// 1. Compétences Apprises
+// 1. Compétences et ups
   learnedSkills   RefSkill[] @relation("LearnedSkills")
-
-// Historique des ups (JSON)
   ups       Json? 
-
-// Dinoz Récincarné ? -- 1 pour oui -- 0 pour non
-  isReincarnate   Int @default(0)
-
   planId    Int?         // Peut être null (pas de plan)
   plan      SkillPlan?   @relation(fields: [planId], references: [id])
 }
@@ -115,13 +113,15 @@ model RefSkill {
 
   // Modificateurs de statistiques (effets)
   modifiers   Json?
- 
+
+  // --- NOUVEAU : Données de Combat et Simulation ---
+  fightCondition Json?   // Conditions de lancement (HP min, statuts, nb alliés...)
+  power          Float?  // Puissance de la compétence (dégâts etc.)
+
   // Relations inverses vers les Dinozs
   dinozsLearned   Dinoz[] @relation("LearnedSkills")
  
   // --- RELATION PARENT/ENFANT (Arbre de compétences) ---
-  // On supprime "parentSkillId" !
-  // On met des crochets [] des deux côtés pour dire "Plusieurs parents possibles"
   parents      RefSkill[] @relation("SkillTree")
   children     RefSkill[] @relation("SkillTree")
 
