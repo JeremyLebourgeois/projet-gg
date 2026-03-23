@@ -1,24 +1,30 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Dinozs - Guerriers du Givre</title>
     <link rel="icon" type="image/png" href="/img/logo.png">
-    
+
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/pages/my-dinozs.css">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body class="hub-body">
 
     <header class="hub-header">
         <div class="header-overlay">
             <div class="header-content">
                 <div class="user-info">
-                    <h1><%= pseudo %></h1>
-                    <p class="status"><strong><%= role %></strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
+                    <h1>
+                        <%= pseudo %>
+                    </h1>
+                    <p class="status"><strong>
+                            <%= role %>
+                        </strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
                 </div>
 
                 <div class="nav-menu">
@@ -46,28 +52,32 @@
         </div>
 
         <div class="dino-grid" id="user-dino-grid">
-            <% dinozs.forEach(dino => { %>
-                <a href="/dinoz/<%= dino.id %>" 
-                class="dino-card <%= dino.note ? 'card-with-note' : '' %>" 
-                <% if (dino.note) { %> data-note="<%= dino.note %>" <% } %>>
-                    
-                    <div class="card-img-container">
-                        <img src="<%= dino.imageUrl ? dino.imageUrl : '/img/races/' + dino.race.toLowerCase() + '.png' %>" alt="<%= dino.race %>">
-                    </div>
-                    <div class="card-info">
-                        <h3><%= dino.name %></h3>
-                        <p><%= dino.race %> Niv.<%= dino.level %></p>
-                    </div>
+            <% dinozs.forEach(dino=> { %>
+                <a href="/dinoz/<%= dino.id %>" class="dino-card <%= dino.note ? 'card-with-note' : '' %>" <% if
+                    (dino.note) { %> data-note="<%= dino.note %>" <% } %>>
+
+                            <div class="card-img-container">
+                                <img src="<%= dino.imageUrl ? dino.imageUrl : '/img/races/' + dino.race.toLowerCase() + '.png' %>"
+                                    alt="<%= dino.race %>">
+                            </div>
+                            <div class="card-info">
+                                <h3>
+                                    <%= dino.name %>
+                                </h3>
+                                <p>
+                                    <%= dino.race %> Niv.<%= dino.level %>
+                                </p>
+                            </div>
                 </a>
-            <% }) %>
+                <% }) %>
 
-            <% if (dinozs.length === 0) { %>
-                <div class="empty-state">Aucun Dinoz trouvé.</div>
-            <% } %>
+                    <% if (dinozs.length===0) { %>
+                        <div class="empty-state">Aucun Dinoz trouvé.</div>
+                        <% } %>
 
-            <div class="empty-state search-empty" style="display: none;">
-                Aucun résultat pour cette recherche.
-            </div>
+                            <div class="empty-state search-empty" style="display: none;">
+                                Aucun résultat pour cette recherche.
+                            </div>
         </div>
 
         <div class="dino-grid hidden" id="race-selector-grid"></div>
@@ -125,15 +135,17 @@
                         <label>Apparence</label>
                         <div class="radio-group">
                             <label>
-                                <input type="radio" name="skinType" value="default" checked onchange="toggleUrlInput(false)">
-                                Apparence Glaciale 
-                            </label>
-                            <label>
-                                <input type="radio" name="skinType" value="custom" onchange="toggleUrlInput(true)">
+                                <input type="radio" name="skinType" value="custom" checked
+                                    onchange="toggleUrlInput(true)">
                                 URL dinoz
                             </label>
+                            <label>
+                                <input type="radio" name="skinType" value="default" onchange="toggleUrlInput(false)">
+                                Apparence Glaciale
+                            </label>
                         </div>
-                        <input type="url" name="imageUrl" id="url-input" placeholder="https://..." class="hidden" style="margin-top: 10px;">
+                        <input type="url" name="imageUrl" id="url-input" placeholder="https://..." required
+                            style="margin-top: 10px;">
                     </div>
 
                     <div class="form-group">
@@ -153,4 +165,5 @@
 
     <script src="/js/pages/my-dinozs.js"></script>
 </body>
+
 </html>
