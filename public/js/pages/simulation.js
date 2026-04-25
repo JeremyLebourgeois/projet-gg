@@ -11,155 +11,65 @@ const state = {
     displayRange: false
 };
 
-// Constantes de combat (Exactes selon getDamage.ts)
+// Constantes de combat
 const BASE_ATTACK_VALUE = 2;
 const BASE_DEFENSE_VALUE = 0;
 const ASSAULT_POWER = 5;
 const ATTACK_GLOBAL_FACTOR = 1.0;
 
 const SKILLS_POWER = {
-    'Souffle Ardent': 5,
-    'Boule de Feu': 7,
-    'Météores': 10,
-    'Coulée de Lave': 12,
-    'Combustion': 3,
-    'Paume Chalumeau': 10,
-    'Canon à Eau': 6,
-    'Douche Écossaise': 2,
-    'Gel': 5,
-    'Déluge': 10,
-    'Coup Sournois': 7,
-    'Lanceur de Gland': 5,
-    'Ondine': 30,
-    'Loup-Garou': 30,
-    'Éclair': 5,
-    'Danse Foudroyante': 3,
-    'Foudre': 10,
-    'Crépuscule Flamboyant': 6,
-    'Mistral': 3,
-    'Tornade': 5,
-    'Attaque Plongeante': 5,
-    'Envol': 10,
-    'Disque Vacuum': 12
+    "Coup de Pression": 10,
+    "Alizé": 8,
+    "Vague de Froid": 12,
+    "Boulier": 0,
+    "Sieste": 0
 };
 
-
 document.addEventListener('DOMContentLoaded', () => {
-    initData();
-    populateFilters();
-    buildFightersList();
-    attachEventListeners();
+    init();
 });
 
-function initData() {
-    DINOZ_DATA = JSON.parse(document.getElementById('dinoz-data').textContent || '[]');
-    PLAN_DATA = JSON.parse(document.getElementById('plan-data').textContent || '[]');
-    SKILLS_DATA = JSON.parse(document.getElementById('skills-data').textContent || '[]');
-    RACES_DATA = JSON.parse(document.getElementById('races-data').textContent || '[]');
+function init() {
+    try {
+        DINOZ_DATA = JSON.parse(document.getElementById('dinoz-data').textContent);
+        PLAN_DATA = JSON.parse(document.getElementById('plan-data').textContent);
+        SKILLS_DATA = JSON.parse(document.getElementById('skills-data').textContent);
+        RACES_DATA = JSON.parse(document.getElementById('races-data').textContent);
 
-    DINOZ_DATA.forEach(d => state.fighters.push(buildFighterStats(d, false)));
-    PLAN_DATA.forEach(p => state.fighters.push(buildFighterStats(p, true)));
+        console.log("Données chargées:", { dinozs: DINOZ_DATA.length, plans: PLAN_DATA.length });
 
-    state.fighters.sort((a, b) => b.level - a.level);
-}
+        // On transforme tout en "combattants" uniformes
+        state.fighters = [
+            ...DINOZ_DATA.map(d => buildFighterData(d, false)),
+            ...PLAN_DATA.map(p => buildFighterData(p, true))
+        ];
 
-function calculateDefenses(elements, defRatios, defMods) {
-    const fire = elements.statFire || 0;
-    const wood = elements.statWood || 0;
-    const water = elements.statWater || 0;
-    const bolt = elements.statBolt || elements.statLightning || 0;
-    const air = elements.statAir || 0;
-
-    return {
-        fire: parseFloat((((fire + defRatios.fire) * 1) + ((wood + defRatios.wood) * 0.5) + ((water + defRatios.water) * 0.5) + ((bolt + defRatios.bolt) * 1.5) + ((air + defRatios.air) * 1.5) + defMods.fire).toFixed(1)),
-        wood: parseFloat((((fire + defRatios.fire) * 1.5) + ((wood + defRatios.wood) * 1) + ((water + defRatios.water) * 0.5) + ((bolt + defRatios.bolt) * 0.5) + ((air + defRatios.air) * 1.5) + defMods.wood).toFixed(1)),
-        water: parseFloat((((fire + defRatios.fire) * 1.5) + ((wood + defRatios.wood) * 1.5) + ((water + defRatios.water) * 1) + ((bolt + defRatios.bolt) * 0.5) + ((air + defRatios.air) * 0.5) + defMods.water).toFixed(1)),
-        lightning: parseFloat((((fire + defRatios.fire) * 0.5) + ((wood + defRatios.wood) * 1.5) + ((water + defRatios.water) * 1.5) + ((bolt + defRatios.bolt) * 1) + ((air + defRatios.air) * 0.5) + defMods.bolt).toFixed(1)),
-        air: parseFloat((((fire + defRatios.fire) * 0.5) + ((wood + defRatios.wood) * 0.5) + ((water + defRatios.water) * 1.5) + ((bolt + defRatios.bolt) * 1.5) + ((air + defRatios.air) * 1) + defMods.air).toFixed(1))
-    };
-}
-
-function applyModifiersFighter(modifiers, flatStats, mults, isGhost = true) {
-    if (typeof modifiers === 'string') {
-        try { modifiers = JSON.parse(modifiers); } catch (e) { return; }
-    }
-    for (const [key, val] of Object.entries(modifiers)) {
-        const isMult = val && typeof val === 'object' && val.type === 'multiply';
-        const amount = isMult ? val.value : val;
-
-        if (key === 'MAX_HP') isMult ? mults.statLife *= amount : flatStats.statLife += amount;
-        else if (key === 'INITIATIVE') isMult ? mults.statInitiative *= amount : flatStats.statInitiative += amount;
-        else if (key === 'ARMOR') isMult ? mults.statArmor *= amount : flatStats.statArmor += amount;
-        else if (key === 'SPEED') isMult ? mults.statSpeed *= amount : flatStats.statSpeed += amount;
-        else if (key === 'COUNTER') isMult ? mults.statCounter *= amount : flatStats.statCounter += amount;
-        else if (key === 'EVASION' || key === 'DODGE' || key === 'ESQUIVE') isMult ? mults.statEsquive *= amount : flatStats.statEsquive += amount;
-        else if (key === 'SUPER_EVASION') isMult ? mults.statSuperEsquive *= amount : flatStats.statSuperEsquive += amount;
-        else if (key === 'MULTIHIT' || key === 'MULTI_HIT') isMult ? mults.statMultiHit *= amount : flatStats.statMultiHit += amount;
-
-        // Éléments (uniquement pour les Fantômes "Plans", car les "Dinozs" ont déjà ces bonus sauvegardés en BDD depuis server.js)
-        else if (isGhost && key === 'FIRE_ELEMENT') flatStats.statFire += amount;
-        else if (isGhost && key === 'WOOD_ELEMENT') flatStats.statWood += amount;
-        else if (isGhost && key === 'WATER_ELEMENT') flatStats.statWater += amount;
-        else if (isGhost && key === 'LIGHTNING_ELEMENT') flatStats.statBolt += amount;
-        else if (isGhost && key === 'AIR_ELEMENT') flatStats.statAir += amount;
-
-        // Types spécifiques aux combats
-        else if (key === 'FIRE_ASSAULT') flatStats.statAssaultFire += amount;
-        else if (key === 'WOOD_ASSAULT') flatStats.statAssaultWood += amount;
-        else if (key === 'WATER_ASSAULT') flatStats.statAssaultWater += amount;
-        else if (key === 'LIGHTNING_ASSAULT') flatStats.statAssaultBolt += amount;
-        else if (key === 'AIR_ASSAULT') flatStats.statAssaultAir += amount;
-
-        else if (key === 'FIRE_DEFENSE') flatStats.defFire += amount;
-        else if (key === 'WOOD_DEFENSE') flatStats.defWood += amount;
-        else if (key === 'WATER_DEFENSE') flatStats.defWater += amount;
-        else if (key === 'LIGHTNING_DEFENSE') flatStats.defBolt += amount;
-        else if (key === 'AIR_DEFENSE') flatStats.defAir += amount;
-
-        else if (key === 'FIRE_DEFENSE_RATIO') flatStats.defRatioFire += amount;
-        else if (key === 'WOOD_DEFENSE_RATIO') flatStats.defRatioWood += amount;
-        else if (key === 'WATER_DEFENSE_RATIO') flatStats.defRatioWater += amount;
-        else if (key === 'LIGHTNING_DEFENSE_RATIO') flatStats.defRatioBolt += amount;
-        else if (key === 'AIR_DEFENSE_RATIO') flatStats.defRatioAir += amount;
+        populateFilters();
+        attachEventListeners();
+        buildFightersList();
+    } catch (e) {
+        console.error("Erreur lors de l'initialisation:", e);
     }
 }
 
-function buildFighterStats(data, isGhost) {
+function buildFighterData(data, isGhost) {
     const uniqueId = (isGhost ? 'ghost_' : 'real_') + data.id;
-    let skillIds = [];
-    let ajout = { fire: 0, wood: 0, water: 0, lightning: 0, air: 0 };
-    let raceName = data.race;
-
-    if (!isGhost) {
-        skillIds = (data.learnedSkills || []).map(s => s.id);
-        ajout = { fire: 0, wood: 0, water: 0, lightning: 0, air: 0 };
-    } else {
-        try { skillIds = (typeof data.skillIds === 'string' ? JSON.parse(data.skillIds) : data.skillIds) || []; } catch (e) { }
-        try {
-            let aj = (typeof data.ajout === 'string' ? JSON.parse(data.ajout) : data.ajout) || {};
-            ajout = { fire: aj.fire || 0, wood: aj.wood || 0, water: aj.water || 0, lightning: aj.lightning || 0, air: aj.air || 0 };
-        } catch (e) { }
-    }
-
-    const raceInfo = RACES_DATA.find(r => r.name.toLowerCase() === raceName.toLowerCase());
-    const base = raceInfo ? { fire: raceInfo.baseFire, wood: raceInfo.baseWood, water: raceInfo.baseWater, bolt: raceInfo.baseBolt, air: raceInfo.baseAir } : { fire: 0, wood: 0, water: 0, bolt: 0, air: 0 };
+    const raceInfo = RACES_DATA.find(r => r.name === data.race);
+    const skillIds = isGhost ? (data.skillIds || []) : (data.learnedSkills || []).map(s => s.id);
 
     let flatStats = {
-        statLife: 100, statArmor: 0, statInitiative: 0, statSpeed: 10, statCounter: 0, statEsquive: 0, statSuperEsquive: 0, statMultiHit: 0,
-        statFire: base.fire + ajout.fire,
-        statWood: base.wood + ajout.wood,
-        statWater: base.water + ajout.water,
-        statBolt: base.bolt + (ajout.lightning || 0),
-        statAir: base.air + ajout.air,
+        statFire: 0, statWood: 0, statWater: 0, statBolt: 0, statAir: 0,
+        statLife: 100, statInitiative: 0, statArmor: 0, statSpeed: 10, statCounter: 0, statEsquive: 0, statSuperEsquive: 0, statMultiHit: 0,
         statAssaultFire: 0, statAssaultWood: 0, statAssaultWater: 0, statAssaultBolt: 0, statAssaultAir: 0,
         defFire: 0, defWood: 0, defWater: 0, defBolt: 0, defAir: 0,
         defRatioFire: 0, defRatioWood: 0, defRatioWater: 0, defRatioBolt: 0, defRatioAir: 0,
-        resilience: 40  // Default resilience for Dinoz (getFighters.ts line 107)
+        resilience: 40
     };
 
     let mults = { statArmor: 1.0, statLife: 1.0, statInitiative: 1.0, statSpeed: 1.0, statCounter: 1.0, statEsquive: 1.0, statSuperEsquive: 1.0, statMultiHit: 1.0 };
 
     if (isGhost) {
+        // Pour les plans, on calcule les éléments de base depuis les compétences (1 up = 1 point)
         skillIds.forEach(id => {
             const skill = SKILLS_DATA.find(s => s.id === id);
             if (skill) {
@@ -170,14 +80,32 @@ function buildFighterStats(data, isGhost) {
                 else if (skill.element === 'Air') flatStats.statAir++;
             }
         });
+        // On ajoute les bases de la race pour les plans (car non stocké en BDD pour les plans)
+        if (raceInfo) {
+            flatStats.statFire += raceInfo.baseFire || 0;
+            flatStats.statWood += raceInfo.baseWood || 0;
+            flatStats.statWater += raceInfo.baseWater || 0;
+            flatStats.statBolt += raceInfo.baseBolt || 0;
+            flatStats.statAir += raceInfo.baseAir || 0;
+        }
     } else {
-        flatStats.statFire = data.statFire;
-        flatStats.statWood = data.statWood;
-        flatStats.statWater = data.statWater;
-        flatStats.statBolt = data.statBolt;
-        flatStats.statAir = data.statAir;
+        // Pour les Dinozs réels, on utilise les stats déjà calculées et sauvegardées en BDD
+        flatStats.statFire = data.statFire || 0;
+        flatStats.statWood = data.statWood || 0;
+        flatStats.statWater = data.statWater || 0;
+        flatStats.statBolt = data.statBolt || 0;
+        flatStats.statAir = data.statAir || 0;
+        flatStats.statLife = data.statLife || 100;
+        flatStats.statSpeed = data.statSpeed || 10;
+        flatStats.statInitiative = data.statInitiative || 0;
+        flatStats.statArmor = data.statArmor || 0;
+        flatStats.statCounter = data.statCounter || 0;
+        flatStats.statEsquive = data.statEsquive || 0;
+        flatStats.statSuperEsquive = data.statSuperEsquive || 0;
+        flatStats.statMultiHit = data.statMultiHit || 0;
     }
 
+    // Appliquer les modificateurs de compétences
     if (raceInfo && raceInfo.innateSkillId) {
         const innate = SKILLS_DATA.find(s => s.id === raceInfo.innateSkillId);
         if (innate && innate.modifiers) applyModifiersFighter(innate.modifiers, flatStats, mults, isGhost);
@@ -208,9 +136,6 @@ function buildFighterStats(data, isGhost) {
     const finalSuperEsquive = parseFloat((flatStats.statSuperEsquive + (mults.statSuperEsquive - 1) * 100).toFixed(1));
     const finalMultiHit = parseFloat((flatStats.statMultiHit + (mults.statMultiHit - 1) * 100).toFixed(1));
 
-    let defRatios = { fire: flatStats.defRatioFire, wood: flatStats.defRatioWood, water: flatStats.defRatioWater, bolt: flatStats.defRatioBolt, air: flatStats.defRatioAir };
-    let defMods = { fire: flatStats.defFire, wood: flatStats.defWood, water: flatStats.defWater, bolt: flatStats.defBolt, air: flatStats.defAir };
-
     return {
         uid: uniqueId,
         id: data.id,
@@ -221,32 +146,81 @@ function buildFighterStats(data, isGhost) {
         isGhost: isGhost,
         role: data.role || '',
         imageUrl: isGhost ? `/img/races/${data.race.toLowerCase()}.png` : (data.imageUrl || `/img/races/${data.race.toLowerCase()}.png`),
-        stats: data.stats && Object.keys(data.stats).length > 0 ? {
-            armor: data.stats.statArmor || 0,
-            life: data.stats.statLife || 100,
-            initiative: data.stats.statInitiative || 0,
-            speed: data.stats.statSpeed || 10,
-            counter: data.stats.statCounter || 0,
-            esquive: data.stats.statEsquive || 0,
-            superEsquive: data.stats.statSuperEsquive || 0,
-            multiHit: data.stats.statMultiHit || 0,
-            resilience: flatStats.resilience
-        } : {
+        stats: {
             armor: finalArmor, life: finalLife, initiative: finalInitiative, speed: finalSpeed,
             counter: finalCounter, esquive: finalEsquive, superEsquive: finalSuperEsquive, multiHit: finalMultiHit,
             resilience: flatStats.resilience
         },
-        elements: data.elements && Object.keys(data.elements).length > 0 ? {
-            fire: data.elements.fire || 0, wood: data.elements.wood || 0, water: data.elements.water || 0, bolt: data.elements.bolt || 0, air: data.elements.air || 0
-        } : {
+        elements: {
             fire: flatStats.statFire, wood: flatStats.statWood, water: flatStats.statWater, bolt: flatStats.statBolt, air: flatStats.statAir
         },
         assaultBonus: {
             fire: flatStats.statAssaultFire, wood: flatStats.statAssaultWood, water: flatStats.statAssaultWater, bolt: flatStats.statAssaultBolt, air: flatStats.statAssaultAir
         },
-        defenses: calculateDefenses(flatStats, defRatios, defMods),
+        defenses: calculateDefenses(flatStats,
+            { fire: flatStats.defRatioFire, wood: flatStats.defRatioWood, water: flatStats.defRatioWater, bolt: flatStats.defRatioBolt, air: flatStats.defRatioAir },
+            { fire: flatStats.defFire, wood: flatStats.defWood, water: flatStats.defWater, bolt: flatStats.defBolt, air: flatStats.defAir }),
         attacks: attacks,
         allSkills: allSkills
+    };
+}
+
+function applyModifiersFighter(modifiers, flatStats, mults, isGhost = true) {
+    if (typeof modifiers === 'string') {
+        try { modifiers = JSON.parse(modifiers); } catch (e) { return; }
+    }
+    for (const [key, val] of Object.entries(modifiers)) {
+        const isMult = val && typeof val === 'object' && val.type === 'multiply';
+        const amount = isMult ? val.value : val;
+
+        if (key === 'MAX_HP') isMult ? mults.statLife *= amount : flatStats.statLife += amount;
+        else if (key === 'INITIATIVE') isMult ? mults.statInitiative *= amount : flatStats.statInitiative += amount;
+        else if (key === 'ARMOR') isMult ? mults.statArmor *= amount : flatStats.statArmor += amount;
+        else if (key === 'SPEED') isMult ? mults.statSpeed *= amount : flatStats.statSpeed += amount;
+        else if (key === 'COUNTER') isMult ? mults.statCounter *= amount : flatStats.statCounter += amount;
+        else if (key === 'EVASION' || key === 'DODGE' || key === 'ESQUIVE') isMult ? mults.statEsquive *= amount : flatStats.statEsquive += amount;
+        else if (key === 'SUPER_EVASION') isMult ? mults.statSuperEsquive *= amount : flatStats.statSuperEsquive += amount;
+        else if (key === 'MULTIHIT' || key === 'MULTI_HIT') isMult ? mults.statMultiHit *= amount : flatStats.statMultiHit += amount;
+
+        else if (isGhost && key === 'FIRE_ELEMENT') flatStats.statFire += amount;
+        else if (isGhost && key === 'WOOD_ELEMENT') flatStats.statWood += amount;
+        else if (isGhost && key === 'WATER_ELEMENT') flatStats.statWater += amount;
+        else if (isGhost && key === 'LIGHTNING_ELEMENT') flatStats.statBolt += amount;
+        else if (isGhost && key === 'AIR_ELEMENT') flatStats.statAir += amount;
+
+        else if (key === 'FIRE_ASSAULT') flatStats.statAssaultFire += amount;
+        else if (key === 'WOOD_ASSAULT') flatStats.statAssaultWood += amount;
+        else if (key === 'WATER_ASSAULT') flatStats.statAssaultWater += amount;
+        else if (key === 'LIGHTNING_ASSAULT') flatStats.statAssaultBolt += amount;
+        else if (key === 'AIR_ASSAULT') flatStats.statAssaultAir += amount;
+
+        else if (key === 'FIRE_DEFENSE') flatStats.defFire += amount;
+        else if (key === 'WOOD_DEFENSE') flatStats.defWood += amount;
+        else if (key === 'WATER_DEFENSE') flatStats.defWater += amount;
+        else if (key === 'LIGHTNING_DEFENSE') flatStats.defBolt += amount;
+        else if (key === 'AIR_DEFENSE') flatStats.defAir += amount;
+
+        else if (key === 'FIRE_DEFENSE_RATIO') flatStats.defRatioFire += amount;
+        else if (key === 'WOOD_DEFENSE_RATIO') flatStats.defRatioWood += amount;
+        else if (key === 'WATER_DEFENSE_RATIO') flatStats.defRatioWater += amount;
+        else if (key === 'LIGHTNING_DEFENSE_RATIO') flatStats.defRatioBolt += amount;
+        else if (key === 'AIR_DEFENSE_RATIO') flatStats.defRatioAir += amount;
+    }
+}
+
+function calculateDefenses(finalStats, ratios, mods) {
+    const f = finalStats.statFire + (ratios.fire || 0);
+    const w = finalStats.statWood + (ratios.wood || 0);
+    const wa = finalStats.statWater + (ratios.water || 0);
+    const b = finalStats.statBolt + (ratios.bolt || 0);
+    const a = finalStats.statAir + (ratios.air || 0);
+
+    return {
+        fire: parseFloat((f * 1 + w * 0.5 + wa * 0.5 + b * 1.5 + a * 1.5 + (mods.fire || 0)).toFixed(1)),
+        wood: parseFloat((f * 1.5 + w * 1 + wa * 0.5 + b * 0.5 + a * 1.5 + (mods.wood || 0)).toFixed(1)),
+        water: parseFloat((f * 1.5 + w * 1.5 + wa * 1 + b * 0.5 + a * 0.5 + (mods.water || 0)).toFixed(1)),
+        lightning: parseFloat((f * 0.5 + w * 1.5 + wa * 1.5 + b * 1 + a * 0.5 + (mods.bolt || 0)).toFixed(1)),
+        air: parseFloat((f * 0.5 + w * 0.5 + wa * 1.5 + b * 1.5 + a * 1 + (mods.air || 0)).toFixed(1))
     };
 }
 
@@ -276,8 +250,8 @@ function attachEventListeners() {
         if (id.includes('level')) document.getElementById(id).addEventListener('input', buildFightersList);
     });
 
-    document.getElementById('btn-clear-a').addEventListener('click', () => { state.teamA = []; updateTeamsDOM(); });
-    document.getElementById('btn-clear-b').addEventListener('click', () => { state.teamB = []; updateTeamsDOM(); });
+    document.getElementById('btn-clear-a').addEventListener('click', () => { state.teamA = []; updateTeamsDOM(); buildFightersList(); });
+    document.getElementById('btn-clear-b').addEventListener('click', () => { state.teamB = []; updateTeamsDOM(); buildFightersList(); });
 
     document.getElementById('btn-start-mode1').addEventListener('click', () => {
         document.getElementById('selection-section').classList.add('hidden');
@@ -295,11 +269,8 @@ function attachEventListeners() {
         renderMode1Panels();
     });
 
-    document.getElementById('select-active-a').addEventListener('change', (e) => { state.activeA = parseInt(e.target.value); renderMode1Panels(); });
-    document.getElementById('select-active-b').addEventListener('change', (e) => { state.activeB = parseInt(e.target.value); renderMode1Panels(); });
-
-    document.getElementById('shield-toggle-a').addEventListener('change', (e) => { state.shieldA = e.target.checked; renderMode1Panels(); });
-    document.getElementById('shield-toggle-b').addEventListener('change', (e) => { state.shieldB = e.target.checked; renderMode1Panels(); });
+    document.getElementById('select-a').addEventListener('change', (e) => { state.activeA = parseInt(e.target.value); renderMode1Panels(); });
+    document.getElementById('select-b').addEventListener('change', (e) => { state.activeB = parseInt(e.target.value); renderMode1Panels(); });
 }
 
 function buildFightersList() {
@@ -345,7 +316,6 @@ function buildFightersList() {
         const inB = state.teamB.some(x => x.uid === f.uid);
         const div = document.createElement('div');
         div.className = 'fighter-card';
-        div.dataset.uid = f.uid;
         div.innerHTML = `
             <div class="fighter-info">
                 <span class="badge ${f.isGhost ? 'ghost' : 'real'}">${f.isGhost ? 'Fantôme' : 'Dinoz'}</span>
@@ -359,7 +329,6 @@ function buildFightersList() {
             </div>
         `;
 
-        // Skill tooltip
         div.addEventListener('mouseenter', () => {
             if (!f.allSkills.length) return;
             skillsTooltip.innerHTML = '<div style="color:#58a6ff;font-weight:bold;margin-bottom:4px;">Compétences</div>' +
@@ -374,25 +343,14 @@ function buildFightersList() {
     });
 }
 
-window.addToTeam = function (uid, teamCode) {
-    const f = state.fighters.find(x => x.uid === uid);
-    if (!f) return;
-    const fighterCopy = { ...f, id_team: Date.now() };
-    if (teamCode === 'A' && state.teamA.length < 6) state.teamA.push(fighterCopy);
-    else if (teamCode === 'B' && state.teamB.length < 6) state.teamB.push(fighterCopy);
-    updateTeamsDOM();
-};
-
 window.toggleTeam = function (uid, teamCode, btn) {
     const team = teamCode === 'A' ? state.teamA : state.teamB;
     const existing = team.findIndex(x => x.uid === uid);
     if (existing >= 0) {
-        // Remove from team
         team.splice(existing, 1);
         btn.textContent = `+ ${teamCode}`;
         btn.classList.remove('in-team');
     } else {
-        // Add to team if not full
         if (team.length >= 6) return;
         const f = state.fighters.find(x => x.uid === uid);
         if (!f) return;
@@ -407,6 +365,7 @@ window.removeFromTeam = function (index, teamCode) {
     if (teamCode === 'A') state.teamA.splice(index, 1);
     else state.teamB.splice(index, 1);
     updateTeamsDOM();
+    buildFightersList(); // On rafraîchit la liste pour mettre à jour les boutons +/-
 };
 
 function updateTeamsDOM() {
@@ -424,18 +383,13 @@ function updateTeamsDOM() {
     document.getElementById('btn-start-mode1').disabled = !(state.teamA.length > 0 && state.teamB.length > 0);
 }
 
-// ------ MODE 1 ENGINE ------
-
 function startMode1() {
     state.activeA = 0; state.activeB = 0;
-    state.shieldA = false; state.shieldB = false;
-    document.getElementById('shield-toggle-a').checked = false;
-    document.getElementById('shield-toggle-b').checked = false;
     const populateSelect = (id, team) => {
         document.getElementById(id).innerHTML = team.map((f, i) => `<option value="${i}">${f.name} (Lvl ${f.level})</option>`).join('');
     };
-    populateSelect('select-active-a', state.teamA);
-    populateSelect('select-active-b', state.teamB);
+    populateSelect('select-a', state.teamA);
+    populateSelect('select-b', state.teamB);
     renderMode1Panels();
 }
 
@@ -443,70 +397,29 @@ function renderMode1Panels() {
     const fA = state.teamA[state.activeA];
     const fB = state.teamB[state.activeB];
     if (!fA || !fB) return;
-    document.getElementById('stats-container-a').innerHTML = buildStatsHtml(fA, state.teamB, state.shieldA, state.shieldB);
-    document.getElementById('stats-container-b').innerHTML = buildStatsHtml(fB, state.teamA, state.shieldB, state.shieldA);
-    renderFighterSheet('sheet-a', fA);
-    renderFighterSheet('sheet-b', fB);
+
+    // Aura Hermétique : n'afficher le bouton que si le Dinoz possède la compétence
+    const hasAuraA = (fA.allSkills || []).some(s => s.name === 'Aura Hermétique' || s.name === 'Aura Hermetique');
+    const hasAuraB = (fB.allSkills || []).some(s => s.name === 'Aura Hermétique' || s.name === 'Aura Hermetique');
+    const btnA = document.getElementById('btn-shield-a');
+    const btnB = document.getElementById('btn-shield-b');
+    
+    if (!hasAuraA) state.shieldA = false;
+    if (!hasAuraB) state.shieldB = false;
+
+    if (btnA) { btnA.style.display = hasAuraA ? 'inline-flex' : 'none'; btnA.classList.toggle('active', state.shieldA); }
+    if (btnB) { btnB.style.display = hasAuraB ? 'inline-flex' : 'none'; btnB.classList.toggle('active', state.shieldB); }
+
+    // Panel A : Dégâts de A vers l'équipe B
+    document.getElementById('stats-container-a').innerHTML = buildStatsHtml(fA, state.teamB);
+    renderFighterSheetInContainer('sheet-a', fA);
+
+    // Panel B : Dégâts de B vers l'équipe A
+    document.getElementById('stats-container-b').innerHTML = buildStatsHtml(fB, state.teamA);
+    renderFighterSheetInContainer('sheet-b', fB);
 }
 
-function damageFormula(attacker, target, elementKey, power, isAssault, targetShield, randomVal) {
-    // Step 1: base attack = BASE_ATTACK_VALUE + element * power
-    // (Matches getDamage.ts: getAttackDefense loop)
-    let attack = BASE_ATTACK_VALUE;
-    const elementAttack = attacker.elements[elementKey] * power;
-    attack += elementAttack;
-
-    let defKey = elementKey === 'bolt' ? 'lightning' : elementKey;
-    let defense = BASE_DEFENSE_VALUE;
-
-    if (elementAttack > 0) {
-        // defense = target.defense[ele] * att / sum_of_elements
-        // For a single element: defense = target.defense[ele] * elementAttack / elementAttack = target.defense[ele]
-        // BUT multiplied by att first: defense += target.defense[ele] * elementAttack
-        // then divided by sum_of_elements (= elementAttack for single element)
-        // => net result: defense = target.defenses[defKey]
-        defense += (target.defenses[defKey] || 0);
-        // Add assault bonus or skill elemental bonus
-        attack += isAssault ? (attacker.assaultBonus[elementKey] || 0) : 0;
-    }
-
-    // Step 2: Apply random bonus (0 to 33% of current attack)
-    attack += (randomVal * attack) / 3;
-
-    // Step 3: Apply global factor
-    attack *= ATTACK_GLOBAL_FACTOR;
-
-    // Step 4: damage = attack
-    let damage = attack;
-
-    // Step 5: Apply armor (and shield bonus)
-    // armor% = (target.stats.armor + shield_bonus) / 100
-    let armorValue = ((target.stats.armor || 0) + (targetShield ? 20 : 0)) / 100;
-    damage *= (1 - Math.max(0, armorValue));
-
-    // Step 6: Subtract defense
-    damage -= defense;
-
-    // Step 7: Apply resilience (getDamage.ts line 24 uses Math.max(damage, 0))
-    // factor: 1 - resilience*0.01, clamped to [0.5, 1.1]
-    let resilienceFactor = Math.max(Math.min(1 - target.stats.resilience * 0.01, 1.1), 0.5);
-    damage = Math.round(Math.pow(Math.max(damage, 0), resilienceFactor));
-
-    // Step 8: Apply minimum damage (minDamage = 1 by default)
-    return Math.max(damage, 1);
-}
-
-function getOutput(attacker, target, el, p, isa, tS) {
-    if (state.displayRange) {
-        const min = damageFormula(attacker, target, el, p, isa, tS, 0);
-        const max = damageFormula(attacker, target, el, p, isa, tS, 1);
-        return `[${min} - ${max}]`;
-    } else {
-        return damageFormula(attacker, target, el, p, isa, tS, 0.5);
-    }
-}
-
-function renderFighterSheet(containerId, fighter) {
+function renderFighterSheetInContainer(containerId, fighter) {
     const elemImg = (key) => `<img src="/img/elements/${key === 'bolt' ? 'lightning' : key}.webp" style="width:18px;height:18px;vertical-align:middle;margin-right:5px;">`;
     const html = `
         <div class="sheet-title">Informations Techniques</div>
@@ -539,45 +452,143 @@ function renderFighterSheet(containerId, fighter) {
     document.getElementById(containerId).innerHTML = html;
 }
 
-function buildStatsHtml(dinoz, adverseTeam, myShield, advShield) {
+window.toggleShield = function(team) {
+    if (team === 'A') {
+        state.shieldA = !state.shieldA;
+        document.getElementById('btn-shield-a').classList.toggle('active', state.shieldA);
+    } else {
+        state.shieldB = !state.shieldB;
+        document.getElementById('btn-shield-b').classList.toggle('active', state.shieldB);
+    }
+    renderMode1Panels();
+};
+
+function buildStatsHtml(dinoz, adverseTeam) {
     let html = '';
     const elementsOrd = ['fire', 'wood', 'water', 'bolt', 'air'];
     const elemImg = (key) => `<img src="/img/elements/${key === 'bolt' ? 'lightning' : key}.webp" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;">`;
     const elementsLabels = { fire: elemImg('fire') + 'Feu', wood: elemImg('wood') + 'Bois', water: elemImg('water') + 'Eau', bolt: elemImg('bolt') + 'Foudre', air: elemImg('air') + 'Air' };
 
-    html += `<div class="section-title"><i class="fas fa-swords"></i> Dégâts Infligés</div>
+    html += `<div class="section-title"><i class="fas fa-swords"></i> Analyse Offensive</div>
              <table class="stats-table">
-               <thead><tr><th>Attaque</th>${adverseTeam.map(t => `<th>${t.name}</th>`).join('')}</tr></thead>
+               <thead><tr><th>Action</th>${adverseTeam.map(t => `<th>${t.name}</th>`).join('')}</tr></thead>
                <tbody>`;
-    elementsOrd.forEach(el => {
-        if (dinoz.elements[el] <= 0 && el !== 'fire') return;
-        html += `<tr><td>Assaut ${elementsLabels[el]}</td>${adverseTeam.map(adv => `<td>${getOutput(dinoz, adv, el, ASSAULT_POWER, true, advShield)}</td>`).join('')}</tr>`;
-    });
-    dinoz.attacks.forEach(atk => {
-        const elKey = { 'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'bolt', 'Air': 'air' }[atk.element];
-        const power = SKILLS_POWER[atk.name] || 5;
-        html += `<tr><td>${atk.name}</td>${adverseTeam.map(adv => `<td>${getOutput(dinoz, adv, elKey, power, false, advShield)}</td>`).join('')}</tr>`;
-    });
-    html += `</tbody></table>`;
 
-    html += `<div class="section-title"><i class="fas fa-shield-alt"></i> Dégâts Subis</div>
-             <table class="stats-table">
-               <thead><tr><th>Attaque Adverse</th>${adverseTeam.map(t => `<th>De: ${t.name}</th>`).join('')}</tr></thead>
-               <tbody>`;
-    let allAdvAssaults = new Set();
-    let allAdvSkills = new Map();
-    adverseTeam.forEach(adv => {
-        elementsOrd.forEach(el => { if (adv.elements[el] > 0) allAdvAssaults.add(el); });
-        adv.attacks.forEach(atk => allAdvSkills.set(atk.id, atk));
+    // 1. Assauts de base (On affiche tout, même si élément = 0)
+    elementsOrd.forEach(el => {
+        const skillMock = { name: 'Assaut', multipliers: { [elementsLabels[el].replace(/<.*?>/g, '')]: 5 }, effect: 'DAMAGE' };
+        html += `<tr><td>Assaut ${elementsLabels[el]}</td>${adverseTeam.map(adv => `<td>${getOutput(dinoz, adv, skillMock, true)}</td>`).join('')}</tr>`;
     });
-    Array.from(allAdvAssaults).forEach(el => {
-        html += `<tr><td>Assaut ${elementsLabels[el]}</td>${adverseTeam.map(adv => adv.elements[el] > 0 ? `<td>${getOutput(adv, dinoz, el, ASSAULT_POWER, true, myShield)}</td>` : '<td>-</td>').join('')}</tr>`;
+
+    // 2. Compétences A et E qui ont un impact sur les PV (HEAL ou DAMAGE uniquement)
+    const HEAL_NAMES = ['Sieste', 'Aube Feuillue', 'Printemps Précoce', 'AubeFeuillue', 'PrintempsPrecoce', 'Printemps Precoce'];
+    // Compétences à exclure explicitement du tableau
+    const SKILLS_BLACKLIST = ['Trou Noir', 'Coups Sournois', 'Paume Ejectable', 'Coup Fatal'];
+    
+    const skillsToDisplay = (dinoz.allSkills || []).filter(fs => {
+        if (SKILLS_BLACKLIST.includes(fs.name)) return false;
+        if (fs.type !== 'A' && fs.type !== 'E') return false;
+        return fs.effect === 'HEAL' || fs.effect === 'DAMAGE' || HEAL_NAMES.includes(fs.name);
     });
-    allAdvSkills.forEach(atk => {
-        const elKey = { 'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'bolt', 'Air': 'air' }[atk.element];
-        const power = SKILLS_POWER[atk.name] || 5;
-        html += `<tr><td>${atk.name}</td>${adverseTeam.map(adv => adv.attacks.some(a => a.id === atk.id) ? `<td>${getOutput(adv, dinoz, elKey, power, false, myShield)}</td>` : '<td>-</td>').join('')}</tr>`;
+    
+    skillsToDisplay.forEach(fullSkill => {
+        const isHeal = fullSkill.effect === 'HEAL' || HEAL_NAMES.includes(fullSkill.name);
+        const rowClass = isHeal ? 'row-heal' : '';
+        const label = isHeal ? `<span class="heal-label">SOIN</span> ${fullSkill.name}` : fullSkill.name;
+        html += `<tr class="${rowClass}"><td>${label}</td>${adverseTeam.map(adv => `<td>${getOutput(dinoz, adv, fullSkill, false)}</td>`).join('')}</tr>`;
     });
+
     html += `</tbody></table>`;
     return html;
+}
+
+function getOutput(attacker, target, skill, isAssault) {
+    if (state.displayRange) {
+        const min = calculateValue(attacker, target, skill, isAssault, 0); // 0% bonus
+        const max = calculateValue(attacker, target, skill, isAssault, 1); // 30% bonus
+        return `[${min} - ${max}]`;
+    } else {
+        return calculateValue(attacker, target, skill, isAssault, 0.5); // 15% bonus (moyenne)
+    }
+}
+
+function calculateValue(attacker, target, skill, isAssault, randomVal) {
+    const ELEM_MAP = { 'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'bolt', 'Air': 'air' };
+    const HEAL_NAMES = ['Sieste', 'Aube Feuillue', 'Printemps Précoce', 'AubeFeuillue', 'PrintempsPrecoce', 'Printemps Precoce'];
+    const isHeal = skill.effect === 'HEAL' || HEAL_NAMES.includes(skill.name);
+    
+    const targetTeam = state.teamA.includes(target) ? 'A' : 'B';
+    
+    // Aura Hermétique : ×1.2 sur l'armure de la cible
+    const targetShield = (targetTeam === 'A' ? state.shieldA : state.shieldB);
+    const baseArmor = (target.statArmor || target.stats?.armor || 0);
+    const effectiveArmor = targetShield ? (baseArmor * 1.2) : baseArmor;
+
+    // Sieste : montant fixe [1 - 20], pas de bonus aléatoire
+    if (skill.name === 'Sieste') {
+        if (randomVal === 0) return 1;
+        if (randomVal === 1) return 20;
+        return Math.round((1 + 20) / 2); // Moyenne = 11
+    }
+
+    let power = 0;
+    const multipliers = skill.multipliers || {};
+
+    // Fallback de multiplicateurs pour les soins connus dont la DB est incomplète
+    // Ces valeurs sont hardcodées selon les règles du jeu
+    const HEAL_MULTIPLIER_FALLBACK = {
+        'Printemps Précoce': { 'Bois': 1 },
+        'PrintempsPrecoce':  { 'Bois': 1 },
+        'Printemps Precoce': { 'Bois': 1 },
+        'Aube Feuillue':     { 'Bois': 2, 'Foudre': 2 },
+        'AubeFeuillue':      { 'Bois': 2, 'Foudre': 2 }
+    };
+    const effectiveMults = (Object.keys(multipliers).length > 0)
+        ? multipliers
+        : (HEAL_MULTIPLIER_FALLBACK[skill.name] || {});
+
+    // Calcul de la puissance de base (Somme des éléments × multiplicateurs)
+    for (const [elemDb, multValue] of Object.entries(effectiveMults)) {
+        const engKey = ELEM_MAP[elemDb] || elemDb.toLowerCase();
+        const eleValue = attacker.elements?.[engKey] || attacker[`stat${engKey.charAt(0).toUpperCase() + engKey.slice(1)}`] || 0;
+        power += eleValue * multValue;
+    }
+
+    // Minimum 1 de puissance
+    power = Math.max(power, 1);
+
+    if (isHeal) {
+        // SOIN : Min = 1, Max = power (pas de bonus aléatoire pour les soins)
+        const maxHeal = Math.round(power);
+        if (randomVal === 0) return 1;
+        if (randomVal === 1) return Math.max(maxHeal, 1);
+        // Moyenne : milieu exact entre 1 et Max
+        return Math.max(Math.round((1 + maxHeal) / 2), 1);
+    } else {
+        // DÉGÂTS : Nouvelle formule demandée
+        
+        // A. Ajout du bonus aléatoire (0% à 30%)
+        const bonusFactor = 1 + (randomVal * 0.3);
+        let currentDmg = power * bonusFactor;
+
+        // B. Réduction par l'Armure
+        currentDmg *= (1 - (effectiveArmor / 100));
+
+        // C. Réduction par la Défense (Liée à l'élément dominant ou moyenne ?)
+        // On va chercher la défense correspondante aux multiplicateurs
+        let defense = 0;
+        let sumMults = 0;
+        for (const [elemDb, multValue] of Object.entries(multipliers)) {
+            const engKey = ELEM_MAP[elemDb] || elemDb.toLowerCase();
+            const defVal = target.defenses?.[engKey === 'bolt' ? 'lightning' : engKey] || target[`def${engKey.charAt(0).toUpperCase() + engKey.slice(1)}`] || 0;
+            defense += defVal * multValue;
+            sumMults += multValue;
+        }
+        if (sumMults > 0) defense /= sumMults; // Moyenne pondérée par les pouvoirs
+        
+        currentDmg -= defense;
+
+        // D. Puissance 0.6 et arrondi
+        return Math.round(Math.pow(Math.max(currentDmg, 1), 0.6));
+    }
 }

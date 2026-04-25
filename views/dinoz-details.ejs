@@ -194,7 +194,8 @@
                 <form action="/dinozs/toggle-congealed" method="POST" style="width: 100%; margin: 0;">
                     <input type="hidden" name="dinozId" value="<%= dino.id %>">
                     <button type="submit" class="btn-congeal">
-                        <i class="fas fa-snowflake"></i> <%= dino.isCongealed ? 'Décongeler' : 'Congeler' %>
+                        <i class="fas fa-snowflake"></i>
+                        <%= dino.isCongealed ? 'Décongeler' : 'Congeler' %>
                     </button>
                 </form>
                 <button class="btn-sacrifice" onclick="openDeleteModal()">

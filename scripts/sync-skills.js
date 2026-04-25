@@ -101,6 +101,50 @@ async function syncSkills() {
         const mtsText = await mtsResp.text();
         const descJson = await descResp.json();
 
+        // 1.5 LECTURE DES MULTIPLICATEURS
+        const fs = require('fs');
+        const path = require('path');
+        const fightMultipliers = {};
+        const fightEffectTypes = {};
+        const fmPath = path.join(__dirname, '../infos_fight/fightMethods.ts');
+        if (fs.existsSync(fmPath)) {
+            console.log("⚔️ Parsing des types d'effets et multiplicateurs de combat (fightMethods.ts)...");
+            const txt = fs.readFileSync(fmPath, 'utf8');
+            const regex = /case Skill\.([A-Z0-9_]+):([\s\S]*?)(?=(?:case Skill\.|break;|default:))/g;
+            let m;
+            while ((m = regex.exec(txt)) !== null) {
+                const skillName = m[1];
+                const body = m[2];
+                let mults = {};
+                
+                let m2;
+                const reSingle = /getElementalAttack\(.*?ElementType\.([A-Z_]+)\s*,\s*([\d.]+)\)/g;
+                while((m2 = reSingle.exec(body))) mults[ELEMENT_MAP['ElementType.' + m2[1]] || m2[1]] = parseFloat(m2[2]);
+                
+                const reMulti = /\[ElementType\.([A-Z_]+)\s*,\s*([\d.]+)\]/g;
+                while((m2 = reMulti.exec(body))) mults[ELEMENT_MAP['ElementType.' + m2[1]] || m2[1]] = parseFloat(m2[2]);
+                
+                const reBase = /fighter\.stats\.base\[ElementType\.([A-Z_]+)\]\s*\*\s*([\d.]+)/g;
+                while((m2 = reBase.exec(body))) mults[ELEMENT_MAP['ElementType.' + m2[1]] || m2[1]] = parseFloat(m2[2]);
+                
+                if (Object.keys(mults).length > 0) {
+                    fightMultipliers[skillName] = mults;
+                }
+
+                // Analyze effect type
+                let effectType = "SPECIAL";
+                if (/attackSingleOpponent\(|attackAllOpponents\(|launchAssault\(/.test(body)) {
+                    effectType = "DAMAGE";
+                } else if (/heal\(/.test(body)) {
+                    effectType = "HEAL";
+                } else if (/addStatus\(|removeStatus\(/.test(body)) {
+                    effectType = "STATUS";
+                }
+                
+                fightEffectTypes[skillName] = effectType;
+            }
+        }
+
         // 2. PRÉPARATION DES DESCRIPTIONS
         let rawDescriptions = {};
         if (descJson.skill && descJson.skill.description) {
@@ -288,22 +332,61 @@ async function syncSkills() {
                     }
 
                     if (statValue !== undefined) {
-                        // Distinguer Armure en élément (Bénéficie des Ratios) vs Malus de Défense (Flat)
-                        if (statName.endsWith('_DEFENSE') && typeof statValue === 'number') {
-                            if (statValue > 0) {
-                                modifiers[statName + '_RATIO'] = statValue;
-                            } else {
-                                modifiers[statName] = statValue;
-                            }
-                        } else {
-                            modifiers[statName] = statValue;
-                        }
+                        // Supprimer la conversion absurde en _RATIO
+                        modifiers[statName] = statValue;
                     }
                 }
             };
 
             parseEffectsBlock('effects');
             parseEffectsBlock('globalEffects');
+
+            // --- NOUVEAU: Extraction des données de combat et visuelles ---
+            const extractObjBlock = (blockName) => {
+                const regex = new RegExp(blockName + ':\\s*(\\{|\\[)');
+                const match = blockBody.match(regex);
+                if (!match) return null;
+                const openChar = match[1];
+                const closeChar = openChar === '{' ? '}' : ']';
+                let braceCount = 0;
+                let startIndex = match.index + match[0].length - 1;
+                let endIndex = -1;
+                for (let i = startIndex; i < blockBody.length; i++) {
+                    if (blockBody[i] === openChar) braceCount++;
+                    else if (blockBody[i] === closeChar) braceCount--;
+                    if (braceCount === 0) {
+                        endIndex = i;
+                        break;
+                    }
+                }
+                if (endIndex === -1) return null;
+                return blockBody.substring(startIndex, endIndex + 1);
+            };
+
+            const cleanTsObjToJson = (str) => {
+                if (!str) return null;
+                let clean = str;
+                clean = clean.replace(/\[[A-Za-z0-9_]+\.([A-Za-z0-9_]+)\]/g, '"$1"');
+                clean = clean.replace(/:\s*[A-Za-z0-9_]+\.([A-Za-z0-9_]+)/g, ': "$1"');
+                clean = clean.replace(/([{,]\s*)([A-Za-z0-9_]+)\s*:/g, '$1"$2":');
+                clean = clean.replace(/'([^']+)'/g, '"$1"');
+                try {
+                    clean = clean.replace(/,(\s*[\]}])/g, '$1'); // Retirer les virgules en fin d'objet
+                    return JSON.parse(clean);
+                } catch (e) {
+                    return null;
+                }
+            };
+
+            const fightConditionRaw = extractObjBlock('fightCondition');
+            const fightCondition = cleanTsObjToJson(fightConditionRaw) || (fightConditionRaw ? { raw: fightConditionRaw.replace(/\n\s*/g, '') } : null);
+
+            const activatableMatch = blockBody.match(/activatable:\s*(true|false)/);
+            const isActivable = activatableMatch && activatableMatch[1] === 'true' ? true : false;
+            
+            const effect = fightEffectTypes[skillVarName.replace('Skill.', '')] || "PASSIVE";
+
+            const multipliers = fightMultipliers[skillVarName.replace('Skill.', '')] || null;
 
             // --- AJOUT À LA LISTE ---
             skillsToUpsert.push({
@@ -318,7 +401,11 @@ async function syncSkills() {
                     probability: prob,
                     priority: prio,
                     raceId,
-                    modifiers: Object.keys(modifiers).length > 0 ? modifiers : null
+                    modifiers: Object.keys(modifiers).length > 0 ? modifiers : null,
+                    fightCondition: fightCondition,
+                    effect: effect,
+                    isActivable: isActivable,
+                    multipliers: multipliers
                 },
                 parentIds: parentIds
             });

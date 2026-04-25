@@ -17,87 +17,86 @@ model User {
   role         String   @default("MEMBRE") // "LEADER", "CHEF-ADJOINT" ou "MEMBRE"
   firstLogin   Boolean  @default(true)
   createdAt    DateTime @default(now())
-  
+
   // Relation : Un user a plusieurs Dinozs
-  dinozs       Dinoz[]
+  dinozs Dinoz[]
 
   // Préférence pour affichage des arbres
-  treeMode     String   @default("COMPRESSED") // "COMPRESSED" ou "EXPANDED"
+  treeMode String @default("COMPRESSED") // "COMPRESSED" ou "EXPANDED"
 
   // Relation inverse : Un user a créé plusieurs plans
-  skillPlans   SkillPlan[]
+  skillPlans SkillPlan[]
 }
-
 
 // Table des Dinozs
 model Dinoz {
-  id        Int     @id @default(autoincrement())
-  name      String
-  race      String
-  imageUrl  String?
-  level     Int     @default(1)
+  id       Int     @id @default(autoincrement())
+  name     String
+  race     String
+  imageUrl String?
+  level    Int     @default(1)
   note     String?
-  role      String @default("test")
+  role     String  @default("test")
 
-  isReincarnate   Int @default(0) // Dinoz Récincarné ? -- 1 pour oui -- 0 pour non
-  isCongealed     Int @default(0) // Dinoz Congelé ? -- 1 pour oui -- 0 pour non
-  
-// Stats
-  statFire  Int     @default(0)
-  statWood  Int     @default(0)
-  statWater Int     @default(0)
-  statBolt  Int     @default(0)
-  statAir   Int     @default(0)
+  isReincarnate Int @default(0) // Dinoz Récincarné ? -- 1 pour oui -- 0 pour non
+  isCongealed   Int @default(0) // Dinoz Congelé ? -- 1 pour oui -- 0 pour non
 
-// stats reincarnation
-  bonusFire     Int @default(0)
-  bonusWood     Int @default(0)
-  bonusWater    Int @default(0)
-  bonusBolt     Int @default(0)
-  bonusAir      Int @default(0)
+  // Stats
+  statFire  Int @default(0)
+  statWood  Int @default(0)
+  statWater Int @default(0)
+  statBolt  Int @default(0)
+  statAir   Int @default(0)
 
-// Compteurs de Sphères (0 à 3)
-  sphereFire    Int @default(0)
-  sphereWood    Int @default(0)
-  sphereWater   Int @default(0)
-  sphereBolt    Int @default(0)
-  sphereAir     Int @default(0)
-  sphereVoid    Int @default(0)
+  // stats reincarnation
+  bonusFire  Int @default(0)
+  bonusWood  Int @default(0)
+  bonusWater Int @default(0)
+  bonusBolt  Int @default(0)
+  bonusAir   Int @default(0)
 
-// Stats Générales
-  statLife       Int @default(100)
-  statSpeed      Float @default(10.0)
-  statInitiative Int @default(0)
-  statCounter    Float @default(0.0)
-  statArmor      Float @default(0.0)
-  statArmorBreak Float @default(0.0)
-  statMultiHit   Float @default(0.0)
-  statEsquive    Float @default(0.0)
+  // Compteurs de Sphères (0 à 3)
+  sphereFire  Int @default(0)
+  sphereWood  Int @default(0)
+  sphereWater Int @default(0)
+  sphereBolt  Int @default(0)
+  sphereAir   Int @default(0)
+  sphereVoid  Int @default(0)
+
+  // Stats Générales
+  statLife         Int   @default(100)
+  statSpeed        Float @default(10.0)
+  statInitiative   Int   @default(0)
+  statCounter      Float @default(0.0)
+  statArmor        Float @default(0.0)
+  statArmorBreak   Float @default(0.0)
+  statMultiHit     Float @default(0.0)
+  statEsquive      Float @default(0.0)
   statSuperEsquive Float @default(0.0)
 
-// Assauts
+  // Assauts
   statAssaultFire  Int @default(0)
   statAssaultWood  Int @default(0)
   statAssaultWater Int @default(0)
   statAssaultBolt  Int @default(0)
   statAssaultAir   Int @default(0)
 
-// Propriétaire
-  userId    Int
-  user      User    @relation(fields: [userId], references: [id])
-  
-// 1. Compétences et ups
-  learnedSkills   RefSkill[] @relation("LearnedSkills")
-  ups       Json? 
-  planId    Int?         // Peut être null (pas de plan)
-  plan      SkillPlan?   @relation(fields: [planId], references: [id])
+  // Propriétaire
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  // 1. Compétences et ups
+  learnedSkills RefSkill[] @relation("LearnedSkills")
+  ups           Json?
+  planId        Int? // Peut être null (pas de plan)
+  plan          SkillPlan? @relation(fields: [planId], references: [id])
 }
 
 // Table de Référence des Compétences (L'arbre)
 model RefSkill {
-  id          Int     @id 
-  name        String  @unique
-   
+  id   Int    @id
+  name String @unique
+
   // Infos générales
   type        String? // "A", "E", "P", "C", "S", "U"
   element     String? // "Feu", "Bois"...
@@ -105,25 +104,27 @@ model RefSkill {
   skillNature Int     @default(1)
   description String?
   raceId      String? // Ex: "Wanwan", "Kabuki", ou null
-  
+
   // Stats techniques
-  energy      Int?    @default(0)
-  probability Int?    @default(0)
-  priority    Int?    @default(0)
+  energy      Int? @default(0)
+  probability Int? @default(0)
+  priority    Int? @default(0)
 
   // Modificateurs de statistiques (effets)
-  modifiers   Json?
+  modifiers Json?
 
   // --- NOUVEAU : Données de Combat et Simulation ---
-  fightCondition Json?   // Conditions de lancement (HP min, statuts, nb alliés...)
-  power          Float?  // Puissance de la compétence (dégâts etc.)
+  fightCondition Json? // Conditions de lancement (HP min, statuts, nb alliés...)
+  effect         String? // Type d'effet principal (ex: "DAMAGE", "HEAL", "STATUS", "SPECIAL")
+  isActivable    Boolean @default(false)
+  multipliers    Json? // Multiplicateurs de dégâts/soins par élément (ex: {"Feu": 5, "Foudre": 6})
 
   // Relations inverses vers les Dinozs
-  dinozsLearned   Dinoz[] @relation("LearnedSkills")
- 
+  dinozsLearned Dinoz[] @relation("LearnedSkills")
+
   // --- RELATION PARENT/ENFANT (Arbre de compétences) ---
-  parents      RefSkill[] @relation("SkillTree")
-  children     RefSkill[] @relation("SkillTree")
+  parents  RefSkill[] @relation("SkillTree")
+  children RefSkill[] @relation("SkillTree")
 
   // Liste des races qui ont cette compétence de façon innée
   racesWithInnate RefRace[]
@@ -132,47 +133,47 @@ model RefSkill {
 model SkillPlan {
   id        Int      @id @default(autoincrement())
   name      String
-  race      String   
-  level     Int      @default(1) 
-  skillIds  Json     
+  race      String
+  level     Int      @default(1)
+  skillIds  Json
   ajout     Json?
   stats     Json?
   elements  Json?
-  isPublic  Boolean  @default(false) 
+  isPublic  Boolean  @default(false)
   createdAt DateTime @default(now())
 
   // Auteur du plan (UNE SEULE FOIS)
-  authorId       Int
-  author         User     @relation(fields: [authorId], references: [id])
-  
+  authorId Int
+  author   User @relation(fields: [authorId], references: [id])
+
   originalAuthor String?
 
-  dinozs    Dinoz[]
+  dinozs Dinoz[]
 }
 
 // --- MODÈLE : RACES ---
 model RefRace {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique // "moueffe", "winks"...
-  
-  isDemon   Boolean  @default(false)
-  price     Int      @default(16000)
+  id   Int    @id @default(autoincrement())
+  name String @unique // "moueffe", "winks"...
+
+  isDemon Boolean @default(false)
+  price   Int     @default(16000)
 
   // Stats élémentaires de base (Grille de départ)
-  baseFire  Int      @default(0)
-  baseWood  Int      @default(0)
-  baseWater Int      @default(0)
-  baseBolt  Int      @default(0)
-  baseAir   Int      @default(0)
+  baseFire  Int @default(0)
+  baseWood  Int @default(0)
+  baseWater Int @default(0)
+  baseBolt  Int @default(0)
+  baseAir   Int @default(0)
 
   // Probabilités de Up (upChance) en %
-  upFire    Int      @default(0)
-  upWood    Int      @default(0)
-  upWater   Int      @default(0)
-  upBolt    Int      @default(0)
-  upAir     Int      @default(0)
+  upFire  Int @default(0)
+  upWood  Int @default(0)
+  upWater Int @default(0)
+  upBolt  Int @default(0)
+  upAir   Int @default(0)
 
   // Compétence Innée
-  innateSkillId Int? 
+  innateSkillId Int?
   innateSkill   RefSkill? @relation(fields: [innateSkillId], references: [id])
-} 
+}

@@ -4,10 +4,23 @@
 }
 
 body {
-    background: #0d1117;
-    /* Dark background */
     color: #e6edf3;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* On réutilise le fond cave mais on l'assombrit et on le floute davantage pour la simu */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(13, 17, 23, 0.85);
+    /* Plus sombre */
+    backdrop-filter: blur(10px);
+    /* Plus flou */
+    z-index: -1;
 }
 
 .main-content {
@@ -68,10 +81,10 @@ select {
 
 .fighter-list-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 14px;
     margin-bottom: 20px;
-    max-height: 440px;
+    max-height: 700px;
     overflow-y: auto;
     padding: 16px;
     background: #161b22;
@@ -211,59 +224,35 @@ select {
     background: #f8514922;
 }
 
-/* Teams Wrapper - hover expand (flottant au-dessus) */
-.teams-wrapper {
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    transition: max-height 0.4s ease;
-    max-height: 52px;
-    overflow: hidden;
-    position: relative;
-    z-index: 10;
-}
-
-.teams-wrapper.teams-hover {
-    position: sticky;
-    bottom: 0;
-    z-index: 100;
-}
-
-.teams-wrapper.teams-hover:hover {
-    max-height: 600px;
-    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.6);
-    border-color: #58a6ff55;
-}
-
-.teams-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 20px;
-    cursor: default;
-    color: #c9d1d9;
-    font-weight: 600;
-    font-size: 0.95em;
-    background: #161b22;
-}
-
-.teams-content {
-    padding: 0 16px 16px;
-}
-
-.teams-container {
+/* New 3-Column Layout */
+.simulation-selection-layout {
     display: flex;
     gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+.team-sidebar {
+    flex: 1;
+    /* 25% */
+    min-width: 300px;
+    position: sticky;
+    top: 20px;
+}
+
+.selection-center {
+    flex: 2;
+    /* 50% */
 }
 
 .team-box {
-    flex: 1;
     background: #161b22;
-    /* Solid */
     border: 2px solid;
     border-radius: 12px;
-    padding: 20px;
+    padding: 16px;
+    height: fit-content;
+    max-height: 85vh;
+    overflow-y: auto;
 }
 
 #team-a-box {
@@ -496,3 +485,170 @@ select {
     color: #484f58;
     cursor: not-allowed;
 }
+
+.combat-log {
+    font-family: monospace;
+    background: #222;
+    color: #ddd;
+    padding: 10px;
+}
+
+.log-turn {
+    color: #f39c12;
+    font-weight: bold;
+    margin-top: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.damage {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.evade {
+    color: #3498db;
+    font-style: italic;
+}
+
+.log-item {
+    color: #2ecc71;
+}
+
+/* Builder Section (Phase 5) */
+.builder-section {
+    margin: 40px auto;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 1000px;
+}
+
+.builder-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.element-inputs {
+    display: flex;
+    justify-content: space-around;
+    background: #0d1117;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.elem-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.elem-field img {
+    width: 24px;
+    height: 24px;
+}
+
+.elem-field input {
+    width: 50px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.gg-select-multi {
+    width: 100%;
+    height: 150px;
+    background: #0d1117;
+    color: white;
+    border: 1px solid #30363d;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.builder-actions {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.simulation-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-action {
+    background: #3fb95044;
+    color: #3fb950;
+    border: 1px solid #3fb95033;
+    padding: 8px 16px;
+    font-size: 0.9em;
+}
+
+.btn-action:hover {
+    background: #3fb95066;
+}
+
+.stats-table tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.row-heal {
+    background: rgba(46, 160, 67, 0.1);
+}
+
+.row-heal:hover {
+    background: rgba(46, 160, 67, 0.2) !important;
+}
+
+.heal-label {
+    background: #238636;
+    color: white;
+    font-size: 0.75em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 8px;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+.batch-results-container {
+    margin: 20px 0;
+    padding: 15px;
+    background: #21262d;
+    border-radius: 8px;
+    border-left: 4px solid #f1e05a;
+}
+
+/* Aura Hermétique Toggle Button */
+.btn-aura {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    color: #8b949e;
+    padding: 4px 8px;
+    font-size: 0.85em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: fit-content;
+    align-self: flex-end; /* Align to the right under the select */
+    margin-top: -5px;    /* Bring it slightly closer to the select */
+}
+
+.btn-aura:hover {
+    border-color: #f1e05a;
+    color: #c9d1d9;
+}
+
+.btn-aura.active {
+    background: rgba(241, 224, 90, 0.15);
+    border-color: #f1e05a;
+    color: #f1e05a;
+    box-shadow: 0 0 8px rgba(241, 224, 90, 0.2);
+}

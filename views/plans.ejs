@@ -39,6 +39,27 @@
         </div>
     </div>
 
+    <div class="filters-container" style="padding: 0 40px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end;">
+        <div class="filter-group">
+            <label style="color: #8b949e; font-size: 0.9em; font-weight: bold; margin-bottom: 5px; display: block;">Recherche (Nom) :</label>
+            <input type="text" id="filter-name" placeholder="Nom du plan..." style="padding: 8px 12px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 6px;" oninput="filterPlans()">
+        </div>
+        <div class="filter-group">
+            <label style="color: #8b949e; font-size: 0.9em; font-weight: bold; margin-bottom: 5px; display: block;">Race :</label>
+            <select id="filter-race" style="padding: 8px 12px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 6px; min-width: 150px;" onchange="filterPlans()">
+                <option value="all">Toutes</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label style="color: #8b949e; font-size: 0.9em; font-weight: bold; margin-bottom: 5px; display: block;">Niveau :</label>
+            <div style="display: flex; gap: 5px; align-items: center;">
+                <input type="number" id="filter-level-min" value="1" min="1" max="80" style="width: 65px; padding: 8px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 6px;" oninput="filterPlans()">
+                <span style="color: #8b949e;">à</span>
+                <input type="number" id="filter-level-max" value="80" min="1" max="80" style="width: 65px; padding: 8px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 6px;" oninput="filterPlans()">
+            </div>
+        </div>
+    </div>
+
     <div class="plans-grid">
         <% if (plans.length === 0) { %>
             <div class="empty-plans-message">
@@ -47,7 +68,7 @@
         <% } %>
 
         <% plans.forEach(plan => { %>
-            <a href="/plan/<%= plan.id %>" class="plan-card">
+            <a href="/plan/<%= plan.id %>" class="plan-card" data-name="<%= plan.name.toLowerCase() %>" data-race="<%= plan.race %>" data-level="<%= plan.level %>" data-author="<%= (plan.originalAuthor || plan.author.pseudo) %>">
                 <div class="plan-race">
                     <i class="fas fa-dna"></i> <%= plan.race %>
                 </div>
@@ -63,6 +84,46 @@
             </a>
         <% }) %>
     </div>
+    </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.plan-card');
+            const races = new Set();
+            
+            cards.forEach(c => {
+                if (c.dataset.race) races.add(c.dataset.race);
+            });
+            
+            const raceSelect = document.getElementById('filter-race');
+            [...races].sort().forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r;
+                opt.textContent = r;
+                raceSelect.appendChild(opt);
+            });
+        });
+
+        function filterPlans() {
+            const nameSearch = document.getElementById('filter-name').value.toLowerCase();
+            const raceFilter = document.getElementById('filter-race').value;
+            const minLevel = parseInt(document.getElementById('filter-level-min').value) || 1;
+            const maxLevel = parseInt(document.getElementById('filter-level-max').value) || 80;
+            
+            const cards = document.querySelectorAll('.plan-card');
+            cards.forEach(c => {
+                const cName = c.dataset.name;
+                const cRace = c.dataset.race;
+                const cLevel = parseInt(c.dataset.level);
+                
+                let show = true;
+                if (nameSearch && !cName.includes(nameSearch)) show = false;
+                if (raceFilter !== 'all' && cRace !== raceFilter) show = false;
+                if (cLevel < minLevel || cLevel > maxLevel) show = false;
+                
+                c.style.display = show ? 'flex' : 'none';
+            });
+        }
+    </script>
 </body>
 </html>

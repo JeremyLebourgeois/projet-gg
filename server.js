@@ -274,9 +274,9 @@ app.post('/dinozs/toggle-congealed', async (req, res) => {
         } else {
             res.redirect('/dinozs');
         }
-    } catch (error) { 
-        console.error(error); 
-        res.redirect('/dinozs'); 
+    } catch (error) {
+        console.error(error);
+        res.redirect('/dinozs');
     }
 });
 
@@ -734,7 +734,7 @@ app.post('/plan/clone', async (req, res) => {
 });
 
 // ==========================================
-// 6. ADMINISTRATION
+// 9. ROUTES VUES EXISTANTES
 // ==========================================
 
 app.get('/admin', checkLeader, async (req, res) => {
@@ -853,7 +853,9 @@ app.get('/simulation', async (req, res) => {
     });
 
     // Reference data for calculating Ghost Dinozs and damage stats
-    const allSkills = await prisma.refSkill.findMany();
+    const allSkills = await prisma.refSkill.findMany({
+        select: { id: true, name: true, type: true, element: true, isActivable: true, effect: true, multipliers: true }
+    });
     const allRaces = await prisma.refRace.findMany();
 
     res.render('simulation', {
@@ -869,7 +871,86 @@ app.get('/simulation', async (req, res) => {
 
 
 // ==========================================
-// 8. DÉMARRAGE SERVEUR
+// 8. API SIMULATION & COMBAT ENGINE
+// ==========================================
+
+// Récupérer toutes les compétences pour le simulateur
+app.get('/api/skills', async (req, res) => {
+    try {
+        const skills = await prisma.refSkill.findMany({
+            select: { id: true, name: true, type: true, element: true, isActivable: true, effect: true, multipliers: true },
+            orderBy: { name: 'asc' }
+        });
+        res.json(skills);
+    } catch (e) { res.status(500).json({ error: "Erreur récupération skills" }); }
+});
+
+// Récupérer les races pour le builder
+app.get('/api/races', async (req, res) => {
+    try {
+        const races = await prisma.refRace.findMany({
+            select: { name: true, baseFire: true, baseWood: true, baseWater: true, baseBolt: true, baseAir: true },
+            orderBy: { name: 'asc' }
+        });
+        res.json(races);
+    } catch (e) { res.status(500).json({ error: "Erreur récupération races" }); }
+});
+
+// Analyse Statique (Mode 1)
+function calculateStaticDamage(attacker, target, skill, isAssault, targetShield, randomVal) {
+    const BASE_ATTACK_VALUE = 2;
+    const ELEM_MAP = { 'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'bolt', 'Air': 'air' };
+    let attack = BASE_ATTACK_VALUE;
+    let defense = 0;
+    let sumOfElements = 0;
+    const multipliers = skill.multipliers || {};
+
+    for (const [elemDb, multValue] of Object.entries(multipliers)) {
+        const engKey = ELEM_MAP[elemDb] || elemDb;
+        const eleValue = attacker[`stat${engKey.charAt(0).toUpperCase() + engKey.slice(1)}`] || 0;
+        const elementAttack = eleValue * multValue;
+        if (elementAttack > 0) {
+            attack += elementAttack;
+            defense += (target[`def${engKey.charAt(0).toUpperCase() + engKey.slice(1)}`] || 0) * elementAttack;
+            sumOfElements += elementAttack;
+        }
+    }
+    if (sumOfElements > 0) defense /= sumOfElements;
+    attack += (randomVal * attack) / 3;
+    let damage = (attack - defense) * (1 - ((target.statArmor + (targetShield ? 20 : 0)) / 100));
+    return Math.round(Math.pow(Math.max(damage, 1), 0.6));
+}
+
+app.post('/api/simulation/analyze', (req, res) => {
+    const { attacker, target, attackerShield, targetShield } = req.body;
+    const results = { assaults: {}, skills: [] };
+    ['fire', 'wood', 'water', 'bolt', 'air'].forEach(el => {
+        const mock = { multipliers: { [el]: 5 } };
+        results.assaults[el] = {
+            min: calculateStaticDamage(attacker, target, mock, true, targetShield, 0),
+            max: calculateStaticDamage(attacker, target, mock, true, targetShield, 1),
+            avg: calculateStaticDamage(attacker, target, mock, true, targetShield, 0.5)
+        };
+    });
+    res.json(results);
+});
+
+// Combat Unique & Batch (Placeholders connectés aux structures attendues)
+app.post('/api/simulation/fight', async (req, res) => {
+    res.json({
+        message: "Mode dynamique prêt", steps: [
+            { action: 'initFighter', fid: req.body.teamA[0]?.id || 1 },
+            { action: 'skillActivate', fid: req.body.teamA[0]?.id || 1, skill: 1, targets: [{ tid: req.body.teamB[0]?.id || 2, hp_lost: 10 }] }
+        ]
+    });
+});
+
+app.post('/api/simulation/batch', async (req, res) => {
+    res.json({ iterations: req.body.iterations, winRateA: 55, winRateB: 45, avgTime: 110 });
+});
+
+// ==========================================
+// 10. DÉMARRAGE SERVEUR
 // ==========================================
 app.listen(PORT, () => {
     console.log(`❄️  Serveur Guerriers du Givre lancé sur http://localhost:${PORT}`);

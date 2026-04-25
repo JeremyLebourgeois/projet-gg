@@ -1517,28 +1517,28 @@ button:hover {
 .card-with-note::after {
     content: attr(data-note);
     position: absolute;
-    bottom: calc(100% + 10px); 
+    bottom: calc(100% + 10px);
     left: 50%;
     transform: translateX(-50%);
     background: rgba(12, 36, 61, 0.95);
-    border: 2px solid #4fc3f7; 
+    border: 2px solid #4fc3f7;
     color: white;
     padding: 8px 12px;
     border-radius: 8px;
     font-size: 0.85rem;
     white-space: normal;
-    
+
     /* LES DEUX LIGNES IMPORTANTES ICI */
-    width: max-content; 
+    width: max-content;
     max-width: 220px;
-    
+
     text-align: center;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.2s ease, visibility 0.2s ease;
     z-index: 1000;
-    pointer-events: none; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 /* La petite flèche sous la bulle */

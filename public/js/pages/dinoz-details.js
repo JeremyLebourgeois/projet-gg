@@ -154,7 +154,7 @@ function updateFullLogic() {
                                 if (s) {
                                     if (s.type === 'I') isAllowed = false;
                                     if (s.name === 'Envol') {
-                                        const flyingRaces = ['planaille', 'nuageoz', 'pteroz', 'soufflet', 'pteroz demon'];
+                                        const flyingRaces = ['planaille', 'nuagoz', 'pteroz', 'soufflet', 'pteroz demon', 'planaille demon'];
                                         if (!flyingRaces.includes(DINO_RACE.toLowerCase())) isAllowed = false;
                                     }
                                     if (s.skillNature === 2) isAllowed = false;
@@ -285,7 +285,7 @@ function getAvailableOptionsAtRow(targetRowIndex, elementsFilter) {
                     let isAllowed = true;
                     if (s.type === 'I') isAllowed = false;
                     if (s.name === 'Envol') {
-                        const flyingRaces = ['planaille', 'nuagoz', 'pteroz', 'soufflet', 'pteroz demon'];
+                        const flyingRaces = ['planaille', 'nuagoz', 'pteroz', 'soufflet', 'pteroz demon', 'planaille demon'];
                         if (!flyingRaces.includes(DINO_RACE.toLowerCase())) isAllowed = false;
                     }
                     if (s.skillNature === 2) isAllowed = false;
