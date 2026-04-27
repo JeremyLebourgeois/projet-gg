@@ -1,74 +1,87 @@
 /* Grille des plans */
-.plans-grid { 
+.plans-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
-    gap: 20px; 
-    padding: 30px; 
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 30px;
 }
 
 /* Carte Plan */
-.plan-card { 
+.plan-card {
     background: rgba(12, 36, 61, 0.8);
-    border: 1px solid #4fc3f7; 
-    border-radius: 10px; 
-    padding: 20px; 
-    transition: all 0.2s; 
-    cursor: pointer; 
-    text-decoration: none; 
-    display: flex; 
-    flex-direction: column; 
-    position: relative; 
+    border: 1px solid #4fc3f7;
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
-.plan-card:hover { 
+.plan-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(79, 195, 247, 0.3); 
+    box-shadow: 0 5px 15px rgba(79, 195, 247, 0.3);
     background: rgba(12, 36, 61, 0.95);
 }
 
+/* Style Race Card */
+.race-card {
+    padding: 5px;
+    border-radius: 8px;
+    gap: 15px;
+    background: rgba(12, 36, 61, 0.8);
+    border: 1px solid #4fc3f7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Typographie Carte */
-.plan-title { 
-    font-size: 1.2rem; 
-    font-weight: bold; 
-    color: white; 
+.plan-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
     margin-bottom: 10px;
 }
 
-.plan-race { 
-    color: #f1c40f; 
-    font-weight: bold; 
-    text-transform: uppercase; 
-    font-size: 0.9rem; 
+.plan-race {
+    color: #f1c40f;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
     margin-bottom: 5px;
-    display: flex; 
-    align-items: center; 
-    gap: 10px; 
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.plan-meta { 
-    color: #aaa; 
+.plan-meta {
+    color: #aaa;
     font-size: 0.85rem;
-    margin-top: auto; 
-    padding-top: 15px; 
-    border-top: 1px solid rgba(255,255,255,0.1); 
-    display: flex; 
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
     justify-content: space-between;
 }
 
-.lvl-badge { 
-    background: #f39c12; 
-    color: black; 
-    padding: 2px 8px; 
+.lvl-badge {
+    background: #f39c12;
+    color: black;
+    padding: 2px 8px;
     border-radius: 5px;
-    font-weight: bold; 
-    font-size: 0.8rem; 
+    font-weight: bold;
+    font-size: 0.8rem;
 }
 
 /* En-tête de la page (Remplacement des styles inline) */
 .plans-page-header {
-    padding: 20px; 
+    padding: 20px;
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -82,10 +95,212 @@
     gap: 10px;
 }
 
+/* Barre de Filtres */
+.filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 15px 30px;
+    border-radius: 10px;
+    margin: 0 30px 30px 30px;
+    border: 1px solid rgba(79, 195, 247, 0.2);
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-group label {
+    color: #8b949e;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.filter-group input[type="text"],
+.filter-group input[type="number"],
+.filter-group select {
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.5);
+    color: white;
+    border: 1px solid #4fc3f7;
+    border-radius: 6px;
+    transition: border-color 0.2s, background 0.2s;
+    font-family: inherit;
+}
+
+.filter-group input[type="text"] {
+    width: 220px;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: #4fc3f7;
+    background: rgba(255, 255, 255, 0.15);
+    outline: none;
+    box-shadow: 0 0 10px rgba(79, 195, 247, 0.2);
+}
+
+.filter-group select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px !important;
+    min-width: 180px;
+}
+
+.filter-group select option {
+    background-color: #0d1117;
+    color: white;
+    padding: 10px;
+}
+
+/* Dual Range Slider */
+.dual-range-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 0;
+}
+
+.dual-range-container {
+    position: relative;
+    width: 300px !important;
+    height: 50px !important;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    padding: 0 30px;
+    box-sizing: border-box;
+}
+
+.slider-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.dual-range-container input[type="range"] {
+    position: absolute;
+    width: calc(100% + 20px);
+    height: 20px;
+    pointer-events: none;
+    -webkit-appearance: none;
+    appearance: none;
+    z-index: 5;
+    background: none;
+    border: none !important;
+    outline: none !important;
+    margin: 0;
+    padding: 0;
+    left: -10px;
+}
+
+.dual-range-container input[type="range"]::-webkit-slider-thumb {
+    pointer-events: all;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4fc3f7;
+    cursor: pointer;
+    -webkit-appearance: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.dual-range-container input[type="range"]::-moz-range-thumb {
+    pointer-events: all;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4fc3f7;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.slider-track {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: #30363d;
+    border-radius: 2px;
+    z-index: 1;
+}
+
+.slider-range {
+    position: absolute;
+    height: 4px;
+    background: #4fc3f7;
+    z-index: 2;
+}
+
+.range-label {
+    color: #8b949e;
+    font-size: 0.9em;
+    font-weight: bold;
+    min-width: 85px;
+    text-align: center;
+}
+
 /* Message Vide */
 .empty-plans-message {
     color: #f7f7f7;
-    grid-column: 1/-1; /* Prend toute la largeur */
-    text-align: center; 
+    grid-column: 1/-1;
+    /* Prend toute la largeur */
+    text-align: center;
     padding: 50px;
+}
+
+/* Sélection de Race Interactive */
+.race-card {
+    background: rgba(206, 219, 244, 0.9) !important;
+    border: 1px solid #d7ccc8 !important;
+    border-radius: 8px !important;
+    padding: 2px !important;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+.race-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    border-color: #4fc3f7 !important;
+    z-index: 10;
+}
+
+.card-img-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-img-container img {
+    max-height: 95%;
+    max-width: 95%;
+    filter: drop-shadow(0 4px 2px rgba(0, 0, 0, 0.4));
+    transform: scale(2.0);
+}
+
+.hidden {
+    display: none !important;
 }

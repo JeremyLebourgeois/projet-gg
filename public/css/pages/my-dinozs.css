@@ -19,7 +19,7 @@
 }
 
 .search-input {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.5);
     border: 1px solid #4fc3f7;
     padding: 10px 15px;
     border-radius: 5px;
@@ -27,32 +27,6 @@
     font-family: inherit;
     width: 250px;
 }
-
-.btn-tool {
-    background: linear-gradient(180deg, #0d47a1, #002171);
-    color: white;
-    border: 1px solid #4fc3f7;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s;
-    font-family: inherit;
-}
-.btn-tool:hover {
-    background: linear-gradient(180deg, #1565c0, #0d47a1);
-    box-shadow: 0 0 10px rgba(79, 195, 247, 0.3);
-}
-
-.btn-new {
-    background: linear-gradient(180deg, #00695c, #004d40);
-    border-color: #4db6ac;
-}
-.btn-new:hover {
-    background: linear-gradient(180deg, #00897b, #00695c);
-}
-
-.spacer { flex: 1; }
 
 /* GRILLE */
 .dino-grid {
@@ -69,12 +43,13 @@
     text-align: center;
     transition: transform 0.2s;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     border: 2px solid #d7ccc8;
     text-decoration: none;
     color: inherit;
     display: block;
 }
+
 .dino-card:hover {
     transform: scale(1.05);
     z-index: 10;
@@ -89,10 +64,11 @@
     justify-content: center;
     margin-bottom: 5px;
 }
+
 .dino-card img {
     max-width: 90%;
     max-height: 90%;
-    filter: drop-shadow(0 4px 2px rgba(0,0,0,0.4));
+    filter: drop-shadow(0 4px 2px rgba(0, 0, 0, 0.4));
 }
 
 .card-info h3 {
@@ -101,6 +77,7 @@
     font-size: 0.9em;
     font-weight: bold;
 }
+
 .card-info p {
     margin: 0;
     color: #5d4037;
@@ -109,10 +86,15 @@
 
 /* Responsive */
 @media (max-width: 1200px) {
-    .dino-grid { grid-template-columns: repeat(5, 1fr); }
+    .dino-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
 }
+
 @media (max-width: 900px) {
-    .dino-grid { grid-template-columns: repeat(3, 1fr); }
+    .dino-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 /* Carte de sélection de Race */
@@ -120,6 +102,7 @@
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .race-card:hover {
     transform: scale(1.1);
     box-shadow: 0 0 20px #4fc3f7;
@@ -132,6 +115,6 @@
     color: white;
     padding: 20px;
     font-style: italic;
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 10px;
 }

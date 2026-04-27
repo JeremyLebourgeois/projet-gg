@@ -42,8 +42,7 @@
 
         <div class="toolbar">
             <div class="search-group">
-                <input type="text" placeholder="Rechercher un dinoz..." class="search-input">
-                <button class="btn-tool"><i class="fas fa-search"></i></button>
+                <input type="text" placeholder="Rechercher un dinoz ..." class="search-input">
             </div>
 
             <button class="btn-tool btn-race">Races</button>
@@ -55,17 +54,19 @@
 
         <div class="dino-grid" id="user-dino-grid">
             <% dinozs.forEach(dino=> { %>
-                <a href="/dinoz/<%= dino.id %>" class="dino-card <%= dino.note ? 'card-with-note' : '' %>" data-congealed="<%= dino.isCongealed %>" <% if
-                    (dino.note) { %> data-note="<%= dino.note %>" <% } %>>
+                <a href="/dinoz/<%= dino.id %>" class="dino-card <%= dino.note ? 'card-with-note' : '' %>"
+                    data-congealed="<%= dino.isCongealed %>" <% if (dino.note) { %> data-note="<%= dino.note %>" <% } %>
+                            >
 
                             <div class="card-img-container" style="position: relative;">
                                 <img src="<%= dino.imageUrl ? dino.imageUrl : '/img/races/' + dino.race.toLowerCase() + '.png' %>"
                                     alt="<%= dino.race %>">
-                                <% if (dino.isCongealed === 1) { %>
-                                    <div style="position: absolute; top: 0px; right: 0px; color: #4fc3f7; text-shadow: 0 0 5px black; font-size: 1.5em;">
+                                <% if (dino.isCongealed===1) { %>
+                                    <div
+                                        style="position: absolute; top: 0px; right: 0px; color: #4fc3f7; text-shadow: 0 0 5px black; font-size: 1.5em;">
                                         <i class="fas fa-snowflake"></i>
                                     </div>
-                                <% } %>
+                                    <% } %>
                             </div>
                             <div class="card-info">
                                 <h3>

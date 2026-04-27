@@ -1,30 +1,50 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <title>Plans du Clan - Guerriers du Givre</title>
     <link rel="icon" type="image/png" href="/img/logo.png">
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/pages/plans.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* (Même CSS que plans.ejs, tu peux le mettre dans style.css si tu veux factoriser) */
-        .plans-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 30px; }
-        .plan-card { background: rgba(12, 36, 61, 0.8); border: 1px solid #e67e22; /* Orange pour clan */ border-radius: 10px; padding: 20px; transition: all 0.2s; cursor: pointer; text-decoration: none; display: flex; flex-direction: column; position: relative; }
-        .plan-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3); background: rgba(12, 36, 61, 0.95); }
-        .plan-title { font-size: 1.2rem; font-weight: bold; color: white; margin-bottom: 10px; }
-        .plan-race { color: #f1c40f; font-weight: bold; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
-        .plan-meta { color: #aaa; font-size: 0.85rem; margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; }
-        .lvl-badge { background: #f39c12; color: black; padding: 2px 8px; border-radius: 5px; font-weight: bold; font-size: 0.8rem; }
+        /* Surcharge spécifique au Clan (Orange au lieu de Bleu) */
+        .plan-card {
+            border-color: #e67e22;
+        }
+
+        .plan-card:hover {
+            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3);
+        }
+
+        .lvl-badge {
+            background: #f39c12;
+        }
+
+        .filters-container {
+            border-color: rgba(230, 126, 34, 0.2);
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            border-color: #e67e22;
+        }
     </style>
 </head>
+
 <body class="hub-body">
 
     <header class="hub-header">
         <div class="header-overlay">
             <div class="header-content">
                 <div class="user-info">
-                    <h1><%= pseudo %></h1>
-                    <p class="status"><strong><%= role %></strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
+                    <h1>
+                        <%= pseudo %>
+                    </h1>
+                    <p class="status"><strong>
+                            <%= role %>
+                        </strong> des Guerriers du Givre depuis <%= daysMember %> jours</p>
                 </div>
                 <div class="nav-menu">
                     <a href="/dashboard" class="nav-btn" title="Accueil"><i class="fas fa-home"></i></a>
@@ -37,72 +57,135 @@
         </div>
     </header>
 
-    <div style="padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="padding: 20px 40px;">
         <h2 style="color: #f7f7f7; margin: 0;"><i class="fas fa-users"></i> Plans du Clan</h2>
-        <a href="/plans" class="btn-ice">Voir mes plans</a>
     </div>
 
-    <div class="filters-container" style="padding: 0 40px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end;">
+    <div class="filters-container">
         <div class="filter-group">
-            <label style="color: #8b949e; font-size: 0.9em; font-weight: bold; margin-bottom: 5px; display: block;">Recherche (Nom) :</label>
-            <input type="text" id="filter-name" placeholder="Nom du plan..." style="padding: 8px 12px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 6px;" oninput="filterPlans()">
+            <input type="text" id="filter-name" placeholder="Rechercher un plan..." oninput="filterPlans()">
         </div>
         <div class="filter-group">
-            <label style="color: #8b949e; font-size: 0.9em; font-weight: bold; margin-bottom: 5px; display: block;">Race :</label>
-            <select id="filter-race" style="padding: 8px 12px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 6px; min-width: 150px;" onchange="filterPlans()">
-                <option value="all">Toutes</option>
-            </select>
+            <button id="btn-race" class="btn-tool">Races</button>
         </div>
         <div class="filter-group">
-            <label style="color: #8b949e; font-size: 0.9em; font-weight: bold; margin-bottom: 5px; display: block;">Niveau :</label>
-            <div style="display: flex; gap: 5px; align-items: center;">
-                <input type="number" id="filter-level-min" value="1" min="1" max="80" style="width: 65px; padding: 8px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 6px;" oninput="filterPlans()">
-                <span style="color: #8b949e;">à</span>
-                <input type="number" id="filter-level-max" value="80" min="1" max="80" style="width: 65px; padding: 8px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 6px;" oninput="filterPlans()">
+            <div class="dual-range-wrapper">
+                <span class="range-label">Niv. <span id="lbl-level-min">1</span> - <span id="lbl-level-max">80</span></span>
+                <div class="dual-range-container">
+                    <div class="slider-inner">
+                        <div class="slider-track"></div>
+                        <div class="slider-range" id="slider-range"></div>
+                        <input type="range" id="range-min" min="1" max="80" value="1" oninput="updateRange()">
+                        <input type="range" id="range-max" min="1" max="80" value="80" oninput="updateRange()">
+                    </div>
+                </div>
             </div>
         </div>
         <div class="filter-group">
-            <label style="color: #8b949e; font-size: 0.9em; font-weight: bold; margin-bottom: 5px; display: block;">Joueur :</label>
-            <select id="filter-player" style="padding: 8px 12px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 6px; min-width: 150px;" onchange="filterPlans()">
-                <option value="all">Tous</option>
+            <select id="filter-player" onchange="filterPlans()">
+                <option value="all">Tous les joueurs</option>
             </select>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="filter-group">
+            <div style="display: flex; gap: 10px;">
+                <a href="/plans" class="btn-tool">Voir mes plans</a>
+                <a href="/architecte" class="btn-tool btn-new">Nouveau plan</a>
+            </div>
         </div>
     </div>
 
-    <div class="plans-grid">
-        <% plans.forEach(plan => { %>
-            <a href="/plan/<%= plan.id %>" class="plan-card" data-name="<%= plan.name.toLowerCase() %>" data-race="<%= plan.race %>" data-level="<%= plan.level %>" data-author="<%= plan.author.pseudo %>">
+    <div class="plans-grid" id="plans-grid">
+        <% plans.forEach(plan=> { %>
+            <a href="/plan/<%= plan.id %>" class="plan-card" data-name="<%= plan.name.toLowerCase() %>"
+                data-race="<%= plan.race %>" data-level="<%= plan.level %>" data-author="<%= plan.author.pseudo %>">
                 <div class="plan-race">
-                    <i class="fas fa-dna"></i> <%= plan.race %>
+                    <i class="fas fa-dna"></i>
+                    <%= plan.race %>
                 </div>
-                <div class="plan-title"><%= plan.name %></div>
+                <div class="plan-title">
+                    <%= plan.name %>
+                </div>
                 <div class="plan-meta">
-                    <span><i class="fas fa-user"></i> <%= plan.author.pseudo %></span>
+                    <span><i class="fas fa-user"></i>
+                        <%= plan.author.pseudo %>
+                    </span>
                     <span class="lvl-badge">Niv. <%= plan.level %></span>
                 </div>
             </a>
-        <% }) %>
+            <% }) %>
+
+                <div class="empty-state search-empty"
+                    style="display: none; grid-column: 1 / -1; text-align: center; color: white; padding: 20px; font-style: italic; background: rgba(0,0,0,0.3); border-radius: 10px;">
+                    Aucun résultat pour cette recherche.
+                </div>
     </div>
-    
+
+    <div class="plans-grid" id="race-selector-grid"
+        style="display: none; grid-template-columns: repeat(7, 1fr); gap: 8px; padding: 30px 300px;"></div>
+
     <script>
+        const racesList = [
+            "Castivore", "Gorilloz", "Hippoclamp", "Moueffe", "Nuagoz", "Pigmou", "Planaille",
+            "Pteroz", "Rocky", "Sirain", "Wanwan", "Winks", "Feross", "Kabuki", "Mahamuti",
+            "Quetzu", "Santaz", "Smog", "Soufflet", "Toufufu", "Triceragnon"
+        ];
+
+        let currentRaceFilter = 'all';
+
         document.addEventListener('DOMContentLoaded', () => {
             const cards = document.querySelectorAll('.plan-card');
-            const races = new Set();
             const players = new Set();
-            
+            const raceGrid = document.getElementById('race-selector-grid');
+            const plansGrid = document.getElementById('plans-grid');
+            const btnRace = document.getElementById('btn-race');
+
             cards.forEach(c => {
-                if (c.dataset.race) races.add(c.dataset.race);
                 if (c.dataset.author) players.add(c.dataset.author);
             });
-            
-            const raceSelect = document.getElementById('filter-race');
-            [...races].sort().forEach(r => {
-                const opt = document.createElement('option');
-                opt.value = r;
-                opt.textContent = r;
-                raceSelect.appendChild(opt);
+
+            // Génération dynamique de la grille des races
+            racesList.forEach(race => {
+                const raceCard = document.createElement('div');
+                raceCard.className = 'race-card';
+                raceCard.style.textAlign = 'center';
+                raceCard.style.border = '1px solid #e67e22'; // Orange pour clan
+
+                raceCard.innerHTML = `
+                    <div class="card-img-container" style="height: 100px; display: flex; align-items: center; justify-content: center;">
+                        <img src="/img/races/${race.toLowerCase()}.png" alt="${race}" title="${race}" style="max-height: 90%; max-width: 90%;">
+                    </div>
+                `;
+
+                raceCard.addEventListener('click', () => {
+                    currentRaceFilter = race;
+                    btnRace.innerHTML = race;
+                    raceGrid.style.display = 'none';
+                    plansGrid.style.display = 'grid';
+                    filterPlans();
+                });
+                raceGrid.appendChild(raceCard);
             });
-            
+
+            btnRace.addEventListener('click', () => {
+                if (raceGrid.style.display === 'none') {
+                    plansGrid.style.display = 'none';
+                    raceGrid.style.display = 'grid';
+                    btnRace.innerHTML = 'Retour <i class="fas fa-undo"></i>';
+                } else {
+                    currentRaceFilter = 'all';
+                    btnRace.innerHTML = 'Races';
+                    raceGrid.style.display = 'none';
+                    plansGrid.style.display = 'grid';
+                    filterPlans();
+                }
+            });
+
+            // Initialiser le range slider
+            updateRange();
+
             const playerSelect = document.getElementById('filter-player');
             [...players].sort((a, b) => a.localeCompare(b)).forEach(p => {
                 const opt = document.createElement('option');
@@ -112,29 +195,69 @@
             });
         });
 
+        function updateRange() {
+            const rangeMin = document.getElementById('range-min');
+            const rangeMax = document.getElementById('range-max');
+            const sliderRange = document.getElementById('slider-range');
+            const lblMin = document.getElementById('lbl-level-min');
+            const lblMax = document.getElementById('lbl-level-max');
+
+            let minVal = parseInt(rangeMin.value);
+            let maxVal = parseInt(rangeMax.value);
+
+            if (minVal > maxVal) {
+                const temp = minVal;
+                minVal = maxVal;
+                maxVal = temp;
+            }
+
+            lblMin.textContent = minVal;
+            lblMax.textContent = maxVal;
+
+            const percent1 = ((minVal - 1) / 79) * 100;
+            const percent2 = ((maxVal - 1) / 79) * 100;
+            
+            sliderRange.style.left = percent1 + "%";
+            sliderRange.style.width = (percent2 - percent1) + "%";
+
+            filterPlans();
+        }
+
         function filterPlans() {
             const nameSearch = document.getElementById('filter-name').value.toLowerCase();
-            const raceFilter = document.getElementById('filter-race').value;
-            const minLevel = parseInt(document.getElementById('filter-level-min').value) || 1;
-            const maxLevel = parseInt(document.getElementById('filter-level-max').value) || 80;
+            const minLevel = parseInt(Math.min(document.getElementById('range-min').value, document.getElementById('range-max').value));
+            const maxLevel = parseInt(Math.max(document.getElementById('range-min').value, document.getElementById('range-max').value));
             const playerFilter = document.getElementById('filter-player').value;
-            
-            const cards = document.querySelectorAll('.plan-card');
+
+            const cards = document.querySelectorAll('#plans-grid .plan-card');
+            const searchEmpty = document.querySelector('.search-empty');
+            let visibleCount = 0;
+
             cards.forEach(c => {
                 const cName = c.dataset.name;
                 const cRace = c.dataset.race;
                 const cLevel = parseInt(c.dataset.level);
                 const cAuthor = c.dataset.author;
-                
+
                 let show = true;
                 if (nameSearch && !cName.includes(nameSearch)) show = false;
-                if (raceFilter !== 'all' && cRace !== raceFilter) show = false;
+                if (currentRaceFilter !== 'all' && cRace.toLowerCase() !== currentRaceFilter.toLowerCase()) show = false;
                 if (cLevel < minLevel || cLevel > maxLevel) show = false;
                 if (playerFilter !== 'all' && cAuthor !== playerFilter) show = false;
-                
-                c.style.display = show ? 'flex' : 'none';
+
+                if (show) {
+                    c.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    c.style.display = 'none';
+                }
             });
+
+            if (searchEmpty) {
+                searchEmpty.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
         }
     </script>
 </body>
+
 </html>
