@@ -45,3 +45,65 @@ body {
 .btn-save-edit {
     background: linear-gradient(180deg, #29b6f6, #0277bd);
 }
+
+/* --- Hauteurs Adaptatives pour les colonnes --- */
+
+/* Colonne Centrale : Tableau de progression */
+.table-scroll {
+    height: calc(100vh - 280px) !important;
+    min-height: 400px;
+    margin-bottom: 20px;
+}
+
+/* Colonne Droite : Liste des compétences et Plans */
+.tab-content.active {
+    height: calc(100vh - 280px) !important;
+    display: flex !important;
+    flex-direction: column;
+}
+
+.skill-list-container {
+    flex: 1;
+    height: 100% !important;
+    max-height: none !important;
+}
+
+
+/* Ajustement pour le conteneur des mini-arbres dans l'onglet Plan */
+.mini-trees-scroll {
+    max-height: calc(100vh - 450px) !important;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Assurer que les colonnes s'alignent bien en haut */
+.dashboard-grid {
+    align-items: flex-start;
+}
+
+/* Scrollbar personnalisée pour les zones de défilement */
+.table-scroll::-webkit-scrollbar,
+.skill-list-container::-webkit-scrollbar,
+.mini-trees-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.table-scroll::-webkit-scrollbar-track,
+.skill-list-container::-webkit-scrollbar-track,
+.mini-trees-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb,
+.skill-list-container::-webkit-scrollbar-thumb,
+.mini-trees-scroll::-webkit-scrollbar-thumb {
+    background: #89cff0;
+    border-radius: 4px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb:hover,
+.skill-list-container::-webkit-scrollbar-thumb:hover,
+.mini-trees-scroll::-webkit-scrollbar-thumb:hover {
+    background: #4fc3f7;
+}
