@@ -8,7 +8,10 @@ const state = {
     activeB: 0,
     shieldA: false,
     shieldB: false,
-    displayRange: false
+    displayRange: false,
+    filterType: 'all',
+    selectedRaces: [],
+    selectedPlayers: []
 };
 
 // Constantes de combat
@@ -45,7 +48,17 @@ function init() {
         ];
 
         populateFilters();
+        
+        // Par défaut, on ne sélectionne que le joueur actuel
+        const currentPseudoEl = document.getElementById('current-user-pseudo');
+        const currentPseudo = currentPseudoEl ? currentPseudoEl.textContent.trim() : "";
+        if (currentPseudo) {
+            state.selectedPlayers = [currentPseudo];
+            updateDropdownSelection('player', [currentPseudo]);
+        }
+
         attachEventListeners();
+        updateRange();
         buildFightersList();
     } catch (e) {
         console.error("Erreur lors de l'initialisation:", e);
@@ -225,29 +238,178 @@ function calculateDefenses(finalStats, ratios, mods) {
 }
 
 function populateFilters() {
-    let races = new Set();
-    let players = new Set();
+    let playersSet = new Set();
     state.fighters.forEach(f => {
-        if (f.race) races.add(f.race);
-        if (f.player) players.add(f.player);
+        if (f.player) playersSet.add(f.player);
     });
 
-    const populateSelect = (id, items) => {
-        const sel = document.getElementById(id);
-        Array.from(items).sort().forEach(item => {
-            const opt = document.createElement('option');
-            opt.value = opt.textContent = item;
-            sel.appendChild(opt);
+    const players = Array.from(playersSet).sort();
+
+    // Population Joueurs
+    const playerDropdown = document.getElementById('player-dropdown-list');
+    if (playerDropdown) {
+        playerDropdown.innerHTML = '';
+        const allItem = document.createElement('div');
+        allItem.className = 'dropdown-item all-option';
+        allItem.innerHTML = `<strong>Tous les joueurs</strong>`;
+        allItem.onclick = (e) => {
+            e.stopPropagation();
+            state.selectedPlayers = [];
+            playerDropdown.querySelectorAll('.dropdown-item').forEach(el => el.classList.remove('active'));
+            playerDropdown.querySelectorAll('.dropdown-item input').forEach(chk => chk.checked = false);
+            updateDropdownLabel('player');
+            buildFightersList();
+        };
+        playerDropdown.appendChild(allItem);
+
+        players.forEach(p => {
+            const item = document.createElement('div');
+            item.className = 'dropdown-item';
+            item.innerHTML = `<input type="checkbox" value="${p}" id="chk-p-${p}"><label for="chk-p-${p}">${p}</label>`;
+            item.onclick = (e) => {
+                e.stopPropagation();
+                const chk = item.querySelector('input');
+                if (e.target !== chk) chk.checked = !chk.checked;
+                const idx = state.selectedPlayers.indexOf(p);
+                if (chk.checked) { if (idx === -1) state.selectedPlayers.push(p); item.classList.add('active'); }
+                else { if (idx > -1) state.selectedPlayers.splice(idx, 1); item.classList.remove('active'); }
+                updateDropdownLabel('player');
+                buildFightersList();
+            };
+            playerDropdown.appendChild(item);
         });
-    };
-    populateSelect('filter-race', races);
-    populateSelect('filter-player', players);
+    }
+
+    // Initialisation du multi-sélecteur de races (Dropdown)
+    const raceDropdown = document.getElementById('race-dropdown-list');
+    const races = [
+        "Castivore", "Gorilloz", "Hippoclamp", "Moueffe", "Nuagoz", "Pigmou", "Planaille",
+        "Pteroz", "Rocky", "Sirain", "Wanwan", "Winks", "Feross", "Kabuki", "Mahamuti",
+        "Quetzu", "Santaz", "Smog", "Soufflet", "Toufufu", "Triceragnon"
+    ];
+
+    if (raceDropdown) {
+        raceDropdown.innerHTML = '';
+        
+        // Option "Toutes"
+        const allItem = document.createElement('div');
+        allItem.className = 'dropdown-item all-option';
+        allItem.innerHTML = `<strong>Toutes les races</strong>`;
+        allItem.onclick = (e) => {
+            e.stopPropagation();
+            state.selectedRaces = [];
+            raceDropdown.querySelectorAll('.dropdown-item').forEach(el => el.classList.remove('active'));
+            raceDropdown.querySelectorAll('.dropdown-item input').forEach(chk => chk.checked = false);
+            updateDropdownLabel('race');
+            buildFightersList();
+        };
+        raceDropdown.appendChild(allItem);
+
+        races.forEach(race => {
+            const item = document.createElement('div');
+            item.className = 'dropdown-item';
+            item.innerHTML = `
+                <input type="checkbox" value="${race}" id="chk-${race}">
+                <label for="chk-${race}">${race}</label>
+            `;
+            
+            item.onclick = (e) => {
+                e.stopPropagation();
+                const chk = item.querySelector('input');
+                if (e.target !== chk) chk.checked = !chk.checked;
+                
+                const index = state.selectedRaces.indexOf(race);
+                if (chk.checked) {
+                    if (index === -1) state.selectedRaces.push(race);
+                    item.classList.add('active');
+                } else {
+                    if (index > -1) state.selectedRaces.splice(index, 1);
+                    item.classList.remove('active');
+                }
+                updateDropdownLabel();
+                buildFightersList();
+            };
+            raceDropdown.appendChild(item);
+        });
+    }
+}
+
+function updateDropdownSelection(type, values) {
+    const list = document.getElementById(`${type}-dropdown-list`);
+    if (!list) return;
+    list.querySelectorAll('.dropdown-item').forEach(item => {
+        const chk = item.querySelector('input');
+        if (chk && values.includes(chk.value)) {
+            chk.checked = true;
+            item.classList.add('active');
+        }
+    });
+    updateDropdownLabel(type);
+}
+
+function updateDropdownLabel(type) {
+    const label = document.getElementById(`${type}-dropdown-selected`);
+    const selected = type === 'race' ? state.selectedRaces : state.selectedPlayers;
+    const defaultText = type === 'race' ? "Toutes" : "Tous";
+    const pluralText = type === 'race' ? "races" : "joueurs";
+
+    if (!label) return;
+    if (selected.length === 0) {
+        label.textContent = defaultText;
+    } else if (selected.length === 1) {
+        label.textContent = selected[0];
+    } else {
+        label.textContent = `${selected.length} ${pluralText}`;
+    }
 }
 
 function attachEventListeners() {
-    ['filter-type', 'filter-race', 'filter-level-min', 'filter-level-max', 'filter-player', 'filter-role'].forEach(id => {
-        document.getElementById(id).addEventListener('change', buildFightersList);
-        if (id.includes('level')) document.getElementById(id).addEventListener('input', buildFightersList);
+    ['filter-player'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', buildFightersList);
+    });
+
+    // Toggle Dropdowns
+    const dropdowns = [
+        { header: 'race-dropdown-selected', list: 'race-dropdown-list' },
+        { header: 'player-dropdown-selected', list: 'player-dropdown-list' }
+    ];
+
+    dropdowns.forEach(d => {
+        const h = document.getElementById(d.header);
+        const l = document.getElementById(d.list);
+        if (h && l) {
+            h.onclick = (e) => {
+                e.stopPropagation();
+                // Fermer les autres dropdowns
+                dropdowns.forEach(od => { if(od.list !== d.list) document.getElementById(od.list).classList.add('hidden'); });
+                l.classList.toggle('hidden');
+            };
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        dropdowns.forEach(d => {
+            const l = document.getElementById(d.list);
+            if (l && !l.contains(e.target)) l.classList.add('hidden');
+        });
+    });
+
+    ['filter-level-min', 'filter-level-max'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+            updateRange();
+            buildFightersList();
+        });
+    });
+
+    // Filtre Type par boutons
+    document.querySelectorAll('#filter-type-group .toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#filter-type-group .toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.filterType = btn.dataset.value;
+            buildFightersList();
+        });
     });
 
     document.getElementById('btn-clear-a').addEventListener('click', () => { state.teamA = []; updateTeamsDOM(); buildFightersList(); });
@@ -273,23 +435,63 @@ function attachEventListeners() {
     document.getElementById('select-b').addEventListener('change', (e) => { state.activeB = parseInt(e.target.value); renderMode1Panels(); });
 }
 
+window.updateRange = function () {
+    const rangeMin = document.getElementById('filter-level-min');
+    const rangeMax = document.getElementById('filter-level-max');
+    const sliderRange = document.getElementById('slider-range');
+    const tipMin = document.getElementById('tip-min');
+    const tipMax = document.getElementById('tip-max');
+
+    let v1 = parseInt(rangeMin.value);
+    let v2 = parseInt(rangeMax.value);
+
+    let minVal = Math.min(v1, v2);
+    let maxVal = Math.max(v1, v2);
+
+    // Calcul des pourcentages pour positionnement
+    const pV1 = ((v1 - 1) / 79) * 100;
+    const pV2 = ((v2 - 1) / 79) * 100;
+    const pMin = ((minVal - 1) / 79) * 100;
+    const pMax = ((maxVal - 1) / 79) * 100;
+
+    sliderRange.style.left = pMin + "%";
+    sliderRange.style.width = (pMax - pMin) + "%";
+
+    // Positionnement des tooltips sur les poignées réelles (pas forcément min/max)
+    tipMin.textContent = v1;
+    tipMin.style.left = pV1 + "%";
+
+    tipMax.textContent = v2;
+    tipMax.style.left = pV2 + "%";
+};
+
 function buildFightersList() {
-    const type = document.getElementById('filter-type').value;
-    const race = document.getElementById('filter-race').value;
-    const minLvl = parseInt(document.getElementById('filter-level-min').value) || 1;
-    const maxLvl = parseInt(document.getElementById('filter-level-max').value) || 80;
-    const player = document.getElementById('filter-player').value;
-    const role = document.getElementById('filter-role').value;
+    const type = state.filterType;
+    const selectedRaces = state.selectedRaces;
+    const selectedPlayers = state.selectedPlayers;
+    const rMin = parseInt(document.getElementById('filter-level-min').value);
+    const rMax = parseInt(document.getElementById('filter-level-max').value);
+    const minLvl = Math.min(rMin, rMax);
+    const maxLvl = Math.max(rMin, rMax);
+
 
     const listContainer = document.getElementById('fighter-list-container');
     listContainer.innerHTML = '';
 
     const filtered = state.fighters.filter(f => {
         if (type !== 'all' && (type === 'real' ? f.isGhost : !f.isGhost)) return false;
-        if (race !== 'all' && f.race !== race) return false;
+        
+        if (selectedRaces.length > 0) {
+            const fRace = (f.race || "").trim().toLowerCase();
+            const isMatch = selectedRaces.some(r => r.trim().toLowerCase() === fRace);
+            if (!isMatch) return false;
+        }
         if (f.level < minLvl || f.level > maxLvl) return false;
-        if (player !== 'all' && f.player !== player) return false;
-        if (role !== 'all' && f.role !== role) return false;
+        if (selectedPlayers.length > 0) {
+            const fPlayer = (f.player || "").trim().toLowerCase();
+            const isMatch = selectedPlayers.some(p => p.trim().toLowerCase() === fPlayer);
+            if (!isMatch) return false;
+        }
         return true;
     });
 
@@ -318,7 +520,6 @@ function buildFightersList() {
         div.className = 'fighter-card';
         div.innerHTML = `
             <div class="fighter-info">
-                <span class="badge ${f.isGhost ? 'ghost' : 'real'}">${f.isGhost ? 'Fantôme' : 'Dinoz'}</span>
                 <img src="${f.imageUrl}" style="width: 90px; height: 90px; border-radius: 10px; margin: 6px auto; display: block; object-fit: contain;">
                 <div class="fighter-name">${f.name}</div>
                 <div class="fighter-details">Lvl ${f.level} - ${f.race}</div>
@@ -403,7 +604,7 @@ function renderMode1Panels() {
     const hasAuraB = (fB.allSkills || []).some(s => s.name === 'Aura Hermétique' || s.name === 'Aura Hermetique');
     const btnA = document.getElementById('btn-shield-a');
     const btnB = document.getElementById('btn-shield-b');
-    
+
     if (!hasAuraA) state.shieldA = false;
     if (!hasAuraB) state.shieldB = false;
 
@@ -452,7 +653,7 @@ function renderFighterSheetInContainer(containerId, fighter) {
     document.getElementById(containerId).innerHTML = html;
 }
 
-window.toggleShield = function(team) {
+window.toggleShield = function (team) {
     if (team === 'A') {
         state.shieldA = !state.shieldA;
         document.getElementById('btn-shield-a').classList.toggle('active', state.shieldA);
@@ -484,13 +685,13 @@ function buildStatsHtml(dinoz, adverseTeam) {
     const HEAL_NAMES = ['Sieste', 'Aube Feuillue', 'Printemps Précoce', 'AubeFeuillue', 'PrintempsPrecoce', 'Printemps Precoce'];
     // Compétences à exclure explicitement du tableau
     const SKILLS_BLACKLIST = ['Trou Noir', 'Coups Sournois', 'Paume Ejectable', 'Coup Fatal'];
-    
+
     const skillsToDisplay = (dinoz.allSkills || []).filter(fs => {
         if (SKILLS_BLACKLIST.includes(fs.name)) return false;
         if (fs.type !== 'A' && fs.type !== 'E') return false;
         return fs.effect === 'HEAL' || fs.effect === 'DAMAGE' || HEAL_NAMES.includes(fs.name);
     });
-    
+
     skillsToDisplay.forEach(fullSkill => {
         const isHeal = fullSkill.effect === 'HEAL' || HEAL_NAMES.includes(fullSkill.name);
         const rowClass = isHeal ? 'row-heal' : '';
@@ -516,9 +717,9 @@ function calculateValue(attacker, target, skill, isAssault, randomVal) {
     const ELEM_MAP = { 'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'bolt', 'Air': 'air' };
     const HEAL_NAMES = ['Sieste', 'Aube Feuillue', 'Printemps Précoce', 'AubeFeuillue', 'PrintempsPrecoce', 'Printemps Precoce'];
     const isHeal = skill.effect === 'HEAL' || HEAL_NAMES.includes(skill.name);
-    
+
     const targetTeam = state.teamA.includes(target) ? 'A' : 'B';
-    
+
     // Aura Hermétique : ×1.2 sur l'armure de la cible
     const targetShield = (targetTeam === 'A' ? state.shieldA : state.shieldB);
     const baseArmor = (target.statArmor || target.stats?.armor || 0);
@@ -538,10 +739,10 @@ function calculateValue(attacker, target, skill, isAssault, randomVal) {
     // Ces valeurs sont hardcodées selon les règles du jeu
     const HEAL_MULTIPLIER_FALLBACK = {
         'Printemps Précoce': { 'Bois': 1 },
-        'PrintempsPrecoce':  { 'Bois': 1 },
+        'PrintempsPrecoce': { 'Bois': 1 },
         'Printemps Precoce': { 'Bois': 1 },
-        'Aube Feuillue':     { 'Bois': 2, 'Foudre': 2 },
-        'AubeFeuillue':      { 'Bois': 2, 'Foudre': 2 }
+        'Aube Feuillue': { 'Bois': 2, 'Foudre': 2 },
+        'AubeFeuillue': { 'Bois': 2, 'Foudre': 2 }
     };
     const effectiveMults = (Object.keys(multipliers).length > 0)
         ? multipliers
@@ -566,7 +767,7 @@ function calculateValue(attacker, target, skill, isAssault, randomVal) {
         return Math.max(Math.round((1 + maxHeal) / 2), 1);
     } else {
         // DÉGÂTS : Nouvelle formule demandée
-        
+
         // A. Ajout du bonus aléatoire (0% à 30%)
         const bonusFactor = 1 + (randomVal * 0.3);
         let currentDmg = power * bonusFactor;
@@ -587,7 +788,7 @@ function calculateValue(attacker, target, skill, isAssault, randomVal) {
             sumMults += multValue;
         }
         if (sumMults > 0) defense /= sumMults; // Moyenne pondérée par les pouvoirs
-        
+
         currentDmg -= defense;
 
         // D. Puissance 0.6 et arrondi
