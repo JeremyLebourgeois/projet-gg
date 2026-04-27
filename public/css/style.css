@@ -13,6 +13,14 @@ body {
     min-height: 100vh;
 }
 
+/* Spacer pour éviter que l'UI des navigateurs mobiles ne cache le contenu en bas de page */
+.mobile-footer-spacer {
+    height: 120px;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+
 body::before {
     content: "";
     position: fixed;
