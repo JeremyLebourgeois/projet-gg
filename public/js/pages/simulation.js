@@ -522,7 +522,7 @@ function calculateValue(attacker, target, skill, isAssault, randomVal) {
     // Aura Hermétique : ×1.2 sur l'armure de la cible
     const targetShield = (targetTeam === 'A' ? state.shieldA : state.shieldB);
     const baseArmor = (target.statArmor || target.stats?.armor || 0);
-    const effectiveArmor = targetShield ? (baseArmor * 1.2) : baseArmor;
+    const effectiveArmor = targetShield ? (((1 + baseArmor / 100) * 1.2) - 1) * 100 : baseArmor;
 
     // Sieste : montant fixe [1 - 20], pas de bonus aléatoire
     if (skill.name === 'Sieste') {
@@ -571,8 +571,10 @@ function calculateValue(attacker, target, skill, isAssault, randomVal) {
         const bonusFactor = 1 + (randomVal * 0.3);
         let currentDmg = power * bonusFactor;
 
-        // B. Réduction par l'Armure
-        currentDmg *= (1 - (effectiveArmor / 100));
+        // B. Réduction par l'Armure (Ignorée par les Santaz)
+        if (attacker.race !== 'Santaz') {
+            currentDmg *= (1 - (effectiveArmor / 100));
+        }
 
         // C. Réduction par la Défense (Liée à l'élément dominant ou moyenne ?)
         // On va chercher la défense correspondante aux multiplicateurs
