@@ -6,6 +6,9 @@ const { PrismaClient } = require('@prisma/client');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const { exec } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
 
 const app = express();
 const prisma = new PrismaClient();
@@ -594,7 +597,8 @@ app.get('/architecte', async (req, res) => {
         orderBy: { id: 'asc' }
     });
 
-    const raceList = ['castivore', 'gorilloz', 'hippoclamp', 'moueffe', 'nuagoz', 'pigmou', 'planaille', 'pteroz', 'rocky', 'sirain', 'wanwan', 'winks', 'feross', 'kabuki', 'mahamuti', 'quetzu', 'santaz', 'smog', 'soufflet', 'toufufu', 'triceragnon'].sort();
+    const raceList = ['castivore', 'gorilloz', 'hippoclamp', 'moueffe', 'nuagoz', 'pigmou', 'planaile', 'pteroz', 'rocky', 'sirain', 'wanwan', 'winks', 'feross', 'kabuki', 'mahamuti', 'quetzu', 'santaz', 'smog', 'soufflet', 'toufufu', 'triceragnon'].sort();
+    raceList.unshift('neutre');
     const raceListDb = await prisma.refRace.findMany();
 
     const valeursAjoutDefaut = {
@@ -616,7 +620,9 @@ app.get('/architecte', async (req, res) => {
     }
 
     const daysMember = Math.ceil(Math.abs(new Date() - new Date(user.createdAt)) / (1000 * 60 * 60 * 24));
-    res.render('architecte', { user, pseudo: user.pseudo, role: user.role, skills: allSkills, daysMember, raceList, raceListDb, plan: planToEdit, ajout: ajoutToEdit });
+    const racesUp = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'racesUp.json'), 'utf8'));
+
+    res.render('architecte', { user, pseudo: user.pseudo, role: user.role, skills: allSkills, daysMember, raceList, raceListDb, plan: planToEdit, ajout: ajoutToEdit, racesUp });
 });
 
 // Sauvegarder un plan

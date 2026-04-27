@@ -69,7 +69,7 @@
                             </div>
                         </div>
                         <div class="filter-group">
-                            <label>Niveau :</label>
+                            <label>Niveaux :</label>
                             <div class="dual-range-wrapper">
                                 <div class="dual-range-container">
                                     <div class="slider-inner">
@@ -87,12 +87,12 @@
                             <label>Joueurs :</label>
                             <div class="custom-dropdown" id="player-dropdown">
                                 <div class="dropdown-selected" id="player-dropdown-selected">Tous</div>
-                                <div class="dropdown-list hidden" id="player-dropdown-list">
-                                    <!-- JS injects checkboxes here -->
-                                </div>
+                                <div class="dropdown-list hidden" id="player-dropdown-list"></div>
                             </div>
                         </div>
-                        <div id="current-user-pseudo" class="hidden"><%= pseudo %></div>
+                        <div id="current-user-pseudo" class="hidden">
+                            <%= pseudo %>
+                        </div>
 
                         <div class="filter-group action-group">
                             <label>&nbsp;</label>

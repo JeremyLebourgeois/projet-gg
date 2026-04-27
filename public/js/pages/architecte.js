@@ -262,6 +262,89 @@ function updateStatsDisplay() {
     window.calculatedLevel = totalLevel;
 
     calculateAllStats(gridPoints);
+    updateRacePercentages();
+}
+
+function updateRacePercentages() {
+    const raceName = document.getElementById('plan-race').value.toLowerCase();
+    
+    // On cherche la race dans RACES_UP (normalisation des noms pour la comparaison)
+    const raceData = RACES_UP.find(r => {
+        const normalized = r.race.toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Enlever les accents
+            .replace(/\s+/g, '_'); // Espaces -> underscore
+        return normalized === raceName || r.race.toLowerCase() === raceName;
+    });
+
+    const elemIds = ['fire', 'wood', 'water', 'lightning', 'air'];
+    
+    if (raceData && raceData.elements) {
+        elemIds.forEach((id, index) => {
+            const pctSpan = document.getElementById(`pct-${id}`);
+            if (pctSpan) {
+                pctSpan.innerText = `(${raceData.elements[index]})`;
+                pctSpan.style.display = 'inline';
+            }
+        });
+        calculateSuccessProbability(raceData, elemIds);
+    } else {
+        // Si non trouvé, on met (0%) par défaut
+        elemIds.forEach(id => {
+            const pctSpan = document.getElementById(`pct-${id}`);
+            if (pctSpan) {
+                pctSpan.innerText = '(0%)';
+                pctSpan.style.display = 'inline';
+            }
+        });
+        document.getElementById('build-probability').innerText = '';
+    }
+}
+
+function calculateSuccessProbability(raceData, elemIds) {
+    const counts = {
+        fire: parseInt(document.getElementById('count-fire').innerText) || 0,
+        wood: parseInt(document.getElementById('count-wood').innerText) || 0,
+        water: parseInt(document.getElementById('count-water').innerText) || 0,
+        lightning: parseInt(document.getElementById('count-lightning').innerText) || 0,
+        air: parseInt(document.getElementById('count-air').innerText) || 0
+    };
+
+    const n = Object.values(counts).reduce((a, b) => a + b, 0);
+    if (n === 0) {
+        document.getElementById('build-probability').innerText = '(100%)';
+        return;
+    }
+
+    const probs = raceData.elements.map(p => parseFloat(p) / 100);
+    
+    // Formule Multinomiale : P = (N! / (k1! * k2! * ...)) * (p1^k1 * p2^k2 * ...)
+    let logProb = logFactorial(n);
+    let possible = true;
+
+    elemIds.forEach((id, i) => {
+        const k = counts[id];
+        const p = probs[i];
+        
+        if (k > 0 && p === 0) possible = false;
+        
+        if (k > 0) {
+            logProb -= logFactorial(k);
+            logProb += k * Math.log(p);
+        }
+    });
+
+    const probability = possible ? Math.exp(logProb) * 100 : 0;
+    
+    let displayProb = probability.toFixed(5) + "%";
+
+    document.getElementById('build-probability').innerText = `(${displayProb} de réussite)`;
+}
+
+// Fonction utilitaire pour le factoriel (via log pour éviter les overflows et garder de la précision)
+function logFactorial(n) {
+    let res = 0;
+    for (let i = 2; i <= n; i++) res += Math.log(i);
+    return res;
 }
 
 function calculateAllStats(gridPoints) {

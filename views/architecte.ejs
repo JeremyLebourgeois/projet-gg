@@ -50,7 +50,7 @@
             <label>Race Cible</label>
             <select id="plan-race" class="input-architect" style="text-transform: capitalize;">
                 <% raceList.forEach(r=> { %>
-                    <option value="<%= r %>">
+                    <option value="<%= r %>" <%= (plan && plan.race === r) ? 'selected' : (!plan && r === 'neutre' ? 'selected' : '') %>>
                         <%= r %>
                     </option>
                     <% }) %>
@@ -98,22 +98,42 @@
             </div>
 
             <div class="ups-details-box">
-                <div class="ups-title">Détail des Ups</div>
+                <div class="ups-title">Détail des Ups <span id="build-probability" style="font-size: 0.85em; color: #f1c40f; font-weight: normal; margin-left: 5px;"></span></div>
 
                 <div class="ups-row zero" id="row-fire">
-                    <img src="/img/elements/fire.webp"> <span id="count-fire">0</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img src="/img/elements/fire.webp">
+                        <span class="ups-pct" id="pct-fire"></span>
+                    </div>
+                    <span id="count-fire">0</span>
                 </div>
                 <div class="ups-row zero" id="row-wood">
-                    <img src="/img/elements/wood.webp"> <span id="count-wood">0</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img src="/img/elements/wood.webp">
+                        <span class="ups-pct" id="pct-wood"></span>
+                    </div>
+                    <span id="count-wood">0</span>
                 </div>
                 <div class="ups-row zero" id="row-water">
-                    <img src="/img/elements/water.webp"> <span id="count-water">0</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img src="/img/elements/water.webp">
+                        <span class="ups-pct" id="pct-water"></span>
+                    </div>
+                    <span id="count-water">0</span>
                 </div>
                 <div class="ups-row zero" id="row-lightning">
-                    <img src="/img/elements/lightning.webp"> <span id="count-lightning">0</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img src="/img/elements/lightning.webp">
+                        <span class="ups-pct" id="pct-lightning"></span>
+                    </div>
+                    <span id="count-lightning">0</span>
                 </div>
                 <div class="ups-row zero" id="row-air">
-                    <img src="/img/elements/air.webp"> <span id="count-air">0</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img src="/img/elements/air.webp">
+                        <span class="ups-pct" id="pct-air"></span>
+                    </div>
+                    <span id="count-air">0</span>
                 </div>
             </div>
 
@@ -217,6 +237,8 @@
         const ALL_SKILLS = JSON.parse(`<%- JSON.stringify(skills).replace(/\\/g, '\\\\').replace(/'/g, "\\'") %>`);
         // prettier-ignore
         const RACES_DB = JSON.parse(`<%- JSON.stringify(raceListDb).replace(/\\/g, '\\\\').replace(/'/g, "\\'") %>`);
+        // prettier-ignore
+        const RACES_UP = JSON.parse(`<%- JSON.stringify(racesUp).replace(/\\/g, '\\\\').replace(/'/g, "\\'") %>`);
         // prettier-ignore
         const PLAN_DATA = JSON.parse(`<%- plan ? JSON.stringify(plan).replace(/\\/g, '\\\\').replace(/'/g, "\\'") : 'null' %>`);
     </script>

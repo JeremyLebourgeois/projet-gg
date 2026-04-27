@@ -184,6 +184,7 @@
 .ups-row span { font-weight: bold; font-size: 1.1rem; color: white; }
 .ups-row.zero { opacity: 0.3; } 
 .ups-row:not(.zero) { background: rgba(255,255,255,0.1); border-left: 3px solid #f1c40f; } /* Mise en valeur active */
+.ups-pct { font-size: 0.85rem !important; color: #f1c40f !important; margin-left: 5px; font-weight: normal !important; opacity: 0.8; }
 
 /* Classes de fond spécifiques */
 .bg-feu { background-color: rgba(211, 47, 47, 0.15); border-left: 5px solid #d32f2f; }
