@@ -414,19 +414,31 @@ function restoreGridVisuals() {
 }
 
 // --- COMMUNICATION SERVEUR ---
-async function saveGridData(rowIndex, colIndex, value) {
+let saveQueue = [];
+let isSaving = false;
+
+async function processSaveQueue() {
+    if (isSaving || saveQueue.length === 0) return;
+    isSaving = true;
+
+    const nextTask = saveQueue.shift();
     try {
         const res = await fetch('/dinoz/update-grid', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ dinoId: DINO_ID, rowIndex, colIndex, value })
+            body: JSON.stringify({ 
+                dinoId: nextTask.dinoId, 
+                rowIndex: nextTask.rowIndex, 
+                colIndex: nextTask.colIndex, 
+                value: nextTask.value 
+            })
         });
         const json = await res.json();
 
         if (json.success) {
             try {
-                if (value) {
-                    const parsedValue = JSON.parse(value);
+                if (nextTask.value) {
+                    const parsedValue = JSON.parse(nextTask.value);
                     if (parsedValue.skillId === 41406) {
                         window.location.reload();
                         return;
@@ -441,7 +453,6 @@ async function saveGridData(rowIndex, colIndex, value) {
                 document.getElementById('val-bolt').innerText = json.stats.statBolt;
                 document.getElementById('val-air').innerText = json.stats.statAir;
 
-                // Update general stats
                 if (document.getElementById('stat-life')) document.getElementById('stat-life').innerText = json.stats.statLife;
                 if (document.getElementById('stat-initiative')) document.getElementById('stat-initiative').innerText = json.stats.statInitiative;
                 if (document.getElementById('stat-armor')) document.getElementById('stat-armor').innerText = (json.stats.statArmor || 0).toFixed(1);
@@ -451,14 +462,12 @@ async function saveGridData(rowIndex, colIndex, value) {
                 if (document.getElementById('stat-counter')) document.getElementById('stat-counter').innerText = (json.stats.statCounter || 0).toFixed(1);
                 if (document.getElementById('stat-multihit')) document.getElementById('stat-multihit').innerText = (json.stats.statMultiHit || 0).toFixed(1);
 
-                // Update assaults
                 if (document.getElementById('assault-fire')) document.getElementById('assault-fire').innerText = (json.stats.statFire * 5) + json.stats.statAssaultFire;
                 if (document.getElementById('assault-wood')) document.getElementById('assault-wood').innerText = (json.stats.statWood * 5) + json.stats.statAssaultWood;
                 if (document.getElementById('assault-water')) document.getElementById('assault-water').innerText = (json.stats.statWater * 5) + json.stats.statAssaultWater;
                 if (document.getElementById('assault-bolt')) document.getElementById('assault-bolt').innerText = (json.stats.statBolt * 5) + json.stats.statAssaultBolt;
                 if (document.getElementById('assault-air')) document.getElementById('assault-air').innerText = (json.stats.statAir * 5) + json.stats.statAssaultAir;
 
-                // Update derived unique damage stats
                 if (document.getElementById('stat-torche')) {
                     document.getElementById('stat-torche').innerText = Math.round(json.stats.statFire ** 0.6);
                 }
@@ -479,7 +488,17 @@ async function saveGridData(rowIndex, colIndex, value) {
                 lvlTxt.innerText = lvlTxt.innerText.replace(/Niveau \d+/, `Niveau ${json.level}`);
             }
         }
-    } catch (err) { console.error(err); }
+    } catch (error) {
+        console.error("Erreur lors de l'enregistrement de la grille :", error);
+    } finally {
+        isSaving = false;
+        processSaveQueue();
+    }
+}
+
+function saveGridData(rowIndex, colIndex, value) {
+    saveQueue.push({ dinoId: DINO_ID, rowIndex, colIndex, value });
+    processSaveQueue();
 }
 
 // --- INTERACTIONS ---
@@ -489,11 +508,61 @@ window.toggleMenu = function (cell) {
     } else {
         if (cell.style.visibility === 'hidden') return;
         document.querySelectorAll('.cell-menu').forEach(m => m.classList.remove('visible'));
-        cell.querySelector('.cell-menu').classList.add('visible');
+        
+        const menu = cell.querySelector('.cell-menu');
+        
+        if (DINO_DATA && DINO_DATA.race && DINO_DATA.racesUp) {
+            const raceData = DINO_DATA.racesUp.find(r => {
+                const normalized = r.race.toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .replace(/\s+/g, '_');
+                return normalized === DINO_DATA.race.toLowerCase() || r.race.toLowerCase() === DINO_DATA.race.toLowerCase();
+            });
+
+            if (raceData && raceData.elements) {
+                const elemIds = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+
+                menu.querySelectorAll('.menu-icon').forEach(icon => {
+                    const title = icon.getAttribute('title');
+                    if (title) {
+                        const elemIndex = elemIds.indexOf(title);
+                        if (elemIndex !== -1 && raceData.elements[elemIndex] === "0%") {
+                            icon.style.display = 'none';
+                        } else {
+                            icon.style.display = 'inline-block';
+                        }
+                    }
+                });
+            }
+        }
+
+        menu.classList.add('visible');
     }
 };
 
 window.selectElement = function (el, type) {
+    if (type !== 'unknown' && DINO_DATA && DINO_DATA.race && DINO_DATA.racesUp) {
+        const raceData = DINO_DATA.racesUp.find(r => {
+            const normalized = r.race.toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/\s+/g, '_');
+            return normalized === DINO_DATA.race.toLowerCase() || r.race.toLowerCase() === DINO_DATA.race.toLowerCase();
+        });
+
+        if (raceData && raceData.elements) {
+            const elemIds = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+            const mapTypeToElem = { 'fire': 'Feu', 'wood': 'Bois', 'water': 'Eau', 'lightning': 'Foudre', 'air': 'Air' };
+            const targetElem = mapTypeToElem[type];
+
+            if (targetElem) {
+                const elemIndex = elemIds.indexOf(targetElem);
+                if (elemIndex !== -1 && raceData.elements[elemIndex] === "0%") {
+                    alert(`Le Dinoz de race ${DINO_DATA.race} n'a pas accès à l'élément ${targetElem} !`);
+                    return;
+                }
+            }
+        }
+    }
     const cell = el.closest('.cell-choice');
     const row = cell.closest('tr');
     const colIndex = cell.classList.contains('col-2') ? 2 : 1;

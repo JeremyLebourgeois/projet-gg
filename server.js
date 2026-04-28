@@ -200,9 +200,11 @@ app.get('/dinoz/:id', async (req, res) => {
             air: parseFloat((((dino.statFire + defRatios.fire) * 0.5) + ((dino.statWood + defRatios.wood) * 0.5) + ((dino.statWater + defRatios.water) * 1.5) + ((dino.statBolt + defRatios.bolt) * 1.5) + ((dino.statAir + defRatios.air) * 1) + defMods.air).toFixed(1))
         };
 
+        const racesUp = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'racesUp.json'), 'utf8'));
+
         res.render('dinoz-details', {
             dino, user, pseudo: user.pseudo, role: user.role, daysMember,
-            allSkills, hasPDC, hasReincarnationSkill, myPlans, defenses
+            allSkills, hasPDC, hasReincarnationSkill, myPlans, defenses, racesUp
         });
     } catch (error) {
         console.error(error);

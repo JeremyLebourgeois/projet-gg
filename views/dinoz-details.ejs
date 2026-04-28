@@ -597,7 +597,8 @@
             race: "<%= dino.race %>",
             grid: JSON.parse(`<%- dino.ups ? JSON.stringify(dino.ups).replace(/\\/g, '\\\\').replace(/'/g, "\\'") : '{}' %>`),
             id: "<%= dino.id %>",
-            planIds: JSON.parse(`<%- (dino.plan && dino.plan.skillIds) ? JSON.stringify(dino.plan.skillIds) : '[]' %>`)
+            planIds: JSON.parse(`<%- (dino.plan && dino.plan.skillIds) ? JSON.stringify(dino.plan.skillIds) : '[]' %>`),
+            racesUp: JSON.parse(`<%- JSON.stringify(racesUp).replace(/\\/g, '\\\\').replace(/'/g, "\\'") %>`)
         };
     </script>
 
