@@ -862,7 +862,7 @@ app.get('/simulation', async (req, res) => {
 
     // Reference data for calculating Ghost Dinozs and damage stats
     const allSkills = await prisma.refSkill.findMany({
-        select: { id: true, name: true, type: true, element: true, isActivable: true, effect: true, multipliers: true }
+        select: { id: true, name: true, type: true, element: true, isActivable: true, effect: true, multipliers: true, modifiers: true }
     });
     const allRaces = await prisma.refRace.findMany();
 
@@ -886,7 +886,7 @@ app.get('/simulation', async (req, res) => {
 app.get('/api/skills', async (req, res) => {
     try {
         const skills = await prisma.refSkill.findMany({
-            select: { id: true, name: true, type: true, element: true, isActivable: true, effect: true, multipliers: true },
+            select: { id: true, name: true, type: true, element: true, isActivable: true, effect: true, multipliers: true, modifiers: true },
             orderBy: { name: 'asc' }
         });
         res.json(skills);
