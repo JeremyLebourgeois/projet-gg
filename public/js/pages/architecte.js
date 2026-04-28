@@ -67,10 +67,31 @@ function showTooltip(skill) {
     if (skill.raceId) {
         statsHtml += `<span class="tooltip-meta" style="color: #f1c40f; font-weight: bold; margin-top: 5px;">Spécial : ${skill.raceId}</span>`;
     }
+
+    let accessWarningHtml = '';
+    const raceName = document.getElementById('plan-race').value.toLowerCase();
+    if (raceName !== 'neutre') {
+        const raceData = RACES_UP.find(r => {
+            const normalized = r.race.toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/\s+/g, '_');
+            return normalized === raceName || r.race.toLowerCase() === raceName;
+        });
+
+        if (raceData && raceData.elements) {
+            const elemIds = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+            const elemIndex = elemIds.indexOf(skill.element);
+            if (elemIndex !== -1 && raceData.elements[elemIndex] === "0%") {
+                accessWarningHtml = `<div style="color: #ef5350; font-weight: bold; margin-top: 8px; padding-top: 5px; border-top: 1px dashed rgba(239,83,80,0.5); display: flex; align-items: center; gap: 5px;"><i class="fas fa-ban"></i> Élément inaccessible (0%)</div>`;
+            }
+        }
+    }
+
     tooltip.innerHTML = `
         <span class="tooltip-title">${skill.name}</span>
         ${statsHtml}
         <div class="tooltip-desc">${skill.description || ''}</div>
+        ${accessWarningHtml}
     `;
     tooltip.style.display = 'block';
 }
@@ -186,6 +207,29 @@ function toggleSkillSelection(skill) {
     if (selectedSkills.has(skill.id)) {
         deselectRecursively(skill);
     } else {
+        const raceName = document.getElementById('plan-race').value.toLowerCase();
+        
+        if (raceName !== 'neutre') {
+            const raceData = RACES_UP.find(r => {
+                const normalized = r.race.toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .replace(/\s+/g, '_');
+                return normalized === raceName || r.race.toLowerCase() === raceName;
+            });
+
+            if (raceData && raceData.elements) {
+                const elemIds = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+                const elemIndex = elemIds.indexOf(skill.element);
+                if (elemIndex !== -1) {
+                    const pct = raceData.elements[elemIndex];
+                    if (pct === "0%") {
+                        alert(`Le Dinoz de race ${raceData.race} n'a pas accès à l'élément ${skill.element} !`);
+                        return;
+                    }
+                }
+            }
+        }
+
         selectedSkills.add(skill.id);
         brick.classList.add('selected');
         selectParentsRecursively(skill);
@@ -222,6 +266,32 @@ function deselectRecursively(skill) {
 
 // --- CALCUL STATS ---
 function updateStatsDisplay() {
+    const raceName = document.getElementById('plan-race').value.toLowerCase();
+    if (raceName !== 'neutre') {
+        const raceData = RACES_UP.find(r => {
+            const normalized = r.race.toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/\s+/g, '_');
+            return normalized === raceName || r.race.toLowerCase() === raceName;
+        });
+
+        if (raceData && raceData.elements) {
+            const elemIds = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+            
+            selectedSkills.forEach(id => {
+                const skill = ALL_SKILLS.find(s => s.id === id);
+                if (skill) {
+                    const elemIndex = elemIds.indexOf(skill.element);
+                    if (elemIndex !== -1 && raceData.elements[elemIndex] === "0%") {
+                        selectedSkills.delete(id);
+                        const brick = document.getElementById(`skill-${id}`);
+                        if (brick) brick.classList.remove('selected');
+                    }
+                }
+            });
+        }
+    }
+
     const elements = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
     const idMap = { 'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'lightning', 'Air': 'air' };
     let totalLevel = 1;
@@ -297,6 +367,48 @@ function updateRacePercentages() {
             }
         });
         document.getElementById('build-probability').innerText = '';
+    }
+
+    updateForbiddenSkills();
+}
+
+function updateForbiddenSkills() {
+    const raceName = document.getElementById('plan-race').value.toLowerCase();
+    
+    if (raceName === 'neutre') {
+        document.querySelectorAll('.skill-brick').forEach(brick => {
+            brick.classList.remove('forbidden');
+        });
+        return;
+    }
+    
+    const raceData = RACES_UP.find(r => {
+        const normalized = r.race.toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/\s+/g, '_');
+        return normalized === raceName || r.race.toLowerCase() === raceName;
+    });
+
+    if (raceData && raceData.elements) {
+        const elemIds = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+        
+        document.querySelectorAll('.skill-brick').forEach(brick => {
+            const skillId = parseInt(brick.id.replace('skill-', ''));
+            const skill = ALL_SKILLS.find(s => s.id === skillId);
+            
+            if (skill) {
+                const elemIndex = elemIds.indexOf(skill.element);
+                if (elemIndex !== -1 && raceData.elements[elemIndex] === "0%") {
+                    brick.classList.add('forbidden');
+                } else {
+                    brick.classList.remove('forbidden');
+                }
+            }
+        });
+    } else {
+        document.querySelectorAll('.skill-brick').forEach(brick => {
+            brick.classList.remove('forbidden');
+        });
     }
 }
 
@@ -463,6 +575,36 @@ async function savePlan() {
 
     if (selectedSkills.size === 0) return alert("Sélectionnez au moins une compétence !");
     if (!name) return alert("Donnez un nom à votre plan !");
+
+    if (race !== 'neutre') {
+        const raceData = RACES_UP.find(r => {
+            const normalized = r.race.toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/\s+/g, '_');
+            return normalized === race.toLowerCase() || r.race.toLowerCase() === race.toLowerCase();
+        });
+
+        if (raceData && raceData.elements) {
+            const elemIds = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+            let hasInvalidSkill = false;
+            let invalidElem = '';
+
+            selectedSkills.forEach(id => {
+                const skill = ALL_SKILLS.find(s => s.id === id);
+                if (skill) {
+                    const elemIndex = elemIds.indexOf(skill.element);
+                    if (elemIndex !== -1 && raceData.elements[elemIndex] === "0%") {
+                        hasInvalidSkill = true;
+                        invalidElem = skill.element;
+                    }
+                }
+            });
+
+            if (hasInvalidSkill) {
+                return alert(`Le Dinoz de race ${raceData.race} n'a pas accès à l'élément ${invalidElem} ! Retirez ces compétences avant d'enregistrer.`);
+            }
+        }
+    }
 
     const planId = PLAN_DATA ? PLAN_DATA.id : null;
 
