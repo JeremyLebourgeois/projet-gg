@@ -48,13 +48,8 @@
 
         <div class="control-group" style="flex: 1;">
             <label>Race Cible</label>
-            <select id="plan-race" class="input-architect" style="text-transform: capitalize;">
-                <% raceList.forEach(r=> { %>
-                    <option value="<%= r %>" <%= (plan && plan.race === r) ? 'selected' : (!plan && r === 'neutre' ? 'selected' : '') %>>
-                        <%= r %>
-                    </option>
-                    <% }) %>
-            </select>
+            <input type="hidden" id="plan-race" value="<%= plan ? plan.race : 'neutre' %>">
+            <button class="btn-tool btn-race" id="btn-race" type="button" style="text-transform: capitalize; width: 100%; margin-top: 5px;"><%= plan ? plan.race : 'Neutre' %></button>
         </div>
 
         <div class="control-group">
@@ -73,6 +68,7 @@
     <div class="architect-main-layout">
 
         <main class="tree-container-scroll">
+            <div class="dino-grid hidden" id="race-selector-grid" style="margin-bottom: 30px;"></div>
             <div id="trees-view" class="trees-grid">
                 <% ['Feu', 'Bois' , 'Eau' , 'Foudre' , 'Air' ].forEach(elem=> { %>
                     <div class="element-block bg-<%= elem.toLowerCase() %>">

@@ -29,8 +29,112 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. Mise à jour des stats
     updateStatsDisplay();
 
-    const raceSelect = document.getElementById('plan-race');
-    if (raceSelect) raceSelect.addEventListener('change', updateStatsDisplay);
+    if (PLAN_DATA && PLAN_DATA.race) {
+        const displayName = PLAN_DATA.race.charAt(0).toUpperCase() + PLAN_DATA.race.slice(1);
+        document.getElementById('btn-race').innerHTML = `${displayName} <i class="fas fa-chevron-down"></i>`;
+    }
+
+    const racesList = [
+        "Castivore", "Gorilloz", "Hippoclamp", "Moueffe", "Nuagoz", "Pigmou", "Planaille",
+        "Pteroz", "Rocky", "Sirain", "Wanwan", "Winks", "Feross", "Kabuki", "Mahamuti",
+        "Quetzu", "Santaz", "Smog", "Soufflet", "Toufufu", "Triceragnon"
+    ];
+
+    const btnRace = document.getElementById('btn-race');
+    const raceGrid = document.getElementById('race-selector-grid');
+    const treesView = document.getElementById('trees-view');
+    const planRaceInput = document.getElementById('plan-race');
+
+    racesList.forEach(race => {
+        const raceCard = document.createElement('div');
+        raceCard.className = 'dino-card race-card';
+        
+        const imgSrc = race.toLowerCase() === 'neutre' ? '/img/races/castivore.png' : `/img/races/${race.toLowerCase()}.png`;
+        const imgStyle = race.toLowerCase() === 'neutre' ? 'opacity: 0.2; filter: grayscale(100%); max-height: 100%;' : 'max-height: 100%;';
+        
+        raceCard.innerHTML = `
+            <div class="card-img-container" style="height: 100%;">
+                <img src="${imgSrc}" alt="${race}" title="${race}" style="${imgStyle}">
+            </div>
+            <div class="card-info" style="padding-bottom: 5px;">
+                <h3 style="font-size: 0.85em; text-transform: capitalize;">${race}</h3>
+            </div>
+        `;
+
+        raceCard.addEventListener('click', () => {
+            planRaceInput.value = race.toLowerCase();
+            
+            treesView.classList.remove('hidden');
+            raceGrid.classList.add('hidden');
+            btnRace.innerHTML = `${race} <i class="fas fa-chevron-down"></i>`;
+
+            const raceName = race.toLowerCase();
+            const toRemove = [];
+            selectedSkills.forEach(id => {
+                const s = ALL_SKILLS.find(x => x.id === id);
+                if (s) {
+                    if (s.raceId && s.raceId.toLowerCase() !== raceName) {
+                        toRemove.push(id);
+                    }
+                    else if (raceName !== 'neutre') {
+                        const raceData = RACES_UP.find(r => {
+                            const normalized = r.race.toLowerCase()
+                                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                                .replace(/\s+/g, '_');
+                            return normalized === raceName || r.race.toLowerCase() === raceName;
+                        });
+
+                        if (raceData && raceData.elements) {
+                            const elemIds = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+                            const elemIndex = elemIds.indexOf(s.element);
+                            if (elemIndex !== -1 && raceData.elements[elemIndex] === "0%") {
+                                toRemove.push(id);
+                            }
+                        }
+                    }
+                }
+            });
+
+            if (toRemove.length > 0) {
+                toRemove.forEach(id => selectedSkills.delete(id));
+                calculateAllTiers();
+                ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'].forEach(elem => renderTreeForElement(elem));
+            }
+
+            updateStatsDisplay();
+        });
+        raceGrid.appendChild(raceCard);
+    });
+
+    btnRace.addEventListener('click', () => {
+        if (raceGrid.classList.contains('hidden')) {
+            treesView.classList.add('hidden');
+            raceGrid.classList.remove('hidden');
+            btnRace.innerHTML = 'Retour <i class="fas fa-undo"></i>';
+        } else {
+            treesView.classList.remove('hidden');
+            raceGrid.classList.add('hidden');
+            
+            planRaceInput.value = 'neutre';
+            btnRace.innerHTML = `Neutre <i class="fas fa-chevron-down"></i>`;
+
+            const toRemove = [];
+            selectedSkills.forEach(id => {
+                const s = ALL_SKILLS.find(x => x.id === id);
+                if (s && s.raceId) {
+                    toRemove.push(id);
+                }
+            });
+
+            if (toRemove.length > 0) {
+                toRemove.forEach(id => selectedSkills.delete(id));
+                calculateAllTiers();
+                ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'].forEach(elem => renderTreeForElement(elem));
+            }
+
+            updateStatsDisplay();
+        }
+    });
 });
 
 // --- GESTION TOOLTIP ---
