@@ -140,9 +140,13 @@ function buildFighterData(data, isGhost) {
     }
 
     // Appliquer les modificateurs de compétences
+    let applyFlatModifiers = true;
+    if (!isGhost) applyFlatModifiers = false;
+    if (isGhost && data.stats) applyFlatModifiers = false;
+
     if (raceInfo && raceInfo.innateSkillId) {
         const innate = SKILLS_DATA.find(s => s.id === raceInfo.innateSkillId);
-        if (innate && innate.modifiers) applyModifiersFighter(innate.modifiers, flatStats, mults, shouldApplyElementModifiers);
+        if (innate && innate.modifiers) applyModifiersFighter(innate.modifiers, flatStats, mults, shouldApplyElementModifiers, applyFlatModifiers);
     }
 
     let attacks = [];
@@ -151,7 +155,7 @@ function buildFighterData(data, isGhost) {
         const skill = SKILLS_DATA.find(s => s.id === id);
         if (skill) {
             allSkills.push(skill);
-            if (skill.modifiers) applyModifiersFighter(skill.modifiers, flatStats, mults, shouldApplyElementModifiers);
+            if (skill.modifiers) applyModifiersFighter(skill.modifiers, flatStats, mults, shouldApplyElementModifiers, applyFlatModifiers);
             if (skill.type && skill.type.includes('A')) {
                 if (skill.name.toLowerCase() === 'sieste') return;
                 if (skill.energy > 0 || (skill.note && (skill.note.toLowerCase().includes('dégât') || skill.note.toLowerCase().includes('score')))) {
@@ -199,7 +203,7 @@ function buildFighterData(data, isGhost) {
     };
 }
 
-function applyModifiersFighter(modifiers, flatStats, mults, isGhost = true) {
+function applyModifiersFighter(modifiers, flatStats, mults, isGhost = true, applyFlatModifiers = true) {
     if (typeof modifiers === 'string') {
         try { modifiers = JSON.parse(modifiers); } catch (e) { return; }
     }
@@ -207,16 +211,18 @@ function applyModifiersFighter(modifiers, flatStats, mults, isGhost = true) {
         const isMult = val && typeof val === 'object' && val.type === 'multiply';
         const amount = isMult ? val.value : val;
 
-        if (key === 'MAX_HP') isMult ? mults.statLife *= amount : flatStats.statLife += amount;
-        else if (key === 'INITIATIVE') isMult ? mults.statInitiative *= amount : flatStats.statInitiative += amount;
-        else if (key === 'ARMOR') isMult ? mults.statArmor *= amount : flatStats.statArmor += amount;
-        else if (key === 'SPEED') isMult ? mults.statSpeed *= amount : flatStats.statSpeed += amount;
-        else if (key === 'COUNTER') isMult ? mults.statCounter *= amount : flatStats.statCounter += amount;
-        else if (key === 'EVASION' || key === 'DODGE' || key === 'ESQUIVE') isMult ? mults.statEsquive *= amount : flatStats.statEsquive += amount;
-        else if (key === 'SUPER_EVASION') isMult ? mults.statSuperEsquive *= amount : flatStats.statSuperEsquive += amount;
-        else if (key === 'MULTIHIT' || key === 'MULTI_HIT') isMult ? mults.statMultiHit *= amount : flatStats.statMultiHit += amount;
+        if (applyFlatModifiers) {
+            if (key === 'MAX_HP') isMult ? mults.statLife *= amount : flatStats.statLife += amount;
+            else if (key === 'INITIATIVE') isMult ? mults.statInitiative *= amount : flatStats.statInitiative += amount;
+            else if (key === 'ARMOR') isMult ? mults.statArmor *= amount : flatStats.statArmor += amount;
+            else if (key === 'SPEED') isMult ? mults.statSpeed *= amount : flatStats.statSpeed += amount;
+            else if (key === 'COUNTER') isMult ? mults.statCounter *= amount : flatStats.statCounter += amount;
+            else if (key === 'EVASION' || key === 'DODGE' || key === 'ESQUIVE') isMult ? mults.statEsquive *= amount : flatStats.statEsquive += amount;
+            else if (key === 'SUPER_EVASION') isMult ? mults.statSuperEsquive *= amount : flatStats.statSuperEsquive += amount;
+            else if (key === 'MULTIHIT' || key === 'MULTI_HIT') isMult ? mults.statMultiHit *= amount : flatStats.statMultiHit += amount;
+        }
 
-        else if (isGhost && key === 'FIRE_ELEMENT') flatStats.statFire += amount;
+        if (isGhost && key === 'FIRE_ELEMENT') flatStats.statFire += amount;
         else if (isGhost && key === 'WOOD_ELEMENT') flatStats.statWood += amount;
         else if (isGhost && key === 'WATER_ELEMENT') flatStats.statWater += amount;
         else if (isGhost && key === 'LIGHTNING_ELEMENT') flatStats.statBolt += amount;
