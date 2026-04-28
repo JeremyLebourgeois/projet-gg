@@ -8,20 +8,7 @@ body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
-/* On réutilise le fond cave mais on l'assombrit et on le floute davantage pour la simu */
-body::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(13, 17, 23, 0.85);
-    /* Plus sombre */
-    backdrop-filter: blur(10px);
-    /* Plus flou */
-    z-index: -1;
-}
+
 
 .main-content {
     padding: 20px 60px 60px 60px;
