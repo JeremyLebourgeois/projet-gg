@@ -81,25 +81,46 @@ function buildFighterData(data, isGhost) {
 
     let mults = { statArmor: 1.0, statLife: 1.0, statInitiative: 1.0, statSpeed: 1.0, statCounter: 1.0, statEsquive: 1.0, statSuperEsquive: 1.0, statMultiHit: 1.0 };
 
+    let shouldApplyElementModifiers = isGhost;
     if (isGhost) {
-        // Pour les plans, on calcule les éléments de base depuis les compétences (1 up = 1 point)
-        skillIds.forEach(id => {
-            const skill = SKILLS_DATA.find(s => s.id === id);
-            if (skill) {
-                if (skill.element === 'Feu') flatStats.statFire++;
-                else if (skill.element === 'Bois') flatStats.statWood++;
-                else if (skill.element === 'Eau') flatStats.statWater++;
-                else if (skill.element === 'Foudre') flatStats.statBolt++;
-                else if (skill.element === 'Air') flatStats.statAir++;
+        if (data.elements) {
+            shouldApplyElementModifiers = false;
+            flatStats.statFire = data.elements.fire || 0;
+            flatStats.statWood = data.elements.wood || 0;
+            flatStats.statWater = data.elements.water || 0;
+            flatStats.statBolt = data.elements.bolt || data.elements.lightning || 0;
+            flatStats.statAir = data.elements.air || 0;
+        } else {
+            // Pour les plans, on calcule les éléments de base depuis les compétences (1 up = 1 point)
+            skillIds.forEach(id => {
+                const skill = SKILLS_DATA.find(s => s.id === id);
+                if (skill) {
+                    if (skill.element === 'Feu') flatStats.statFire++;
+                    else if (skill.element === 'Bois') flatStats.statWood++;
+                    else if (skill.element === 'Eau') flatStats.statWater++;
+                    else if (skill.element === 'Foudre') flatStats.statBolt++;
+                    else if (skill.element === 'Air') flatStats.statAir++;
+                }
+            });
+            // On ajoute les bases de la race pour les plans (car non stocké en BDD pour les plans)
+            if (raceInfo) {
+                flatStats.statFire += raceInfo.baseFire || 0;
+                flatStats.statWood += raceInfo.baseWood || 0;
+                flatStats.statWater += raceInfo.baseWater || 0;
+                flatStats.statBolt += raceInfo.baseBolt || 0;
+                flatStats.statAir += raceInfo.baseAir || 0;
             }
-        });
-        // On ajoute les bases de la race pour les plans (car non stocké en BDD pour les plans)
-        if (raceInfo) {
-            flatStats.statFire += raceInfo.baseFire || 0;
-            flatStats.statWood += raceInfo.baseWood || 0;
-            flatStats.statWater += raceInfo.baseWater || 0;
-            flatStats.statBolt += raceInfo.baseBolt || 0;
-            flatStats.statAir += raceInfo.baseAir || 0;
+        }
+
+        if (data.stats) {
+            flatStats.statLife = data.stats.statLife || 100;
+            flatStats.statSpeed = data.stats.statSpeed || 10;
+            flatStats.statInitiative = data.stats.statInitiative || 0;
+            flatStats.statArmor = data.stats.statArmor || 0;
+            flatStats.statCounter = data.stats.statCounter || 0;
+            flatStats.statEsquive = data.stats.statEsquive || 0;
+            flatStats.statSuperEsquive = data.stats.statSuperEsquive || 0;
+            flatStats.statMultiHit = data.stats.statMultiHit || 0;
         }
     } else {
         // Pour les Dinozs réels, on utilise les stats déjà calculées et sauvegardées en BDD
@@ -121,7 +142,7 @@ function buildFighterData(data, isGhost) {
     // Appliquer les modificateurs de compétences
     if (raceInfo && raceInfo.innateSkillId) {
         const innate = SKILLS_DATA.find(s => s.id === raceInfo.innateSkillId);
-        if (innate && innate.modifiers) applyModifiersFighter(innate.modifiers, flatStats, mults, isGhost);
+        if (innate && innate.modifiers) applyModifiersFighter(innate.modifiers, flatStats, mults, shouldApplyElementModifiers);
     }
 
     let attacks = [];
@@ -130,7 +151,7 @@ function buildFighterData(data, isGhost) {
         const skill = SKILLS_DATA.find(s => s.id === id);
         if (skill) {
             allSkills.push(skill);
-            if (skill.modifiers) applyModifiersFighter(skill.modifiers, flatStats, mults, isGhost);
+            if (skill.modifiers) applyModifiersFighter(skill.modifiers, flatStats, mults, shouldApplyElementModifiers);
             if (skill.type && skill.type.includes('A')) {
                 if (skill.name.toLowerCase() === 'sieste') return;
                 if (skill.energy > 0 || (skill.note && (skill.note.toLowerCase().includes('dégât') || skill.note.toLowerCase().includes('score')))) {
