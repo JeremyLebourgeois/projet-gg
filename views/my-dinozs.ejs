@@ -47,6 +47,35 @@
 
             <button class="btn-tool btn-race">Races</button>
             <button class="btn-tool btn-congealed"><i class="fas fa-snowflake"></i></button>
+            
+            <div class="role-filter-group" style="position: relative; display: inline-block;">
+                <button class="btn-tool btn-roles" id="btn-roles" type="button">Rôles <i class="fas fa-chevron-down"></i></button>
+                <div class="roles-dropdown hidden" id="roles-dropdown" style="position: absolute; top: 100%; left: 0; z-index: 100; background: #2b2e38; border: 1px solid #444; border-radius: 8px; padding: 10px; margin-top: 5px; min-width: 160px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <label style="display: flex; align-items: center; gap: 10px; padding: 5px 0; color: #ddd; cursor: pointer;">
+                        <input type="checkbox" class="role-checkbox" value="ALL" checked> Tous
+                    </label>
+                    <div style="border-bottom: 1px solid #444; margin: 5px 0;"></div>
+                    <label style="display: flex; align-items: center; gap: 10px; padding: 5px 0; color: #ddd; cursor: pointer;">
+                        <input type="checkbox" class="role-checkbox" value="PVP"> PVP
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; padding: 5px 0; color: #ddd; cursor: pointer;">
+                        <input type="checkbox" class="role-checkbox" value="PVE"> PVE
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; padding: 5px 0; color: #ddd; cursor: pointer;">
+                        <input type="checkbox" class="role-checkbox" value="Récolteur"> Récolteur
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; padding: 5px 0; color: #ddd; cursor: pointer;">
+                        <input type="checkbox" class="role-checkbox" value="Compétence U"> Compétence U
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; padding: 5px 0; color: #ddd; cursor: pointer;">
+                        <input type="checkbox" class="role-checkbox" value="Défis Dojo"> Défis Dojo
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; padding: 5px 0; color: #ddd; cursor: pointer;">
+                        <input type="checkbox" class="role-checkbox" value="Test"> Test
+                    </label>
+                </div>
+            </div>
+
             <div class="spacer"></div>
             <button class="btn-tool btn-new">Nouveau Dinoz</button>
 
@@ -55,8 +84,7 @@
         <div class="dino-grid" id="user-dino-grid">
             <% dinozs.forEach(dino=> { %>
                 <a href="/dinoz/<%= dino.id %>" class="dino-card <%= dino.note ? 'card-with-note' : '' %>"
-                    data-congealed="<%= dino.isCongealed %>" <% if (dino.note) { %> data-note="<%= dino.note %>" <% } %>
-                            >
+                    data-congealed="<%= dino.isCongealed %>" data-role="<%= dino.role || '' %>" <% if (dino.note) { %> data-note="<%= dino.note %>" <% } %>>
 
                             <div class="card-img-container" style="position: relative;">
                                 <img src="<%= dino.imageUrl ? dino.imageUrl : '/img/races/' + dino.race.toLowerCase() + '.png' %>"

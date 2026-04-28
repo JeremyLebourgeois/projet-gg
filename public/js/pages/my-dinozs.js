@@ -72,10 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const filterValue = searchInput.value.toLowerCase().trim();
         let visibleCount = 0;
 
+        const selectedRoles = Array.from(document.querySelectorAll('.role-checkbox:checked')).map(c => c.value);
+
         dinoCards.forEach(card => {
             const isCongealed = card.getAttribute('data-congealed') === '1';
             const cardRace = card.querySelector('.card-info p').textContent.toLowerCase();
             const dinoName = card.querySelector('h3').textContent.toLowerCase();
+            const cardRole = card.getAttribute('data-role') || '';
             
             let showFrozen = false;
             if (congealState === 0 && !isCongealed) showFrozen = true;
@@ -84,8 +87,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let showSearch = filterValue === '' || dinoName.includes(filterValue);
             let showRace = currentRaceFilter === null || cardRace.includes(currentRaceFilter.toLowerCase());
+            
+            let showRole = false;
+            if (selectedRoles.includes('ALL') || selectedRoles.length === 0) {
+                showRole = true;
+            } else {
+                showRole = selectedRoles.includes(cardRole);
+            }
 
-            if (showFrozen && showSearch && showRace) {
+            if (showFrozen && showSearch && showRace && showRole) {
                 card.style.display = '';
                 visibleCount++;
             } else {
@@ -104,6 +114,43 @@ document.addEventListener('DOMContentLoaded', () => {
             searchEmpty.style.display = 'none';
         }
     }
+
+    // FILTRE PAR RÔLE (MULTI-CHOIX)
+    const btnRoles = document.getElementById('btn-roles');
+    const rolesDropdown = document.getElementById('roles-dropdown');
+    const roleCheckboxes = document.querySelectorAll('.role-checkbox');
+    const allCheckbox = document.querySelector('.role-checkbox[value="ALL"]');
+    
+    btnRoles.addEventListener('click', (e) => {
+        e.stopPropagation();
+        rolesDropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (rolesDropdown && !rolesDropdown.contains(e.target) && e.target !== btnRoles) {
+            rolesDropdown.classList.add('hidden');
+        }
+    });
+
+    roleCheckboxes.forEach(cb => {
+        cb.addEventListener('change', (e) => {
+            if (e.target.value === 'ALL') {
+                if (e.target.checked) {
+                    roleCheckboxes.forEach(other => {
+                        if (other !== e.target) other.checked = false;
+                    });
+                }
+            } else {
+                if (e.target.checked) {
+                    allCheckbox.checked = false;
+                } else {
+                    const anyChecked = Array.from(roleCheckboxes).some(c => c.value !== 'ALL' && c.checked);
+                    if (!anyChecked) allCheckbox.checked = true;
+                }
+            }
+            applyFilters();
+        });
+    });
 
     // 2. LOGIQUE DU BOUTON "RACES"
     btnRace.addEventListener('click', () => {
