@@ -70,7 +70,10 @@ function showTooltip(skill) {
 
     let accessWarningHtml = '';
     const raceName = document.getElementById('plan-race').value.toLowerCase();
-    if (raceName !== 'neutre') {
+    
+    if (skill.raceId && skill.raceId.toLowerCase() !== raceName) {
+        accessWarningHtml = `<div style="color: #ef5350; font-weight: bold; margin-top: 8px; padding-top: 5px; border-top: 1px dashed rgba(239,83,80,0.5); display: flex; align-items: center; gap: 5px;"><i class="fas fa-ban"></i> Réservé à la race ${skill.raceId}</div>`;
+    } else if (raceName !== 'neutre') {
         const raceData = RACES_UP.find(r => {
             const normalized = r.race.toLowerCase()
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -209,6 +212,11 @@ function toggleSkillSelection(skill) {
     } else {
         const raceName = document.getElementById('plan-race').value.toLowerCase();
         
+        if (skill.raceId && skill.raceId.toLowerCase() !== raceName) {
+            alert(`La compétence ${skill.name} est réservée à la race ${skill.raceId} !`);
+            return;
+        }
+
         if (raceName !== 'neutre') {
             const raceData = RACES_UP.find(r => {
                 const normalized = r.race.toLowerCase()
@@ -267,30 +275,39 @@ function deselectRecursively(skill) {
 // --- CALCUL STATS ---
 function updateStatsDisplay() {
     const raceName = document.getElementById('plan-race').value.toLowerCase();
-    if (raceName !== 'neutre') {
-        const raceData = RACES_UP.find(r => {
-            const normalized = r.race.toLowerCase()
-                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                .replace(/\s+/g, '_');
-            return normalized === raceName || r.race.toLowerCase() === raceName;
-        });
-
-        if (raceData && raceData.elements) {
-            const elemIds = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+    selectedSkills.forEach(id => {
+        const skill = ALL_SKILLS.find(s => s.id === id);
+        if (skill) {
+            let remove = false;
             
-            selectedSkills.forEach(id => {
-                const skill = ALL_SKILLS.find(s => s.id === id);
-                if (skill) {
+            if (skill.raceId && skill.raceId.toLowerCase() !== raceName) {
+                remove = true;
+            }
+
+            if (!remove && raceName !== 'neutre') {
+                const raceData = RACES_UP.find(r => {
+                    const normalized = r.race.toLowerCase()
+                        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                        .replace(/\s+/g, '_');
+                    return normalized === raceName || r.race.toLowerCase() === raceName;
+                });
+
+                if (raceData && raceData.elements) {
+                    const elemIds = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
                     const elemIndex = elemIds.indexOf(skill.element);
                     if (elemIndex !== -1 && raceData.elements[elemIndex] === "0%") {
-                        selectedSkills.delete(id);
-                        const brick = document.getElementById(`skill-${id}`);
-                        if (brick) brick.classList.remove('selected');
+                        remove = true;
                     }
                 }
-            });
+            }
+
+            if (remove) {
+                selectedSkills.delete(id);
+                const brick = document.getElementById(`skill-${id}`);
+                if (brick) brick.classList.remove('selected');
+            }
         }
-    }
+    });
 
     const elements = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
     const idMap = { 'Feu': 'fire', 'Bois': 'wood', 'Eau': 'water', 'Foudre': 'lightning', 'Air': 'air' };
@@ -377,7 +394,13 @@ function updateForbiddenSkills() {
     
     if (raceName === 'neutre') {
         document.querySelectorAll('.skill-brick').forEach(brick => {
-            brick.classList.remove('forbidden');
+            const skillId = parseInt(brick.id.replace('skill-', ''));
+            const skill = ALL_SKILLS.find(s => s.id === skillId);
+            if (skill && skill.raceId) {
+                brick.classList.add('forbidden');
+            } else {
+                brick.classList.remove('forbidden');
+            }
         });
         return;
     }
@@ -389,27 +412,33 @@ function updateForbiddenSkills() {
         return normalized === raceName || r.race.toLowerCase() === raceName;
     });
 
-    if (raceData && raceData.elements) {
-        const elemIds = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+    const elemIds = ['Feu', 'Bois', 'Eau', 'Foudre', 'Air'];
+    
+    document.querySelectorAll('.skill-brick').forEach(brick => {
+        const skillId = parseInt(brick.id.replace('skill-', ''));
+        const skill = ALL_SKILLS.find(s => s.id === skillId);
         
-        document.querySelectorAll('.skill-brick').forEach(brick => {
-            const skillId = parseInt(brick.id.replace('skill-', ''));
-            const skill = ALL_SKILLS.find(s => s.id === skillId);
+        if (skill) {
+            let forbid = false;
             
-            if (skill) {
+            if (skill.raceId && skill.raceId.toLowerCase() !== raceName) {
+                forbid = true;
+            }
+
+            if (!forbid && raceData && raceData.elements) {
                 const elemIndex = elemIds.indexOf(skill.element);
                 if (elemIndex !== -1 && raceData.elements[elemIndex] === "0%") {
-                    brick.classList.add('forbidden');
-                } else {
-                    brick.classList.remove('forbidden');
+                    forbid = true;
                 }
             }
-        });
-    } else {
-        document.querySelectorAll('.skill-brick').forEach(brick => {
-            brick.classList.remove('forbidden');
-        });
-    }
+
+            if (forbid) {
+                brick.classList.add('forbidden');
+            } else {
+                brick.classList.remove('forbidden');
+            }
+        }
+    });
 }
 
 function calculateSuccessProbability(raceData, elemIds) {
@@ -575,6 +604,17 @@ async function savePlan() {
 
     if (selectedSkills.size === 0) return alert("Sélectionnez au moins une compétence !");
     if (!name) return alert("Donnez un nom à votre plan !");
+
+    let invalidRaceSkill = null;
+    selectedSkills.forEach(id => {
+        const skill = ALL_SKILLS.find(s => s.id === id);
+        if (skill && skill.raceId && skill.raceId.toLowerCase() !== race.toLowerCase()) {
+            invalidRaceSkill = skill;
+        }
+    });
+    if (invalidRaceSkill) {
+        return alert(`La compétence ${invalidRaceSkill.name} est réservée à la race ${invalidRaceSkill.raceId} !`);
+    }
 
     if (race !== 'neutre') {
         const raceData = RACES_UP.find(r => {
