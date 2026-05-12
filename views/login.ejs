@@ -33,6 +33,11 @@
             </form>
         </div>
     </main>
-
+    <script>
+        // Réinitialiser les filtres sauvegardés lors de la (dé)connexion
+        localStorage.removeItem('dinoz_filters');
+        localStorage.removeItem('my_plans_filters');
+        localStorage.removeItem('clan_plans_filters');
+    </script>
 </body>
 </html>

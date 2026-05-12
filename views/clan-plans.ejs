@@ -183,9 +183,6 @@
                 }
             });
 
-            // Initialiser le range slider
-            updateRange();
-
             const playerSelect = document.getElementById('filter-player');
             [...players].sort((a, b) => a.localeCompare(b)).forEach(p => {
                 const opt = document.createElement('option');
@@ -193,7 +190,48 @@
                 opt.textContent = p;
                 playerSelect.appendChild(opt);
             });
+
+            // Charger les filtres sauvegardés
+            loadFilters();
+
+            // Initialiser le range slider
+            updateRange();
         });
+
+        // Rechargement si retour arrière (cache navigateur)
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || performance.getEntriesByType("navigation")[0].type === 'back_forward') {
+                window.location.reload();
+            }
+        });
+
+        function saveFilters() {
+            const filters = {
+                nameSearch: document.getElementById('filter-name').value,
+                raceFilter: currentRaceFilter,
+                minLevel: document.getElementById('range-min').value,
+                maxLevel: document.getElementById('range-max').value,
+                playerFilter: document.getElementById('filter-player').value
+            };
+            localStorage.setItem('clan_plans_filters', JSON.stringify(filters));
+        }
+
+        function loadFilters() {
+            const saved = localStorage.getItem('clan_plans_filters');
+            if (saved) {
+                try {
+                    const filters = JSON.parse(saved);
+                    if (filters.nameSearch) document.getElementById('filter-name').value = filters.nameSearch;
+                    if (filters.raceFilter) {
+                        currentRaceFilter = filters.raceFilter;
+                        document.getElementById('btn-race').innerHTML = currentRaceFilter === 'all' ? 'Races' : currentRaceFilter;
+                    }
+                    if (filters.minLevel) document.getElementById('range-min').value = filters.minLevel;
+                    if (filters.maxLevel) document.getElementById('range-max').value = filters.maxLevel;
+                    if (filters.playerFilter) document.getElementById('filter-player').value = filters.playerFilter;
+                } catch (e) { }
+            }
+        }
 
         function updateRange() {
             const rangeMin = document.getElementById('range-min');
@@ -256,6 +294,8 @@
             if (searchEmpty) {
                 searchEmpty.style.display = visibleCount === 0 ? 'block' : 'none';
             }
+
+            saveFilters();
         }
     </script>
 </body>

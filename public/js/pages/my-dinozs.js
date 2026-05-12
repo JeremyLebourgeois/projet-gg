@@ -34,14 +34,35 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentRaceFilter = null;
     const btnCongealed = document.querySelector('.btn-congealed');
 
-    // Initial state style
-    btnCongealed.style.opacity = '0.5';
-    btnCongealed.style.borderColor = '#555';
-    btnCongealed.title = "Cacher les Dinozs congelés";
+    function saveFilters() {
+        const filters = {
+            congealState,
+            currentRaceFilter,
+            search: searchInput.value.trim(),
+            roles: Array.from(document.querySelectorAll('.role-checkbox:checked')).map(c => c.value)
+        };
+        localStorage.setItem('dinoz_filters', JSON.stringify(filters));
+    }
 
-    btnCongealed.addEventListener('click', () => {
-        congealState = (congealState + 1) % 3;
-        
+    function loadFilters() {
+        const saved = localStorage.getItem('dinoz_filters');
+        if (saved) {
+            try {
+                const filters = JSON.parse(saved);
+                congealState = filters.congealState !== undefined ? filters.congealState : 0;
+                currentRaceFilter = filters.currentRaceFilter || null;
+                searchInput.value = filters.search || '';
+                
+                if (filters.roles && Array.isArray(filters.roles)) {
+                    document.querySelectorAll('.role-checkbox').forEach(cb => {
+                        cb.checked = filters.roles.includes(cb.value);
+                    });
+                }
+            } catch (e) { console.error(e); }
+        }
+    }
+
+    function updateCongealVisual() {
         if (congealState === 0) {
             btnCongealed.style.opacity = '0.5';
             btnCongealed.style.background = '';
@@ -58,6 +79,15 @@ document.addEventListener('DOMContentLoaded', () => {
             btnCongealed.style.borderColor = '#00e5ff';
             btnCongealed.title = "Dinozs congelés uniquement";
         }
+    }
+
+    // Load saved filters before first visual update
+    loadFilters();
+    updateCongealVisual();
+
+    btnCongealed.addEventListener('click', () => {
+        congealState = (congealState + 1) % 3;
+        updateCongealVisual();
         
         if (!raceGrid.classList.contains('hidden')) {
             userGrid.classList.remove('hidden');
@@ -113,6 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             searchEmpty.style.display = 'none';
         }
+
+        saveFilters();
     }
 
     // FILTRE PAR RÔLE (MULTI-CHOIX)
