@@ -255,6 +255,11 @@
                                         <div class="menu-icon text-badge bg-up"
                                             onclick="event.stopPropagation(); selectElement(this, 'unknown')"
                                             title="Inconnu / ???" style="cursor:pointer; font-size:0.8rem;">???</div>
+                                        <div class="menu-icon text-badge"
+                                            onclick="event.stopPropagation(); selectElement(this, 'reset')"
+                                            title="Réinitialiser" style="cursor:pointer; font-size:1rem; background: #e74c3c; color: white; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 4px;">
+                                            <i class="fas fa-times"></i>
+                                        </div>
                                     </div>
                                 </td>
 
@@ -276,6 +281,11 @@
                                         <div class="menu-icon text-badge bg-up"
                                             onclick="event.stopPropagation(); selectElement(this, 'unknown')"
                                             title="Inconnu / ???" style="cursor:pointer; font-size:0.8rem;">???</div>
+                                        <div class="menu-icon text-badge"
+                                            onclick="event.stopPropagation(); selectElement(this, 'reset')"
+                                            title="Réinitialiser" style="cursor:pointer; font-size:1rem; background: #e74c3c; color: white; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 4px;">
+                                            <i class="fas fa-times"></i>
+                                        </div>
                                     </div>
                                 </td>
 
@@ -589,17 +599,35 @@
         </div>
     </div>
 
+    <script id="dino-data-json" type="application/json">
+        <%- JSON.stringify({
+            allSkills: allSkills,
+            serverLearnedIds: dino.learnedSkills.map(s => s.id),
+            race: dino.race,
+            grid: dino.ups || {},
+            id: dino.id,
+            planIds: (dino.plan && dino.plan.skillIds) ? dino.plan.skillIds : [],
+            racesUp: racesUp
+        }).replace(/</g, '\\u003c') %>
+    </script>
+
     <script>
-        // prettier-ignore
-        const DINO_DATA = {
-            allSkills: JSON.parse(`<%- JSON.stringify(allSkills).replace(/\\/g, '\\\\').replace(/'/g, "\\'") %>`),
-            serverLearnedIds: JSON.parse(`<%- JSON.stringify(dino.learnedSkills.map(s => s.id)) %>`),
-            race: "<%= dino.race %>",
-            grid: JSON.parse(`<%- dino.ups ? JSON.stringify(dino.ups).replace(/\\/g, '\\\\').replace(/'/g, "\\'") : '{}' %>`),
-            id: "<%= dino.id %>",
-            planIds: JSON.parse(`<%- (dino.plan && dino.plan.skillIds) ? JSON.stringify(dino.plan.skillIds) : '[]' %>`),
-            racesUp: JSON.parse(`<%- JSON.stringify(racesUp).replace(/\\/g, '\\\\').replace(/'/g, "\\'") %>`)
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            var errorDiv = document.createElement('div');
+            errorDiv.style.cssText = "position:fixed; top:0; left:0; width:100%; background:red; color:white; padding:20px; z-index:999999;";
+            errorDiv.innerHTML = "<h3>JS Error!</h3><p>" + msg + "</p><p>Line: " + lineNo + "</p><pre>" + (error && error.stack ? error.stack : '') + "</pre>";
+            document.body.prepend(errorDiv);
         };
+        try {
+            var jsonData = document.getElementById('dino-data-json').textContent;
+            window.DINO_DATA = JSON.parse(jsonData);
+        } catch (e) {
+            console.error("Failed to parse JSON:", e);
+            var errorDiv = document.createElement('div');
+            errorDiv.style.cssText = "position:fixed; top:0; left:0; width:100%; background:orange; color:white; padding:20px; z-index:999999;";
+            errorDiv.innerHTML = "<h3>JSON Parse Error!</h3><pre>" + e.toString() + "</pre>";
+            document.body.prepend(errorDiv);
+        }
     </script>
 
     <script src="/js/pages/dinoz-details.js"></script>

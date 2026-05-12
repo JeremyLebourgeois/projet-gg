@@ -299,12 +299,28 @@ app.post('/dinoz/update-grid', async (req, res) => {
         if (!gridData[rowIndex]) gridData[rowIndex] = {};
         const colKey = `col${colIndex}`;
 
-        value === "" ? delete gridData[rowIndex][colKey] : gridData[rowIndex][colKey] = value;
+        if (value === "") {
+            delete gridData[rowIndex][colKey];
+            if (Object.keys(gridData[rowIndex]).length === 0) {
+                delete gridData[rowIndex];
+            }
+        } else {
+            gridData[rowIndex][colKey] = value;
+        }
 
         // 2. Calcul Niveau
         let newLevel = 1;
-        for (const [_, cols] of Object.entries(gridData)) {
-            if (cols.col3 && cols.col3 !== "") newLevel++;
+        let maxRowIndex = 0;
+        for (const [rowIndexStr, cols] of Object.entries(gridData)) {
+            if (cols.col3 && cols.col3 !== "") {
+                const rIdx = parseInt(rowIndexStr, 10);
+                if (rIdx > maxRowIndex) {
+                    maxRowIndex = rIdx;
+                }
+            }
+        }
+        if (maxRowIndex > 0) {
+            newLevel = maxRowIndex + 1;
         }
 
         // 3. Calcul Stats & Compétences

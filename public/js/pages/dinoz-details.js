@@ -136,12 +136,18 @@ function updateFullLogic() {
         // 2. Vérif Décision
         if (cell3.dataset.decision) {
             let isValid = false;
-            try {
-                const dec = JSON.parse(cell3.dataset.decision);
-                if (dec.action === 'skip') {
-                    isValid = true;
-                } else {
-                    const val1DB = ELEM_MAP[cell1.dataset.value];
+            const isCol1Empty = !cell1.dataset.value;
+            const isCol2Empty = !cell2.dataset.value || cell2.classList.contains('hidden');
+            
+            if (isCol1Empty && isCol2Empty) {
+                isValid = false;
+            } else {
+                try {
+                    const dec = JSON.parse(cell3.dataset.decision);
+                    if (dec.action === 'skip') {
+                        isValid = true;
+                    } else {
+                        const val1DB = ELEM_MAP[cell1.dataset.value];
                     const val2DB = state.hasPDC ? ELEM_MAP[cell2.dataset.value] : null;
                     const decElem = dec.element;
                     if (decElem && (decElem === val1DB || (state.hasPDC && decElem === val2DB))) {
@@ -154,7 +160,7 @@ function updateFullLogic() {
                                 if (s) {
                                     if (s.type === 'I') isAllowed = false;
                                     if (s.name === 'Envol') {
-                                        const flyingRaces = ['planaille', 'nuagoz', 'pteroz', 'soufflet', 'pteroz demon', 'planaille demon'];
+                                        const flyingRaces = ['planaile', 'planaille', 'nuagoz', 'pteroz', 'soufflet', 'pteroz demon', 'planaile demon', 'planaille demon'];
                                         if (!flyingRaces.includes(DINO_RACE.toLowerCase())) isAllowed = false;
                                     }
                                     if (s.skillNature === 2) isAllowed = false;
@@ -165,8 +171,9 @@ function updateFullLogic() {
                             }
                         }
                     }
-                }
-            } catch (e) { }
+                } // closes else
+                } catch (e) { } // closes try
+            } // closes else (isCol1Empty && isCol2Empty)
 
             if (!isValid) {
                 resetCell(cell3);
@@ -176,10 +183,13 @@ function updateFullLogic() {
         }
 
         // 3. Auto-remplissage
-        const val1 = cell1.dataset.value;
-        const isRealElement = val1 && val1 !== 'unknown';
-        if (isRealElement && !state.hasPDC && !cell3.dataset.decision) {
-            setCellVisual(cell3, val1);
+        if (!cell3.dataset.decision) {
+            resetCell(cell3);
+            const val1 = cell1.dataset.value;
+            const isRealElement = val1 && val1 !== 'unknown';
+            if (isRealElement && !state.hasPDC) {
+                setCellVisual(cell3, val1);
+            }
         }
 
         // 4. Application Décision
@@ -233,6 +243,9 @@ function handleDecisionClick(cell) {
     const uniqueElementsList = Array.from(targetElements);
     const options = getAvailableOptionsAtRow(rowIndex, uniqueElementsList);
     options.push({ type: 'skip', label: '???', name: 'Inconnu' });
+    if (cell.dataset.decision) {
+        options.unshift({ type: 'reset', label: '<i class="fas fa-times"></i>', name: 'Annuler le choix' });
+    }
     openSkillModal(cell, options);
 }
 
@@ -285,7 +298,7 @@ function getAvailableOptionsAtRow(targetRowIndex, elementsFilter) {
                     let isAllowed = true;
                     if (s.type === 'I') isAllowed = false;
                     if (s.name === 'Envol') {
-                        const flyingRaces = ['planaille', 'nuagoz', 'pteroz', 'soufflet', 'pteroz demon', 'planaille demon'];
+                        const flyingRaces = ['planaile', 'planaille', 'nuagoz', 'pteroz', 'soufflet', 'pteroz demon', 'planaile demon', 'planaille demon'];
                         if (!flyingRaces.includes(DINO_RACE.toLowerCase())) isAllowed = false;
                     }
                     if (s.skillNature === 2) isAllowed = false;
@@ -317,6 +330,29 @@ function openSkillModal(targetCell, options) {
                 <span>${opt.name}</span>
             `;
             item.onclick = () => confirmChoice(targetCell, { action: 'skip', label: opt.label });
+        } else if (opt.type === 'reset') {
+            item.className = `skill-item`;
+            item.style.cursor = 'pointer';
+            item.style.backgroundColor = 'rgba(231, 76, 60, 0.1)';
+            item.style.border = '1px solid #e74c3c';
+            item.style.marginBottom = '10px';
+            item.innerHTML = `
+                <div style="font-weight:bold; font-size:1.2em; width:30px; text-align:center; color:#e74c3c;">${opt.label}</div>
+                <span style="color:#e74c3c; font-weight:bold;">${opt.name}</span>
+            `;
+            item.onclick = () => {
+                closeSkillModal();
+                resetCell(targetCell);
+                const row = targetCell.closest('tr');
+                if (localGrid[row.dataset.rowIndex]) {
+                    delete localGrid[row.dataset.rowIndex].col3;
+                    if (Object.keys(localGrid[row.dataset.rowIndex]).length === 0) {
+                        delete localGrid[row.dataset.rowIndex];
+                    }
+                }
+                saveGridData(row.dataset.rowIndex, 3, "");
+                updateFullLogic();
+            };
         } else {
             const cssElem = CSS_MAP[opt.element] || 'neutre';
             item.className = `skill-item list-${cssElem}`;
@@ -541,6 +577,24 @@ window.toggleMenu = function (cell) {
 };
 
 window.selectElement = function (el, type) {
+    const cell = el.closest('.cell-choice');
+    const row = cell.closest('tr');
+    const colIndex = cell.classList.contains('col-2') ? 2 : 1;
+
+    if (type === 'reset') {
+        resetCell(cell);
+        cell.querySelector('.cell-menu').classList.remove('visible');
+        if (localGrid[row.dataset.rowIndex]) {
+            delete localGrid[row.dataset.rowIndex][`col${colIndex}`];
+            if (Object.keys(localGrid[row.dataset.rowIndex]).length === 0) {
+                delete localGrid[row.dataset.rowIndex];
+            }
+        }
+        saveGridData(row.dataset.rowIndex, colIndex, '');
+        updateFullLogic();
+        return;
+    }
+
     if (type !== 'unknown' && DINO_DATA && DINO_DATA.race && DINO_DATA.racesUp) {
         const raceData = DINO_DATA.racesUp.find(r => {
             const normalized = r.race.toLowerCase()
@@ -563,9 +617,6 @@ window.selectElement = function (el, type) {
             }
         }
     }
-    const cell = el.closest('.cell-choice');
-    const row = cell.closest('tr');
-    const colIndex = cell.classList.contains('col-2') ? 2 : 1;
     setCellVisual(cell, type);
     cell.querySelector('.cell-menu').classList.remove('visible');
     if (!localGrid[row.dataset.rowIndex]) localGrid[row.dataset.rowIndex] = {};
